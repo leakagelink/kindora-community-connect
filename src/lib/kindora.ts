@@ -80,7 +80,7 @@ export type RequestFilters = {
   search?: string | undefined;
   type?: string | undefined;
   categoryId?: string | undefined;
-  remote?: "any" | "remote" | "local";
+  remote?: "any" | "remote" | "local" | undefined;
   language?: string | undefined;
   limit?: number | undefined;
 };
