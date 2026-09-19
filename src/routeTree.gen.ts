@@ -18,6 +18,7 @@ import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as AuthenticatedPostIndexRouteImport } from './routes/_authenticated/post.index'
+import { Route as AuthenticatedPostRequestRouteImport } from './routes/_authenticated/post.request'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -63,6 +64,12 @@ const AuthenticatedPostIndexRoute = AuthenticatedPostIndexRouteImport.update({
   path: '/post/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPostRequestRoute =
+  AuthenticatedPostRequestRouteImport.update({
+    id: '/post/request',
+    path: '/post/request',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -72,6 +79,7 @@ export interface FileRoutesByFullPath {
   '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/post/request': typeof AuthenticatedPostRequestRoute
   '/post/': typeof AuthenticatedPostIndexRoute
 }
 export interface FileRoutesByTo {
@@ -82,6 +90,7 @@ export interface FileRoutesByTo {
   '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/post/request': typeof AuthenticatedPostRequestRoute
   '/post': typeof AuthenticatedPostIndexRoute
 }
 export interface FileRoutesById {
@@ -94,6 +103,7 @@ export interface FileRoutesById {
   '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/_authenticated/post/request': typeof AuthenticatedPostRequestRoute
   '/_authenticated/post/': typeof AuthenticatedPostIndexRoute
 }
 export interface FileRouteTypes {
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/reset-password'
     | '/legal/$slug'
+    | '/post/request'
     | '/post/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/reset-password'
     | '/legal/$slug'
+    | '/post/request'
     | '/post'
   id:
     | '__root__'
@@ -127,6 +139,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/reset-password'
     | '/legal/$slug'
+    | '/_authenticated/post/request'
     | '/_authenticated/post/'
   fileRoutesById: FileRoutesById
 }
@@ -206,14 +219,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPostIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/post/request': {
+      id: '/_authenticated/post/request'
+      path: '/post/request'
+      fullPath: '/post/request'
+      preLoaderRoute: typeof AuthenticatedPostRequestRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedPostRequestRoute: typeof AuthenticatedPostRequestRoute
   AuthenticatedPostIndexRoute: typeof AuthenticatedPostIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedPostRequestRoute: AuthenticatedPostRequestRoute,
   AuthenticatedPostIndexRoute: AuthenticatedPostIndexRoute,
 }
 
