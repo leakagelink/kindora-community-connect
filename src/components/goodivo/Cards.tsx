@@ -36,7 +36,7 @@ export function RequestCard({ request }: { request: RequestCardData }) {
     <Link
       to="/requests/$id"
       params={{ id: request.id }}
-      className="surface-card flex flex-col rounded-3xl p-5 transition-shadow hover:shadow-[var(--shadow-lift)]"
+      className="surface-card lift-hover flex flex-col rounded-3xl p-5"
     >
       <div className="flex items-center justify-between gap-2">
         <TypeBadge type={request.request_type} />
@@ -78,7 +78,7 @@ export function ListingCard({ listing }: { listing: ListingCardData }) {
     <Link
       to="/products/$id"
       params={{ id: listing.id }}
-      className="surface-card flex flex-col overflow-hidden rounded-3xl transition-shadow hover:shadow-[var(--shadow-lift)]"
+      className="surface-card lift-hover flex flex-col overflow-hidden rounded-3xl"
     >
       <div className="aspect-[4/3] w-full bg-secondary">
         {photo ? (
@@ -125,7 +125,7 @@ export function HelperCard({ helper }: { helper: HelperCardData }) {
     <Link
       to="/u/$id"
       params={{ id: helper.user_id }}
-      className="surface-card flex flex-col rounded-3xl p-5 transition-shadow hover:shadow-[var(--shadow-lift)]"
+      className="surface-card lift-hover flex flex-col rounded-3xl p-5"
     >
       <div className="flex items-center gap-3">
         <span className="grid size-10 place-items-center overflow-hidden rounded-full bg-secondary font-display text-sm font-bold">
