@@ -1,14 +1,16 @@
 import { Link } from "@tanstack/react-router";
 
+import logo from "@/assets/logo.png";
+
 export function BrandMark({ size = "md" }: { size?: "sm" | "md" }) {
-  const box = size === "sm" ? "size-8 rounded-lg text-base" : "size-9 rounded-xl text-lg";
+  const box = size === "sm" ? "size-8 rounded-lg" : "size-9 rounded-xl";
   return (
-    <span
+    <img
+      src={logo}
+      alt=""
       aria-hidden="true"
-      className={`grid place-items-center bg-primary font-display font-extrabold text-primary-foreground ${box}`}
-    >
-      K
-    </span>
+      className={`shrink-0 object-contain ${box}`}
+    />
   );
 }
 
