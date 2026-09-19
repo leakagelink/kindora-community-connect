@@ -215,7 +215,7 @@ function Home() {
           {helpers.isLoading ? (
             <CardSkeleton />
           ) : helpers.data?.length ? (
-            helpers.data.map((helper) => <HelperCardLazy key={helper.id} helper={helper} />)
+            helpers.data.map((helper) => <HelperCard key={helper.id} helper={helper} />)
           ) : (
             <p className="text-sm text-muted-foreground">
               No helper profiles yet. Publish yours and choose what you'd like to work on.
@@ -330,9 +330,4 @@ function Home() {
       ) : null}
     </AppShell>
   );
-}
-
-function HelperCardLazy({ helper }: { helper: Parameters<typeof RequestCard>[0] extends never ? never : any }) {
-  const { HelperCard } = require("@/components/kindora/Cards") as typeof import("@/components/kindora/Cards");
-  return <HelperCard helper={helper} />;
 }
