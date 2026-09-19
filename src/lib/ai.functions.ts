@@ -119,7 +119,7 @@ export const runAiTool = createServerFn({ method: "POST" })
       user_id: userId,
       tool: data.tool,
       input: data.input ?? {},
-      output: output ?? null,
+      output: (output ?? null) as never,
       model: MODEL,
       status: errorMessage ? "failed" : "succeeded",
       error_message: errorMessage,
@@ -127,5 +127,5 @@ export const runAiTool = createServerFn({ method: "POST" })
 
     if (errorMessage) throw new Error(errorMessage);
 
-    return { output: output!, remaining: Math.max(0, dailyLimit - used - 1), dailyLimit };
+    return { outputJson: JSON.stringify(output), remaining: Math.max(0, dailyLimit - used - 1), dailyLimit };
   });

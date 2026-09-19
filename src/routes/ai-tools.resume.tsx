@@ -97,7 +97,7 @@ function ResumeTool() {
                 setBusy(true);
                 try {
                   const result = await generate({ data: { tool: "resume_builder", input: form } });
-                  setResume(result.output as unknown as Resume);
+                  setResume(JSON.parse(result.outputJson) as Resume);
                   void quota.refetchUsage();
                   void queryClient.invalidateQueries({ queryKey: ["ai-history", "resume_builder"] });
                 } catch (error) {

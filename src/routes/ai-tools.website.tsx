@@ -77,7 +77,7 @@ function WebsiteTool() {
                 setBusy(true);
                 try {
                   const output = await generate({ data: { tool: "website_starter", input: form } });
-                  setResult(output.output as unknown as { html: string; notes?: string });
+                  setResult(JSON.parse(output.outputJson) as { html: string; notes?: string });
                   void quota.refetchUsage();
                   void queryClient.invalidateQueries({ queryKey: ["ai-history", "website_starter"] });
                 } catch (error) {

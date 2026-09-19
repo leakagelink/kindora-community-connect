@@ -68,7 +68,8 @@ function LogoTool() {
                 setBusy(true);
                 try {
                   const result = await generate({ data: { tool: "logo_maker", input: form } });
-                  setConcepts(((result.output['concepts'] as Concept[]) ?? []).slice(0, 3));
+                  const parsed = JSON.parse(result.outputJson) as { concepts?: Concept[] };
+                  setConcepts((parsed.concepts ?? []).slice(0, 3));
                   void quota.refetchUsage();
                   void queryClient.invalidateQueries({ queryKey: ["ai-history", "logo_maker"] });
                 } catch (error) {
