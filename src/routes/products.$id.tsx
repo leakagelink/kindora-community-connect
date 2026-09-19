@@ -51,7 +51,7 @@ function ProductDetail() {
     queryFn: async () => {
       const { data: rows, error } = await supabase
         .from("product_interests")
-        .select("id, user_id, message, status, created_at, person:profiles!product_interests_user_id_fkey(id, display_name)")
+        .select("id, user_id, message, status, created_at, person:profiles!product_interests_user_profile_fkey(id, display_name)")
         .eq("listing_id", id)
         .order("created_at", { ascending: false });
       if (error) throw error;

@@ -155,7 +155,7 @@ export function requestQuery(id: string) {
       const { data, error } = await supabase
         .from("help_requests")
         .select(
-          `${REQUEST_SELECT}, required_features, expected_deliverables, complexity, hosting_expectations, is_prototype, owner:profiles!help_requests_owner_id_fkey(id, display_name, avatar_url, city, country, show_location)`,
+          `${REQUEST_SELECT}, required_features, expected_deliverables, complexity, hosting_expectations, is_prototype, owner:profiles!help_requests_owner_profile_fkey(id, display_name, avatar_url, city, country, show_location)`,
         )
         .eq("id", id)
         .maybeSingle();
@@ -200,7 +200,7 @@ export function listingQuery(id: string) {
       const { data, error } = await supabase
         .from("product_listings")
         .select(
-          `${LISTING_SELECT}, giveaway_rules, size_note, owner:profiles!product_listings_owner_id_fkey(id, display_name, avatar_url, city, country, show_location)`,
+          `${LISTING_SELECT}, giveaway_rules, size_note, owner:profiles!product_listings_owner_profile_fkey(id, display_name, avatar_url, city, country, show_location)`,
         )
         .eq("id", id)
         .maybeSingle();
@@ -257,7 +257,7 @@ export function reviewsQuery(userId: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("reviews")
-        .select("id, rating, comment, created_at, reviewer:profiles!reviews_reviewer_id_fkey(display_name, avatar_url)")
+        .select("id, rating, comment, created_at, reviewer:profiles!reviews_reviewer_profile_fkey(display_name, avatar_url)")
         .eq("reviewee_id", userId)
         .eq("is_hidden", false)
         .order("created_at", { ascending: false });

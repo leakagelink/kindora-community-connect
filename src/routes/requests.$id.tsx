@@ -60,7 +60,7 @@ function RequestDetail() {
       const { data: rows, error } = await supabase
         .from("request_applications")
         .select(
-          "id, helper_id, message, relevant_skills, proposed_deliverables, estimated_days, questions, status, created_at, helper:profiles!request_applications_helper_id_fkey(id, display_name, avatar_url)",
+          "id, helper_id, message, relevant_skills, proposed_deliverables, estimated_days, questions, status, created_at, helper:profiles!request_applications_helper_profile_fkey(id, display_name, avatar_url)",
         )
         .eq("request_id", id)
         .order("created_at", { ascending: false });
