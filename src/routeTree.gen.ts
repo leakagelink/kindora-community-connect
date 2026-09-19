@@ -17,6 +17,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
+import { Route as RequestsIdRouteImport } from './routes/requests.$id'
 import { Route as AuthenticatedPostIndexRouteImport } from './routes/_authenticated/post.index'
 import { Route as AuthenticatedPostListingRouteImport } from './routes/_authenticated/post.listing'
 import { Route as AuthenticatedPostOfferRouteImport } from './routes/_authenticated/post.offer'
@@ -61,6 +62,11 @@ const LegalSlugRoute = LegalSlugRouteImport.update({
   path: '/legal/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RequestsIdRoute = RequestsIdRouteImport.update({
+  id: '/requests/$id',
+  path: '/requests/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedPostIndexRoute = AuthenticatedPostIndexRouteImport.update({
   id: '/post/',
   path: '/post/',
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/requests/$id': typeof RequestsIdRoute
   '/post/listing': typeof AuthenticatedPostListingRoute
   '/post/offer': typeof AuthenticatedPostOfferRoute
   '/post/request': typeof AuthenticatedPostRequestRoute
@@ -105,6 +112,7 @@ export interface FileRoutesByTo {
   '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/requests/$id': typeof RequestsIdRoute
   '/post/listing': typeof AuthenticatedPostListingRoute
   '/post/offer': typeof AuthenticatedPostOfferRoute
   '/post/request': typeof AuthenticatedPostRequestRoute
@@ -120,6 +128,7 @@ export interface FileRoutesById {
   '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/requests/$id': typeof RequestsIdRoute
   '/_authenticated/post/listing': typeof AuthenticatedPostListingRoute
   '/_authenticated/post/offer': typeof AuthenticatedPostOfferRoute
   '/_authenticated/post/request': typeof AuthenticatedPostRequestRoute
@@ -135,6 +144,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/reset-password'
     | '/legal/$slug'
+    | '/requests/$id'
     | '/post/listing'
     | '/post/offer'
     | '/post/request'
@@ -148,6 +158,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/reset-password'
     | '/legal/$slug'
+    | '/requests/$id'
     | '/post/listing'
     | '/post/offer'
     | '/post/request'
@@ -162,6 +173,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/reset-password'
     | '/legal/$slug'
+    | '/requests/$id'
     | '/_authenticated/post/listing'
     | '/_authenticated/post/offer'
     | '/_authenticated/post/request'
@@ -177,6 +189,7 @@ export interface RootRouteChildren {
   ExploreRoute: typeof ExploreRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   LegalSlugRoute: typeof LegalSlugRoute
+  RequestsIdRoute: typeof RequestsIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -237,6 +250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegalSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/requests/$id': {
+      id: '/requests/$id'
+      path: '/requests/$id'
+      fullPath: '/requests/$id'
+      preLoaderRoute: typeof RequestsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/post/': {
       id: '/_authenticated/post/'
       path: '/post'
@@ -294,6 +314,7 @@ const rootRouteChildren: RootRouteChildren = {
   ExploreRoute: ExploreRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   LegalSlugRoute: LegalSlugRoute,
+  RequestsIdRoute: RequestsIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
