@@ -17,7 +17,7 @@ export function BrandLockup({ withAttribution = true }: { withAttribution?: bool
     <Link to="/" className="flex items-center gap-2.5">
       <BrandMark />
       <span className="leading-none">
-        <span className="block font-display text-lg font-extrabold tracking-tight">Kindora</span>
+        <span className="block font-display text-lg font-extrabold tracking-tight">Goodivo</span>
         {withAttribution ? (
           <span className="mt-1 block text-[10px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
             Powered by Socilet

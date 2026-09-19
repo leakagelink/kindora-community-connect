@@ -4,7 +4,7 @@ import { useState } from "react";
 import { HeartHandshake, Search, ShieldCheck, Sparkles } from "lucide-react";
 
 import { AppShell } from "@/components/site/AppShell";
-import { CardSkeleton, HelperCard, ListingCard, RequestCard } from "@/components/kindora/Cards";
+import { CardSkeleton, HelperCard, ListingCard, RequestCard } from "@/components/goodivo/Cards";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -14,18 +14,18 @@ import {
   helpersQuery,
   listingsQuery,
   requestsQuery,
-} from "@/lib/kindora";
+} from "@/lib/goodivo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Kindora: Free Help & Services — Free Help. Real Impact." },
+      { title: "Goodivo: Free Help & Services — Give More. Help More." },
       {
         name: "description",
         content:
           "Request free digital services, skills and products, offer your own help, and use free AI tools. No payment required to receive help.",
       },
-      { property: "og:title", content: "Kindora: Free Help & Services" },
+      { property: "og:title", content: "Goodivo: Free Help & Services" },
       {
         property: "og:description",
         content:
@@ -56,7 +56,7 @@ function Home() {
             Community help, always free to receive
           </span>
           <h1 className="mt-5 font-display text-5xl font-extrabold leading-[1.02] tracking-tight sm:text-6xl">
-            Free Help. <span className="text-primary">Real Impact.</span>
+            Give More. <span className="text-primary">Help More.</span>
           </h1>
           <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground">
             Post a request, share a skill, or give away a permitted product. Connect with people who want to help — no
@@ -81,7 +81,7 @@ function Home() {
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              aria-label="Search Kindora"
+              aria-label="Search Goodivo"
               placeholder="e.g. logo design, books, career guidance…"
               className="border-0 bg-transparent shadow-none focus-visible:ring-0"
             />
@@ -260,7 +260,7 @@ function Home() {
 
       {/* How it works */}
       <section className="py-4">
-        <h2 className="font-display text-xl font-bold tracking-tight">How Kindora works</h2>
+        <h2 className="font-display text-xl font-bold tracking-tight">How Goodivo works</h2>
         <div className="mt-5 grid gap-4 sm:grid-cols-3">
           {[
             { n: "01", title: "Post or browse", body: "Ask for help or find people ready to give it.", tone: "text-primary" },
@@ -293,7 +293,7 @@ function Home() {
               <p className="mt-1.5 max-w-2xl text-sm text-muted-foreground">
                 Requests and listings are reviewed before they appear publicly. Every post, listing, profile and message
                 can be reported, and you can block anyone. Prohibited and unsafe items are not allowed. Nobody may
-                require payment for help offered through Kindora.
+                require payment for help offered through Goodivo.
               </p>
               <div className="mt-4 flex flex-wrap gap-3">
                 <Button asChild variant="outline" size="sm" className="rounded-full">
@@ -316,7 +316,7 @@ function Home() {
         <section className="pb-6">
           <div className="surface-card flex flex-wrap items-center justify-between gap-4 rounded-3xl p-6">
             <div>
-              <h2 className="font-display text-lg font-bold">Support Kindora</h2>
+              <h2 className="font-display text-lg font-bold">Support Goodivo</h2>
               <p className="mt-1 max-w-xl text-sm text-muted-foreground">
                 Donations are entirely optional and never required to receive help. They don't affect ranking or whether
                 a request is accepted.

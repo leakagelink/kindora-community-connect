@@ -4,8 +4,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { AiToolPage, download } from "@/components/kindora/AiTool";
-import { Field, FormCard } from "@/components/kindora/FormBits";
+import { AiToolPage, download } from "@/components/goodivo/AiTool";
+import { Field, FormCard } from "@/components/goodivo/FormBits";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,10 +14,10 @@ import { runAiTool } from "@/lib/ai.functions";
 export const Route = createFileRoute("/ai-tools/website")({
   head: () => ({
     meta: [
-      { title: "Free Website Starter — Kindora" },
+      { title: "Free Website Starter — Goodivo" },
       { name: "description", content: "Generate a simple one-page website for free, preview it and export the code." },
-      { property: "og:title", content: "Free Website Starter — Kindora" },
-      { property: "og:description", content: "Generate a simple one-page website for free on Kindora." },
+      { property: "og:title", content: "Free Website Starter — Goodivo" },
+      { property: "og:description", content: "Generate a simple one-page website for free on Goodivo." },
     ],
   }),
   component: WebsiteTool,

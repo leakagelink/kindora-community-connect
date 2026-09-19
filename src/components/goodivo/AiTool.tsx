@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { aiLimitsQuery, featureFlagsQuery, timeAgo } from "@/lib/kindora";
+import { aiLimitsQuery, featureFlagsQuery, timeAgo } from "@/lib/goodivo";
 
 export function useAiQuota(tool: string) {
   const { user } = useAuth();

@@ -5,14 +5,14 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { AppShell, PageHeading } from "@/components/site/AppShell";
-import { Field, FormCard, FreeNotice, NativeSelect } from "@/components/kindora/FormBits";
+import { Field, FormCard, FreeNotice, NativeSelect } from "@/components/goodivo/FormBits";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { EXPERIENCE_LEVELS } from "@/lib/kindora";
+import { EXPERIENCE_LEVELS } from "@/lib/goodivo";
 
 const schema = z.object({
   headline: z.string().trim().min(8, "Add a short headline (at least 8 characters).").max(120),
@@ -37,9 +37,9 @@ function splitList(value: string) {
 export const Route = createFileRoute("/_authenticated/post/offer")({
   head: () => ({
     meta: [
-      { title: "Offer your help — Kindora" },
+      { title: "Offer your help — Goodivo" },
       { name: "description", content: "Publish a helper profile with your skills, availability and languages." },
-      { property: "og:title", content: "Offer your help — Kindora" },
+      { property: "og:title", content: "Offer your help — Goodivo" },
       { property: "og:description", content: "Publish a helper profile with your skills and availability." },
     ],
   }),
@@ -203,7 +203,7 @@ function PostOffer() {
               You choose which requests to apply to. There's no obligation and no penalty for declining.
             </FreeNotice>
             <FreeNotice>
-              Your completed-help count only ever reflects verified activity completed on Kindora.
+              Your completed-help count only ever reflects verified activity completed on Goodivo.
             </FreeNotice>
           </FormCard>
           <Button type="submit" size="pill" className="w-full" disabled={mutation.isPending}>

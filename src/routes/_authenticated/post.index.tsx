@@ -3,17 +3,17 @@ import { useQuery } from "@tanstack/react-query";
 import { Gift, HandHeart, Sparkles } from "lucide-react";
 
 import { AppShell, PageHeading } from "@/components/site/AppShell";
-import { featureFlagsQuery } from "@/lib/kindora";
+import { featureFlagsQuery } from "@/lib/goodivo";
 
 export const Route = createFileRoute("/_authenticated/post/")({
   head: () => ({
     meta: [
-      { title: "Post on Kindora — request help, offer skills or give a product" },
+      { title: "Post on Goodivo — request help, offer skills or give a product" },
       {
         name: "description",
         content: "Choose what to post: a free help request, a helper profile, or a permitted product giveaway.",
       },
-      { property: "og:title", content: "Post on Kindora" },
+      { property: "og:title", content: "Post on Goodivo" },
       { property: "og:description", content: "Request free help, offer your skills, or give away a product." },
     ],
   }),
@@ -55,7 +55,7 @@ function PostHub() {
       <PageHeading
         eyebrow="Create"
         title="What would you like to post?"
-        description="Requests and listings are reviewed before they appear publicly. Nobody may require payment for help on Kindora."
+        description="Requests and listings are reviewed before they appear publicly. Nobody may require payment for help on Goodivo."
       />
       <div className="grid gap-4 md:grid-cols-3">
         {options

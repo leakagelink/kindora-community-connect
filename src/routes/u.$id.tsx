@@ -2,15 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 
 import { AppShell, EmptyState, PageHeading } from "@/components/site/AppShell";
-import { profileQuery, reviewsQuery } from "@/lib/kindora";
+import { profileQuery, reviewsQuery } from "@/lib/goodivo";
 
 export const Route = createFileRoute("/u/$id")({
   head: () => ({
     meta: [
-      { title: "Member profile — Kindora" },
-      { name: "description", content: "A public Kindora member profile with skills, languages and completed help." },
-      { property: "og:title", content: "Member profile — Kindora" },
-      { property: "og:description", content: "A public Kindora member profile." },
+      { title: "Member profile — Goodivo" },
+      { name: "description", content: "A public Goodivo member profile with skills, languages and completed help." },
+      { property: "og:title", content: "Member profile — Goodivo" },
+      { property: "og:description", content: "A public Goodivo member profile." },
     ],
   }),
   component: PublicProfile,
@@ -41,7 +41,7 @@ function PublicProfile() {
 
   return (
     <AppShell>
-      <PageHeading eyebrow="Member" title={person.display_name ?? "Kindora member"} description={person.bio ?? undefined} />
+      <PageHeading eyebrow="Member" title={person.display_name ?? "Goodivo member"} description={person.bio ?? undefined} />
       <div className="grid gap-4 md:grid-cols-2">
         <div className="surface-card rounded-3xl p-6">
           <h2 className="font-display text-sm font-bold">About</h2>
@@ -60,7 +60,7 @@ function PublicProfile() {
             ) : null}
           </dl>
           <p className="mt-5 text-xs text-muted-foreground">
-            Counts reflect verified activity completed on Kindora only. Contact details are never shown publicly.
+            Counts reflect verified activity completed on Goodivo only. Contact details are never shown publicly.
           </p>
         </div>
         <div className="surface-card rounded-3xl p-6">

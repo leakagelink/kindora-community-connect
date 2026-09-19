@@ -1,5 +1,5 @@
-// Kindora offline shell: cache static assets, always prefer the network for data.
-const CACHE = "kindora-shell-v1";
+// Goodivo offline shell: cache static assets, always prefer the network for data.
+const CACHE = "goodivo-shell-v1";
 const SHELL = ["/", "/manifest.webmanifest", "/favicon.png", "/icons/icon-192.png", "/icons/icon-512.png"];
 
 self.addEventListener("install", (event) => {

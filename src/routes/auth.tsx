@@ -22,10 +22,10 @@ export const Route = createFileRoute("/auth")({
   }),
   head: () => ({
     meta: [
-      { title: "Log in or sign up — Kindora" },
-      { name: "description", content: "Create a free Kindora account to request help, offer skills or give products." },
-      { property: "og:title", content: "Log in or sign up — Kindora" },
-      { property: "og:description", content: "Create a free Kindora account to request help or offer skills." },
+      { title: "Log in or sign up — Goodivo" },
+      { name: "description", content: "Create a free Goodivo account to request help, offer skills or give products." },
+      { property: "og:title", content: "Log in or sign up — Goodivo" },
+      { property: "og:description", content: "Create a free Goodivo account to request help or offer skills." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -188,7 +188,7 @@ function AuthPage() {
               {mode === "signin" ? (
                 <>
                   <p className="text-muted-foreground">
-                    New to Kindora?{" "}
+                    New to Goodivo?{" "}
                     <Link to="/auth" search={{ mode: "signup", redirect }} className="font-semibold text-primary">
                       Create an account
                     </Link>

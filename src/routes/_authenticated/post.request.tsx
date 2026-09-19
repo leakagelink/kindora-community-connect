@@ -5,14 +5,14 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { AppShell, PageHeading } from "@/components/site/AppShell";
-import { Field, FormCard, FreeNotice, NativeSelect } from "@/components/kindora/FormBits";
+import { Field, FormCard, FreeNotice, NativeSelect } from "@/components/goodivo/FormBits";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { categoriesQuery, REQUEST_TYPES } from "@/lib/kindora";
+import { categoriesQuery, REQUEST_TYPES } from "@/lib/goodivo";
 
 const schema = z.object({
   title: z.string().trim().min(8, "Give your request a clear title (at least 8 characters).").max(120),
@@ -35,10 +35,10 @@ const HIGH_EFFORT_HINT = ["digital_service"];
 export const Route = createFileRoute("/_authenticated/post/request")({
   head: () => ({
     meta: [
-      { title: "Request free help — Kindora" },
-      { name: "description", content: "Describe what you need. Receiving help on Kindora is always free." },
-      { property: "og:title", content: "Request free help — Kindora" },
-      { property: "og:description", content: "Describe what you need. Receiving help on Kindora is always free." },
+      { title: "Request free help — Goodivo" },
+      { name: "description", content: "Describe what you need. Receiving help on Goodivo is always free." },
+      { property: "og:title", content: "Request free help — Goodivo" },
+      { property: "og:description", content: "Describe what you need. Receiving help on Goodivo is always free." },
     ],
   }),
   component: PostRequest,
@@ -299,11 +299,11 @@ function PostRequest() {
         <aside className="space-y-4 md:sticky md:top-24 md:self-start">
           <FormCard title="Before you post">
             <FreeNotice>
-              Help on Kindora is free. There is no budget field and asking a volunteer to pay — or being asked to pay —
+              Help on Goodivo is free. There is no budget field and asking a volunteer to pay — or being asked to pay —
               is not allowed. Report anyone who requests money.
             </FreeNotice>
             <FreeNotice>
-              Volunteers decide what they can take on. Kindora doesn't promise that any request will be accepted or
+              Volunteers decide what they can take on. Goodivo doesn't promise that any request will be accepted or
               completed, especially larger builds.
             </FreeNotice>
             <FreeNotice>

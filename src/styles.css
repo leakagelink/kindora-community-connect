@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Kindora design system — "Soft Mesh Community".
+ * Goodivo design system — "Soft Mesh Community".
  * Brand blue + warm accent on a cream mesh ground.
  * All colours are semantic tokens. Never hardcode colours in components.
  */
@@ -139,7 +139,7 @@
   }
 }
 
-/* The signature Kindora ground: a soft four-point colour mesh on cream. */
+/* The signature Goodivo ground: a soft four-point colour mesh on cream. */
 @utility mesh-ground {
   background-color: var(--cream);
   background-image:

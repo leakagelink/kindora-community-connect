@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { AppShell, PageHeading } from "@/components/site/AppShell";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ReportDialog } from "@/components/kindora/ReportDialog";
+import { ReportDialog } from "@/components/goodivo/ReportDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { blockUser, sendMessage } from "@/lib/actions";
 import { useAuth } from "@/lib/auth";

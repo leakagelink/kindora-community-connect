@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Field } from "@/components/kindora/FormBits";
+import { Field } from "@/components/goodivo/FormBits";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { notify } from "@/lib/actions";

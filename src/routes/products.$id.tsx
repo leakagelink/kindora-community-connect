@@ -7,22 +7,22 @@ import { AppShell, EmptyState, PageHeading } from "@/components/site/AppShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Field } from "@/components/kindora/FormBits";
-import { PhotoStrip } from "@/components/kindora/PhotoStrip";
-import { ReportDialog } from "@/components/kindora/ReportDialog";
-import { ReviewDialog } from "@/components/kindora/ReviewDialog";
+import { Field } from "@/components/goodivo/FormBits";
+import { PhotoStrip } from "@/components/goodivo/PhotoStrip";
+import { ReportDialog } from "@/components/goodivo/ReportDialog";
+import { ReviewDialog } from "@/components/goodivo/ReviewDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { ensureConversation, notify } from "@/lib/actions";
 import { useAuth } from "@/lib/auth";
-import { listingQuery, statusLabel, timeAgo } from "@/lib/kindora";
+import { listingQuery, statusLabel, timeAgo } from "@/lib/goodivo";
 
 export const Route = createFileRoute("/products/$id")({
   head: () => ({
     meta: [
-      { title: "Free product — Kindora" },
-      { name: "description", content: "A permitted item being given away free on Kindora." },
-      { property: "og:title", content: "Free product — Kindora" },
-      { property: "og:description", content: "A permitted item being given away free on Kindora." },
+      { title: "Free product — Goodivo" },
+      { name: "description", content: "A permitted item being given away free on Goodivo." },
+      { property: "og:title", content: "Free product — Goodivo" },
+      { property: "og:description", content: "A permitted item being given away free on Goodivo." },
     ],
   }),
   component: ProductDetail,
@@ -221,7 +221,7 @@ function ProductDetail() {
                       <li key={interest.id} className="rounded-2xl border border-border p-4">
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <Link to="/u/$id" params={{ id: interest.user_id }} className="text-sm font-semibold">
-                            {interest.person?.display_name ?? "Kindora member"}
+                            {interest.person?.display_name ?? "Goodivo member"}
                           </Link>
                           <Badge variant="secondary">{statusLabel(interest.status)}</Badge>
                         </div>
@@ -341,7 +341,7 @@ function ProductDetail() {
             </div>
           ) : null}
           <p className="mt-5 rounded-xl bg-secondary px-4 py-3 text-xs text-muted-foreground">
-            Items on Kindora are free. Never pay for an item, delivery or a deposit.
+            Items on Goodivo are free. Never pay for an item, delivery or a deposit.
           </p>
         </aside>
       </div>

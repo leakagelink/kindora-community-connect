@@ -23,7 +23,7 @@ export const LEGAL_DOCS: LegalDoc[] = [
       {
         heading: "Who we are",
         body: [
-          `Kindora is operated by ${P.entity}, powered by Socilet. Contact: ${P.email}. Registered address: ${P.address}.`,
+          `Goodivo is operated by ${P.entity}, powered by Socilet. Contact: ${P.email}. Registered address: ${P.address}.`,
           "These details are placeholders until the operating entity is formally confirmed. We do not claim any registration, licence or certification that has not been verified.",
         ],
       },
@@ -70,20 +70,20 @@ export const LEGAL_DOCS: LegalDoc[] = [
   {
     slug: "terms",
     title: "Terms of Service",
-    summary: "The rules for using Kindora.",
+    summary: "The rules for using Goodivo.",
     sections: [
       {
-        heading: "Using Kindora",
+        heading: "Using Goodivo",
         body: [
           "You must be able to form a binding agreement in your jurisdiction to create an account. You are responsible for the accuracy of what you post and for your conduct on the platform.",
-          "Kindora connects people who want help with people willing to give it. We are not a party to any arrangement between users and we do not guarantee that any request will be accepted or completed.",
+          "Goodivo connects people who want help with people willing to give it. We are not a party to any arrangement between users and we do not guarantee that any request will be accepted or completed.",
         ],
       },
       {
         heading: "Help is free",
         body: [
-          "No payment may be required to receive help offered through Kindora. Asking a requester for mandatory payment, fees or deposits is a violation and may result in restriction or removal of your account.",
-          "Volunteers decide freely what they take on. Scope, availability and capacity are entirely up to them. Nothing on Kindora promises unlimited free development or delivery of any project.",
+          "No payment may be required to receive help offered through Goodivo. Asking a requester for mandatory payment, fees or deposits is a violation and may result in restriction or removal of your account.",
+          "Volunteers decide freely what they take on. Scope, availability and capacity are entirely up to them. Nothing on Goodivo promises unlimited free development or delivery of any project.",
         ],
       },
       {
@@ -102,7 +102,7 @@ export const LEGAL_DOCS: LegalDoc[] = [
       {
         heading: "Suspension and termination",
         body: [
-          "We may warn, restrict, suspend or remove accounts that violate these terms or endanger others. You may stop using Kindora and delete your account at any time.",
+          "We may warn, restrict, suspend or remove accounts that violate these terms or endanger others. You may stop using Goodivo and delete your account at any time.",
         ],
       },
       {
@@ -128,7 +128,7 @@ export const LEGAL_DOCS: LegalDoc[] = [
       {
         heading: "Never require payment",
         body: [
-          "Help on Kindora is free. Do not ask for fees, deposits, commissions or paid upgrades in exchange for help. Report anyone who does.",
+          "Help on Goodivo is free. Do not ask for fees, deposits, commissions or paid upgrades in exchange for help. Report anyone who does.",
         ],
       },
       {
@@ -140,7 +140,7 @@ export const LEGAL_DOCS: LegalDoc[] = [
       {
         heading: "Protect privacy",
         body: [
-          "Do not share other people's personal information, and be careful about sharing your own. Keep conversations in Kindora messaging until you are comfortable.",
+          "Do not share other people's personal information, and be careful about sharing your own. Keep conversations in Goodivo messaging until you are comfortable.",
         ],
       },
       {
@@ -160,7 +160,7 @@ export const LEGAL_DOCS: LegalDoc[] = [
   {
     slug: "prohibited-items",
     title: "Prohibited Products and Services Policy",
-    summary: "What may never be requested, offered or given away on Kindora.",
+    summary: "What may never be requested, offered or given away on Goodivo.",
     sections: [
       {
         heading: "Never allowed",
@@ -230,7 +230,7 @@ export const LEGAL_DOCS: LegalDoc[] = [
       {
         heading: "Support is optional",
         body: [
-          "You can receive help on Kindora without ever donating. Donations are voluntary contributions to platform operations.",
+          "You can receive help on Goodivo without ever donating. Donations are voluntary contributions to platform operations.",
         ],
       },
       {
@@ -257,7 +257,7 @@ export const LEGAL_DOCS: LegalDoc[] = [
   {
     slug: "account-deletion",
     title: "Account Deletion",
-    summary: "How to delete your Kindora account and what happens to your data.",
+    summary: "How to delete your Goodivo account and what happens to your data.",
     sections: [
       {
         heading: "How to delete",

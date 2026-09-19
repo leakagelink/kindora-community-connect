@@ -5,7 +5,7 @@ import { AppShell, EmptyState, PageHeading } from "@/components/site/AppShell";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { timeAgo } from "@/lib/kindora";
+import { timeAgo } from "@/lib/goodivo";
 
 export const Route = createFileRoute("/_authenticated/messages/")({
   component: MessagesList,
@@ -99,7 +99,7 @@ function MessagesList() {
           action={
             <Button asChild className="rounded-full">
               <Link to="/explore" search={{ tab: "requests" }}>
-                Explore Kindora
+                Explore Goodivo
               </Link>
             </Button>
           }
@@ -115,7 +115,7 @@ function MessagesList() {
               >
                 <div className="min-w-0">
                   <p className="truncate font-display text-sm font-bold">
-                    {conversation.other?.display_name ?? "Kindora member"}
+                    {conversation.other?.display_name ?? "Goodivo member"}
                   </p>
                   <p className="truncate text-sm text-muted-foreground">
                     {conversation.last?.body ?? "No messages yet"}

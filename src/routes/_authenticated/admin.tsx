@@ -10,11 +10,11 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { Field, NativeSelect } from "@/components/kindora/FormBits";
+import { Field, NativeSelect } from "@/components/goodivo/FormBits";
 import { supabase } from "@/integrations/supabase/client";
 import { logAudit, notify } from "@/lib/actions";
 import { useAuth } from "@/lib/auth";
-import { statusLabel, timeAgo } from "@/lib/kindora";
+import { statusLabel, timeAgo } from "@/lib/goodivo";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminPage,
@@ -32,7 +32,7 @@ function AdminPage() {
       <AppShell>
         <EmptyState
           title="Moderator access only"
-          body="This area is restricted to Kindora moderators and admins."
+          body="This area is restricted to Goodivo moderators and admins."
           action={
             <Button asChild className="rounded-full">
               <Link to="/">Back to home</Link>
@@ -47,7 +47,7 @@ function AdminPage() {
     <AppShell>
       <PageHeading
         eyebrow={isAdmin ? "Admin" : "Moderation"}
-        title="Kindora control room"
+        title="Goodivo control room"
         description="Review reports, moderate content, and manage the platform. Every action is written to the audit log."
       />
       <Tabs defaultValue="overview">
@@ -278,7 +278,7 @@ function Reports({ moderatorId }: { moderatorId: string }) {
       await notify({
         userId: report.target_id,
         type: "moderation",
-        title: "Warning from the Kindora moderators",
+        title: "Warning from the Goodivo moderators",
         body: reason || "Your recent activity may break our Community Guidelines.",
         link: "/legal/community-guidelines",
       });

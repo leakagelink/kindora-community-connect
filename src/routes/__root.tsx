@@ -77,18 +77,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Kindora: Free Help & Services" },
+      { title: "Goodivo: Free Help & Services" },
       {
         name: "description",
         content:
-          "Find free help, share skills, give away products, and use free community AI tools on Kindora.",
+          "Find free help, share skills, give away products, and use free community AI tools on Goodivo.",
       },
-      { name: "author", content: "Kindora, powered by Socilet" },
+      { name: "author", content: "Goodivo, powered by Socilet" },
       { name: "theme-color", content: "#FAF7F2" },
-      { property: "og:title", content: "Kindora: Free Help & Services" },
+      { property: "og:title", content: "Goodivo: Free Help & Services" },
       {
         property: "og:description",
-        content: "Free Help. Real Impact. Give skills, share products, help people.",
+        content: "Give More. Help More. Give skills, share products, help people.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -12,9 +12,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Field, NativeSelect } from "@/components/kindora/FormBits";
+import { Field, NativeSelect } from "@/components/goodivo/FormBits";
 import { useAuth } from "@/lib/auth";
-import { REPORT_REASONS } from "@/lib/kindora";
+import { REPORT_REASONS } from "@/lib/goodivo";
 import { submitReport } from "@/lib/actions";
 
 export function ReportDialog({

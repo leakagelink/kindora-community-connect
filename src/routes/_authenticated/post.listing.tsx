@@ -5,14 +5,14 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { AppShell, PageHeading } from "@/components/site/AppShell";
-import { Field, FormCard, FreeNotice, NativeSelect } from "@/components/kindora/FormBits";
+import { Field, FormCard, FreeNotice, NativeSelect } from "@/components/goodivo/FormBits";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { categoriesQuery, PRODUCT_CONDITIONS } from "@/lib/kindora";
+import { categoriesQuery, PRODUCT_CONDITIONS } from "@/lib/goodivo";
 
 const schema = z.object({
   title: z.string().trim().min(6, "Add a clear title (at least 6 characters).").max(120),
@@ -35,9 +35,9 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 export const Route = createFileRoute("/_authenticated/post/listing")({
   head: () => ({
     meta: [
-      { title: "Give away a product — Kindora" },
+      { title: "Give away a product — Goodivo" },
       { name: "description", content: "List a permitted item you no longer need, free for someone who does." },
-      { property: "og:title", content: "Give away a product — Kindora" },
+      { property: "og:title", content: "Give away a product — Goodivo" },
       { property: "og:description", content: "List a permitted item you no longer need, free for someone who does." },
     ],
   }),

@@ -16,7 +16,7 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-secondary hover:text-secondary-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        /* Kindora variants */
+        /* Goodivo variants */
         ink: "bg-foreground text-background shadow-sm hover:bg-foreground/90",
         help: "bg-accent text-accent-foreground shadow-sm hover:bg-accent/90",
         offer: "border border-input bg-card text-foreground shadow-sm hover:bg-secondary",
