@@ -217,7 +217,7 @@ export function helpersQuery(filters: { search?: string | undefined; limit?: num
       let query = supabase
         .from("service_offers")
         .select(
-          "id, headline, intro, skills, experience, availability, is_remote, location, languages, user_id, created_at, profile:profiles!service_offers_user_id_fkey(id, display_name, avatar_url)",
+          "id, headline, intro, skills, experience, availability, is_remote, location, languages, user_id, created_at",
         )
         .eq("is_active", true)
         .is("deleted_at", null)
@@ -226,7 +226,16 @@ export function helpersQuery(filters: { search?: string | undefined; limit?: num
       if (filters.search) query = query.or(`headline.ilike.%${filters.search}%,intro.ilike.%${filters.search}%`);
       const { data, error } = await query;
       if (error) throw error;
-      return data;
+      const offers = data ?? [];
+      const ids = [...new Set(offers.map((offer) => offer.user_id))];
+      const { data: people } = ids.length
+        ? await supabase.from("profiles").select("id, display_name, avatar_url").in("id", ids)
+        : { data: [] };
+      const byId = new Map((people ?? []).map((person) => [person.id, person]));
+      return offers.map((offer) => ({
+        ...offer,
+        profile: byId.get(offer.user_id) ?? null,
+      }));
     },
   });
 }
