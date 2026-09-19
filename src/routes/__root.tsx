@@ -129,6 +129,15 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  // Installable PWA: register the offline shell once, after hydration.
+  useEffect(() => {
+    if (!("serviceWorker" in navigator)) return;
+    const timer = window.setTimeout(() => {
+      void navigator.serviceWorker.register("/sw.js").catch(() => undefined);
+    }, 1200);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

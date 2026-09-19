@@ -1,8 +1,19 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import { AppShell, EmptyState, PageHeading } from "@/components/site/AppShell";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Field } from "@/components/kindora/FormBits";
+import { PhotoStrip } from "@/components/kindora/PhotoStrip";
+import { ReportDialog } from "@/components/kindora/ReportDialog";
+import { ReviewDialog } from "@/components/kindora/ReviewDialog";
+import { supabase } from "@/integrations/supabase/client";
+import { ensureConversation, notify } from "@/lib/actions";
+import { useAuth } from "@/lib/auth";
 import { listingQuery, statusLabel, timeAgo } from "@/lib/kindora";
 
 export const Route = createFileRoute("/products/$id")({
@@ -17,9 +28,36 @@ export const Route = createFileRoute("/products/$id")({
   component: ProductDetail,
 });
 
+type InterestRow = {
+  id: string;
+  user_id: string;
+  message: string | null;
+  status: string;
+  created_at: string;
+  person: { id: string; display_name: string } | null;
+};
+
 function ProductDetail() {
   const { id } = Route.useParams();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { data, isLoading } = useQuery(listingQuery(id));
+  const [message, setMessage] = useState("");
+
+  const { data: interests } = useQuery({
+    queryKey: ["product-interests", id],
+    enabled: Boolean(user),
+    queryFn: async () => {
+      const { data: rows, error } = await supabase
+        .from("product_interests")
+        .select("id, user_id, message, status, created_at, person:profiles!product_interests_user_profile_fkey(id, display_name)")
+        .eq("listing_id", id)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (rows ?? []) as unknown as InterestRow[];
+    },
+  });
 
   if (isLoading) {
     return (
@@ -47,23 +85,233 @@ function ProductDetail() {
     );
   }
 
+  const isOwner = user?.id === data.owner_id;
+  const myInterest = interests?.find((row) => row.user_id === user?.id) ?? null;
+  const reserved = interests?.find((row) => row.status === "reserved") ?? null;
+
+  const openConversation = async (otherUserId: string) => {
+    if (!user) {
+      void navigate({ to: "/auth", search: { mode: "signin", redirect: `/products/${id}` } });
+      return;
+    }
+    const conversationId = await ensureConversation({ meId: user.id, otherUserId, listingId: id });
+    void navigate({ to: "/messages/$id", params: { id: conversationId } });
+  };
+
+  const expressInterest = async () => {
+    if (!user) {
+      void navigate({ to: "/auth", search: { mode: "signin", redirect: `/products/${id}` } });
+      return;
+    }
+    const { error } = await supabase
+      .from("product_interests")
+      .insert({ listing_id: id, user_id: user.id, message: message.trim() || null });
+    if (error) {
+      toast.error(error.code === "23505" ? "You already expressed interest." : error.message);
+      return;
+    }
+    await notify({
+      userId: data.owner_id,
+      type: "interest",
+      title: "Someone is interested in your item",
+      body: data.title,
+      link: `/products/${id}`,
+    });
+    setMessage("");
+    void queryClient.invalidateQueries({ queryKey: ["product-interests", id] });
+    toast.success("Interest sent to the donor");
+  };
+
+  const setListingStatus = async (status: string, label: string) => {
+    const { error } = await supabase
+      .from("product_listings")
+      .update({ status: status as never })
+      .eq("id", id);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    void queryClient.invalidateQueries({ queryKey: ["product-listing", id] });
+    void queryClient.invalidateQueries({ queryKey: ["product-listings"] });
+    toast.success(label);
+  };
+
+  const decideInterest = async (interest: InterestRow, status: "reserved" | "declined" | "completed") => {
+    const { error } = await supabase
+      .from("product_interests")
+      .update({ status: status as never })
+      .eq("id", interest.id);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    if (status === "reserved") await setListingStatus("reserved", "Item reserved");
+    if (status === "completed") await setListingStatus("given_away", "Marked as given away");
+    await notify({
+      userId: interest.user_id,
+      type: "interest_update",
+      title:
+        status === "reserved"
+          ? "An item was reserved for you"
+          : status === "completed"
+            ? "Item marked as given away"
+            : "Your interest was declined",
+      body: data.title,
+      link: `/products/${id}`,
+    });
+    void queryClient.invalidateQueries({ queryKey: ["product-interests", id] });
+  };
+
   return (
     <AppShell>
       <PageHeading
         eyebrow={`Free product · ${statusLabel(data.status)}`}
         title={data.title}
         description={`Listed ${timeAgo(data.created_at)}${data.location ? ` · ${data.location}` : ""}`}
+        action={
+          <div className="flex flex-wrap items-center gap-2">
+            {!isOwner ? (
+              <Button variant="outline" className="rounded-full" onClick={() => void openConversation(data.owner_id)}>
+                Message donor
+              </Button>
+            ) : null}
+            <ReportDialog targetType="listing" targetId={id} />
+          </div>
+        }
       />
       <div className="grid gap-4 md:grid-cols-[1.4fr_0.6fr]">
-        <article className="surface-card rounded-3xl p-6">
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{data.description}</p>
-          {data.giveaway_rules ? (
-            <div className="mt-6 border-t border-border pt-5">
-              <h2 className="font-display text-sm font-bold">Giveaway rules</h2>
-              <p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">{data.giveaway_rules}</p>
+        <div className="space-y-4">
+          <PhotoStrip photos={(data.photos ?? []) as string[]} title={data.title} />
+          <article className="surface-card rounded-3xl p-6">
+            <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{data.description}</p>
+            {data.giveaway_rules ? (
+              <div className="mt-6 border-t border-border pt-5">
+                <h2 className="font-display text-sm font-bold">Giveaway rules</h2>
+                <p className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground">{data.giveaway_rules}</p>
+              </div>
+            ) : null}
+          </article>
+
+          {isOwner ? (
+            <section className="surface-card rounded-3xl p-6">
+              <h2 className="font-display text-base font-bold">Manage this listing</h2>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {data.status === "reserved" ? (
+                  <Button size="sm" variant="outline" className="rounded-full" onClick={() => void setListingStatus("published", "Back to available")}>
+                    Mark available again
+                  </Button>
+                ) : null}
+                {data.status !== "given_away" ? (
+                  <Button size="sm" variant="help" className="rounded-full" onClick={() => void setListingStatus("given_away", "Marked as given away")}>
+                    Mark given away
+                  </Button>
+                ) : null}
+                <Button size="sm" variant="ghost" className="rounded-full" onClick={() => void setListingStatus("removed", "Listing removed")}>
+                  Remove listing
+                </Button>
+              </div>
+
+              <div className="mt-6 border-t border-border pt-5">
+                <h3 className="font-display text-sm font-bold">Interested people ({interests?.length ?? 0})</h3>
+                {(interests ?? []).length === 0 ? (
+                  <p className="mt-2 text-sm text-muted-foreground">No interest yet.</p>
+                ) : (
+                  <ul className="mt-3 space-y-3">
+                    {(interests ?? []).map((interest) => (
+                      <li key={interest.id} className="rounded-2xl border border-border p-4">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <Link to="/u/$id" params={{ id: interest.user_id }} className="text-sm font-semibold">
+                            {interest.person?.display_name ?? "Kindora member"}
+                          </Link>
+                          <Badge variant="secondary">{statusLabel(interest.status)}</Badge>
+                        </div>
+                        {interest.message ? (
+                          <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">{interest.message}</p>
+                        ) : null}
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {interest.status === "pending" ? (
+                            <>
+                              <Button size="sm" variant="help" className="rounded-full" onClick={() => void decideInterest(interest, "reserved")}>
+                                Reserve for them
+                              </Button>
+                              <Button size="sm" variant="outline" className="rounded-full" onClick={() => void decideInterest(interest, "declined")}>
+                                Decline
+                              </Button>
+                            </>
+                          ) : null}
+                          {interest.status === "reserved" ? (
+                            <Button size="sm" variant="help" className="rounded-full" onClick={() => void decideInterest(interest, "completed")}>
+                              Given away
+                            </Button>
+                          ) : null}
+                          <Button size="sm" variant="ghost" className="rounded-full" onClick={() => void openConversation(interest.user_id)}>
+                            Message
+                          </Button>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              {reserved && data.status === "given_away" ? (
+                <div className="mt-4">
+                  <ReviewDialog revieweeId={reserved.user_id} listingId={id} label="Review the receiver" />
+                </div>
+              ) : null}
+            </section>
+          ) : null}
+
+          {!isOwner && data.status === "published" ? (
+            <section className="surface-card rounded-3xl p-6">
+              <h2 className="font-display text-base font-bold">
+                {myInterest ? "Your interest" : "Express interest"}
+              </h2>
+              {myInterest ? (
+                <div className="mt-2 space-y-3">
+                  <Badge variant="secondary">{statusLabel(myInterest.status)}</Badge>
+                  {myInterest.message ? (
+                    <p className="text-sm text-muted-foreground">{myInterest.message}</p>
+                  ) : null}
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="rounded-full text-muted-foreground"
+                    onClick={async () => {
+                      await supabase.from("product_interests").delete().eq("id", myInterest.id);
+                      void queryClient.invalidateQueries({ queryKey: ["product-interests", id] });
+                      toast.success("Interest withdrawn");
+                    }}
+                  >
+                    Withdraw interest
+                  </Button>
+                </div>
+              ) : (
+                <div className="mt-4 space-y-4">
+                  <Field id="interest-message" label="Message to the donor" hint="Optional. Say when you could collect.">
+                    <Textarea
+                      id="interest-message"
+                      rows={3}
+                      maxLength={1000}
+                      value={message}
+                      onChange={(event) => setMessage(event.target.value)}
+                    />
+                  </Field>
+                  <Button className="rounded-full" onClick={() => void expressInterest()}>
+                    I'm interested
+                  </Button>
+                </div>
+              )}
+            </section>
+          ) : null}
+
+          {myInterest?.status === "completed" ? (
+            <div className="surface-card rounded-3xl p-6">
+              <ReviewDialog revieweeId={data.owner_id} listingId={id} label="Review the donor" />
             </div>
           ) : null}
-        </article>
+        </div>
+
         <aside className="surface-card h-fit rounded-3xl p-6">
           <h2 className="font-display text-sm font-bold">Details</h2>
           <dl className="mt-3 space-y-2 text-sm text-muted-foreground">
@@ -84,6 +332,14 @@ function ProductDetail() {
               <dd className="font-medium text-foreground">{data.delivery_available ? "Yes" : "No"}</dd>
             </div>
           </dl>
+          {data.owner ? (
+            <div className="mt-5 border-t border-border pt-4">
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">Offered by</p>
+              <Link to="/u/$id" params={{ id: data.owner_id }} className="mt-2 block text-sm font-semibold">
+                {data.owner.display_name}
+              </Link>
+            </div>
+          ) : null}
           <p className="mt-5 rounded-xl bg-secondary px-4 py-3 text-xs text-muted-foreground">
             Items on Kindora are free. Never pay for an item, delivery or a deposit.
           </p>

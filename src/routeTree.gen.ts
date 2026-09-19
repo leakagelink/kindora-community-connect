@@ -19,7 +19,6 @@ import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
-import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AiToolsLogoRouteImport } from './routes/ai-tools.logo'
@@ -29,6 +28,8 @@ import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
 import { Route as RequestsIdRouteImport } from './routes/requests.$id'
 import { Route as UIdRouteImport } from './routes/u.$id'
+import { Route as AuthenticatedMessagesIndexRouteImport } from './routes/_authenticated/messages.index'
+import { Route as AuthenticatedMessagesIdRouteImport } from './routes/_authenticated/messages.$id'
 import { Route as AuthenticatedPostIndexRouteImport } from './routes/_authenticated/post.index'
 import { Route as AuthenticatedPostListingRouteImport } from './routes/_authenticated/post.listing'
 import { Route as AuthenticatedPostOfferRouteImport } from './routes/_authenticated/post.offer'
@@ -83,11 +84,6 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedMessagesRoute = AuthenticatedMessagesRouteImport.update({
-  id: '/messages',
-  path: '/messages',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedNotificationsRoute =
   AuthenticatedNotificationsRouteImport.update({
     id: '/notifications',
@@ -134,6 +130,17 @@ const UIdRoute = UIdRouteImport.update({
   path: '/u/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedMessagesIndexRoute =
+  AuthenticatedMessagesIndexRouteImport.update({
+    id: '/messages/',
+    path: '/messages/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMessagesIdRoute = AuthenticatedMessagesIdRouteImport.update({
+  id: '/messages/$id',
+  path: '/messages/$id',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedPostIndexRoute = AuthenticatedPostIndexRouteImport.update({
   id: '/post/',
   path: '/post/',
@@ -167,7 +174,6 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/support': typeof SupportRoute
   '/admin': typeof AuthenticatedAdminRoute
-  '/messages': typeof AuthenticatedMessagesRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/ai-tools/logo': typeof AiToolsLogoRoute
@@ -177,9 +183,11 @@ export interface FileRoutesByFullPath {
   '/products/$id': typeof ProductsIdRoute
   '/requests/$id': typeof RequestsIdRoute
   '/u/$id': typeof UIdRoute
+  '/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/post/listing': typeof AuthenticatedPostListingRoute
   '/post/offer': typeof AuthenticatedPostOfferRoute
   '/post/request': typeof AuthenticatedPostRequestRoute
+  '/messages/': typeof AuthenticatedMessagesIndexRoute
   '/post/': typeof AuthenticatedPostIndexRoute
 }
 export interface FileRoutesByTo {
@@ -192,7 +200,6 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/support': typeof SupportRoute
   '/admin': typeof AuthenticatedAdminRoute
-  '/messages': typeof AuthenticatedMessagesRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/profile': typeof AuthenticatedProfileRoute
   '/ai-tools/logo': typeof AiToolsLogoRoute
@@ -202,9 +209,11 @@ export interface FileRoutesByTo {
   '/products/$id': typeof ProductsIdRoute
   '/requests/$id': typeof RequestsIdRoute
   '/u/$id': typeof UIdRoute
+  '/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/post/listing': typeof AuthenticatedPostListingRoute
   '/post/offer': typeof AuthenticatedPostOfferRoute
   '/post/request': typeof AuthenticatedPostRequestRoute
+  '/messages': typeof AuthenticatedMessagesIndexRoute
   '/post': typeof AuthenticatedPostIndexRoute
 }
 export interface FileRoutesById {
@@ -219,7 +228,6 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/support': typeof SupportRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
-  '/_authenticated/messages': typeof AuthenticatedMessagesRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/ai-tools/logo': typeof AiToolsLogoRoute
@@ -229,9 +237,11 @@ export interface FileRoutesById {
   '/products/$id': typeof ProductsIdRoute
   '/requests/$id': typeof RequestsIdRoute
   '/u/$id': typeof UIdRoute
+  '/_authenticated/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/_authenticated/post/listing': typeof AuthenticatedPostListingRoute
   '/_authenticated/post/offer': typeof AuthenticatedPostOfferRoute
   '/_authenticated/post/request': typeof AuthenticatedPostRequestRoute
+  '/_authenticated/messages/': typeof AuthenticatedMessagesIndexRoute
   '/_authenticated/post/': typeof AuthenticatedPostIndexRoute
 }
 export interface FileRouteTypes {
@@ -246,7 +256,6 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/support'
     | '/admin'
-    | '/messages'
     | '/notifications'
     | '/profile'
     | '/ai-tools/logo'
@@ -256,9 +265,11 @@ export interface FileRouteTypes {
     | '/products/$id'
     | '/requests/$id'
     | '/u/$id'
+    | '/messages/$id'
     | '/post/listing'
     | '/post/offer'
     | '/post/request'
+    | '/messages/'
     | '/post/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -271,7 +282,6 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/support'
     | '/admin'
-    | '/messages'
     | '/notifications'
     | '/profile'
     | '/ai-tools/logo'
@@ -281,9 +291,11 @@ export interface FileRouteTypes {
     | '/products/$id'
     | '/requests/$id'
     | '/u/$id'
+    | '/messages/$id'
     | '/post/listing'
     | '/post/offer'
     | '/post/request'
+    | '/messages'
     | '/post'
   id:
     | '__root__'
@@ -297,7 +309,6 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/support'
     | '/_authenticated/admin'
-    | '/_authenticated/messages'
     | '/_authenticated/notifications'
     | '/_authenticated/profile'
     | '/ai-tools/logo'
@@ -307,9 +318,11 @@ export interface FileRouteTypes {
     | '/products/$id'
     | '/requests/$id'
     | '/u/$id'
+    | '/_authenticated/messages/$id'
     | '/_authenticated/post/listing'
     | '/_authenticated/post/offer'
     | '/_authenticated/post/request'
+    | '/_authenticated/messages/'
     | '/_authenticated/post/'
   fileRoutesById: FileRoutesById
 }
@@ -401,13 +414,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/messages': {
-      id: '/_authenticated/messages'
-      path: '/messages'
-      fullPath: '/messages'
-      preLoaderRoute: typeof AuthenticatedMessagesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/notifications': {
       id: '/_authenticated/notifications'
       path: '/notifications'
@@ -471,6 +477,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/messages/': {
+      id: '/_authenticated/messages/'
+      path: '/messages'
+      fullPath: '/messages/'
+      preLoaderRoute: typeof AuthenticatedMessagesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/messages/$id': {
+      id: '/_authenticated/messages/$id'
+      path: '/messages/$id'
+      fullPath: '/messages/$id'
+      preLoaderRoute: typeof AuthenticatedMessagesIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/post/': {
       id: '/_authenticated/post/'
       path: '/post'
@@ -504,23 +524,25 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
-  AuthenticatedMessagesRoute: typeof AuthenticatedMessagesRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedMessagesIdRoute: typeof AuthenticatedMessagesIdRoute
   AuthenticatedPostListingRoute: typeof AuthenticatedPostListingRoute
   AuthenticatedPostOfferRoute: typeof AuthenticatedPostOfferRoute
   AuthenticatedPostRequestRoute: typeof AuthenticatedPostRequestRoute
+  AuthenticatedMessagesIndexRoute: typeof AuthenticatedMessagesIndexRoute
   AuthenticatedPostIndexRoute: typeof AuthenticatedPostIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
-  AuthenticatedMessagesRoute: AuthenticatedMessagesRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedMessagesIdRoute: AuthenticatedMessagesIdRoute,
   AuthenticatedPostListingRoute: AuthenticatedPostListingRoute,
   AuthenticatedPostOfferRoute: AuthenticatedPostOfferRoute,
   AuthenticatedPostRequestRoute: AuthenticatedPostRequestRoute,
+  AuthenticatedMessagesIndexRoute: AuthenticatedMessagesIndexRoute,
   AuthenticatedPostIndexRoute: AuthenticatedPostIndexRoute,
 }
 
