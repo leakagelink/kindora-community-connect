@@ -77,12 +77,12 @@ export function timeAgo(iso: string) {
 const PUBLIC_REQUEST_STATUSES = ["published", "receiving_offers", "in_progress"] as const;
 
 export type RequestFilters = {
-  search?: string;
-  type?: string;
-  categoryId?: string;
+  search?: string | undefined;
+  type?: string | undefined;
+  categoryId?: string | undefined;
   remote?: "any" | "remote" | "local";
-  language?: string;
-  limit?: number;
+  language?: string | undefined;
+  limit?: number | undefined;
 };
 
 export const categoriesQuery = queryOptions({
@@ -168,7 +168,7 @@ export function requestQuery(id: string) {
 const LISTING_SELECT =
   "id, title, description, condition, photos, location, pickup_available, delivery_available, quantity, status, created_at, owner_id, category:categories(id, name)";
 
-export type ListingFilters = { search?: string; categoryId?: string; location?: string; limit?: number };
+export type ListingFilters = { search?: string | undefined; categoryId?: string | undefined; location?: string; limit?: number };
 
 export function listingsQuery(filters: ListingFilters = {}) {
   return queryOptions({
@@ -210,7 +210,7 @@ export function listingQuery(id: string) {
   });
 }
 
-export function helpersQuery(filters: { search?: string; limit?: number } = {}) {
+export function helpersQuery(filters: { search?: string | undefined; limit?: number } = {}) {
   return queryOptions({
     queryKey: ["service-offers", filters],
     queryFn: async () => {

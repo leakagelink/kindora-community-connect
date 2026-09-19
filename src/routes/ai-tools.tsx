@@ -27,7 +27,7 @@ function AiToolsPage() {
         {AI_TOOLS.map((tool) => (
           <div key={tool.key} className="surface-card rounded-3xl p-6">
             <h2 className="font-display text-base font-bold">{tool.name}</h2>
-            <p className="mt-2 text-sm text-muted-foreground">{tool.description}</p>
+            <p className="mt-2 text-sm text-muted-foreground">{tool.blurb}</p>
             <p className="mt-4 text-xs text-muted-foreground">Coming in the next build step.</p>
           </div>
         ))}

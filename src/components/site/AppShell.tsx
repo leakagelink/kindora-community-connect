@@ -21,10 +21,10 @@ export function PageHeading({
   description,
   action,
 }: {
-  eyebrow?: string;
+  eyebrow?: string | undefined;
   title: string;
-  description?: string;
-  action?: ReactNode;
+  description?: string | undefined;
+  action?: ReactNode | undefined;
 }) {
   return (
     <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
