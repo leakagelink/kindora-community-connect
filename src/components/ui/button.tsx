@@ -17,9 +17,10 @@ const buttonVariants = cva(
         ghost: "hover:bg-secondary hover:text-secondary-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         /* Goodivo variants */
-        ink: "bg-foreground text-background shadow-sm hover:bg-foreground/90",
-        help: "bg-accent text-accent-foreground shadow-sm hover:bg-accent/90",
-        offer: "border border-input bg-card text-foreground shadow-sm hover:bg-secondary",
+        ink: "bg-foreground text-background shadow-sm hover:bg-foreground/90 press",
+        help: "bg-rose text-rose-foreground shadow-[var(--shadow-rose)] hover:brightness-110 press",
+        offer: "bg-leaf text-leaf-foreground shadow-[var(--shadow-leaf)] hover:brightness-110 press",
+        brand: "bg-primary text-primary-foreground shadow-[var(--shadow-brand)] hover:brightness-110 press",
       },
       size: {
         default: "h-9 px-4 py-2",
