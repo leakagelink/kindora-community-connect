@@ -18,6 +18,7 @@ import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as AuthenticatedPostIndexRouteImport } from './routes/_authenticated/post.index'
+import { Route as AuthenticatedPostListingRouteImport } from './routes/_authenticated/post.listing'
 import { Route as AuthenticatedPostOfferRouteImport } from './routes/_authenticated/post.offer'
 import { Route as AuthenticatedPostRequestRouteImport } from './routes/_authenticated/post.request'
 
@@ -65,6 +66,12 @@ const AuthenticatedPostIndexRoute = AuthenticatedPostIndexRouteImport.update({
   path: '/post/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPostListingRoute =
+  AuthenticatedPostListingRouteImport.update({
+    id: '/post/listing',
+    path: '/post/listing',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedPostOfferRoute = AuthenticatedPostOfferRouteImport.update({
   id: '/post/offer',
   path: '/post/offer',
@@ -85,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/post/listing': typeof AuthenticatedPostListingRoute
   '/post/offer': typeof AuthenticatedPostOfferRoute
   '/post/request': typeof AuthenticatedPostRequestRoute
   '/post/': typeof AuthenticatedPostIndexRoute
@@ -97,6 +105,7 @@ export interface FileRoutesByTo {
   '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/post/listing': typeof AuthenticatedPostListingRoute
   '/post/offer': typeof AuthenticatedPostOfferRoute
   '/post/request': typeof AuthenticatedPostRequestRoute
   '/post': typeof AuthenticatedPostIndexRoute
@@ -111,6 +120,7 @@ export interface FileRoutesById {
   '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
   '/legal/$slug': typeof LegalSlugRoute
+  '/_authenticated/post/listing': typeof AuthenticatedPostListingRoute
   '/_authenticated/post/offer': typeof AuthenticatedPostOfferRoute
   '/_authenticated/post/request': typeof AuthenticatedPostRequestRoute
   '/_authenticated/post/': typeof AuthenticatedPostIndexRoute
@@ -125,6 +135,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/reset-password'
     | '/legal/$slug'
+    | '/post/listing'
     | '/post/offer'
     | '/post/request'
     | '/post/'
@@ -137,6 +148,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/reset-password'
     | '/legal/$slug'
+    | '/post/listing'
     | '/post/offer'
     | '/post/request'
     | '/post'
@@ -150,6 +162,7 @@ export interface FileRouteTypes {
     | '/explore'
     | '/reset-password'
     | '/legal/$slug'
+    | '/_authenticated/post/listing'
     | '/_authenticated/post/offer'
     | '/_authenticated/post/request'
     | '/_authenticated/post/'
@@ -231,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPostIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/post/listing': {
+      id: '/_authenticated/post/listing'
+      path: '/post/listing'
+      fullPath: '/post/listing'
+      preLoaderRoute: typeof AuthenticatedPostListingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/post/offer': {
       id: '/_authenticated/post/offer'
       path: '/post/offer'
@@ -249,12 +269,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedPostListingRoute: typeof AuthenticatedPostListingRoute
   AuthenticatedPostOfferRoute: typeof AuthenticatedPostOfferRoute
   AuthenticatedPostRequestRoute: typeof AuthenticatedPostRequestRoute
   AuthenticatedPostIndexRoute: typeof AuthenticatedPostIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedPostListingRoute: AuthenticatedPostListingRoute,
   AuthenticatedPostOfferRoute: AuthenticatedPostOfferRoute,
   AuthenticatedPostRequestRoute: AuthenticatedPostRequestRoute,
   AuthenticatedPostIndexRoute: AuthenticatedPostIndexRoute,
