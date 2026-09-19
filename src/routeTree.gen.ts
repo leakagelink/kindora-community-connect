@@ -17,10 +17,14 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SupportRouteImport } from './routes/support'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedMessagesRouteImport } from './routes/_authenticated/messages'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AiToolsLogoRouteImport } from './routes/ai-tools.logo'
+import { Route as AiToolsResumeRouteImport } from './routes/ai-tools.resume'
+import { Route as AiToolsWebsiteRouteImport } from './routes/ai-tools.website'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
 import { Route as RequestsIdRouteImport } from './routes/requests.$id'
@@ -69,6 +73,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -89,6 +98,21 @@ const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AiToolsLogoRoute = AiToolsLogoRouteImport.update({
+  id: '/logo',
+  path: '/logo',
+  getParentRoute: () => AiToolsRoute,
+} as any)
+const AiToolsResumeRoute = AiToolsResumeRouteImport.update({
+  id: '/resume',
+  path: '/resume',
+  getParentRoute: () => AiToolsRoute,
+} as any)
+const AiToolsWebsiteRoute = AiToolsWebsiteRouteImport.update({
+  id: '/website',
+  path: '/website',
+  getParentRoute: () => AiToolsRoute,
 } as any)
 const LegalSlugRoute = LegalSlugRouteImport.update({
   id: '/legal/$slug',
@@ -136,15 +160,19 @@ const AuthenticatedPostRequestRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/ai-tools': typeof AiToolsRoute
+  '/ai-tools': typeof AiToolsRouteWithChildren
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/support': typeof SupportRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/messages': typeof AuthenticatedMessagesRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/ai-tools/logo': typeof AiToolsLogoRoute
+  '/ai-tools/resume': typeof AiToolsResumeRoute
+  '/ai-tools/website': typeof AiToolsWebsiteRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/products/$id': typeof ProductsIdRoute
   '/requests/$id': typeof RequestsIdRoute
@@ -157,15 +185,19 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/ai-tools': typeof AiToolsRoute
+  '/ai-tools': typeof AiToolsRouteWithChildren
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/support': typeof SupportRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/messages': typeof AuthenticatedMessagesRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/ai-tools/logo': typeof AiToolsLogoRoute
+  '/ai-tools/resume': typeof AiToolsResumeRoute
+  '/ai-tools/website': typeof AiToolsWebsiteRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/products/$id': typeof ProductsIdRoute
   '/requests/$id': typeof RequestsIdRoute
@@ -180,15 +212,19 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
-  '/ai-tools': typeof AiToolsRoute
+  '/ai-tools': typeof AiToolsRouteWithChildren
   '/auth': typeof AuthRoute
   '/contact': typeof ContactRoute
   '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/support': typeof SupportRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/messages': typeof AuthenticatedMessagesRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/ai-tools/logo': typeof AiToolsLogoRoute
+  '/ai-tools/resume': typeof AiToolsResumeRoute
+  '/ai-tools/website': typeof AiToolsWebsiteRoute
   '/legal/$slug': typeof LegalSlugRoute
   '/products/$id': typeof ProductsIdRoute
   '/requests/$id': typeof RequestsIdRoute
@@ -208,10 +244,14 @@ export interface FileRouteTypes {
     | '/contact'
     | '/explore'
     | '/reset-password'
+    | '/support'
     | '/admin'
     | '/messages'
     | '/notifications'
     | '/profile'
+    | '/ai-tools/logo'
+    | '/ai-tools/resume'
+    | '/ai-tools/website'
     | '/legal/$slug'
     | '/products/$id'
     | '/requests/$id'
@@ -229,10 +269,14 @@ export interface FileRouteTypes {
     | '/contact'
     | '/explore'
     | '/reset-password'
+    | '/support'
     | '/admin'
     | '/messages'
     | '/notifications'
     | '/profile'
+    | '/ai-tools/logo'
+    | '/ai-tools/resume'
+    | '/ai-tools/website'
     | '/legal/$slug'
     | '/products/$id'
     | '/requests/$id'
@@ -251,10 +295,14 @@ export interface FileRouteTypes {
     | '/contact'
     | '/explore'
     | '/reset-password'
+    | '/support'
     | '/_authenticated/admin'
     | '/_authenticated/messages'
     | '/_authenticated/notifications'
     | '/_authenticated/profile'
+    | '/ai-tools/logo'
+    | '/ai-tools/resume'
+    | '/ai-tools/website'
     | '/legal/$slug'
     | '/products/$id'
     | '/requests/$id'
@@ -269,11 +317,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
-  AiToolsRoute: typeof AiToolsRoute
+  AiToolsRoute: typeof AiToolsRouteWithChildren
   AuthRoute: typeof AuthRoute
   ContactRoute: typeof ContactRoute
   ExploreRoute: typeof ExploreRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SupportRoute: typeof SupportRoute
   LegalSlugRoute: typeof LegalSlugRoute
   ProductsIdRoute: typeof ProductsIdRoute
   RequestsIdRoute: typeof RequestsIdRoute
@@ -338,6 +387,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -365,6 +421,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/profile'
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/ai-tools/logo': {
+      id: '/ai-tools/logo'
+      path: '/logo'
+      fullPath: '/ai-tools/logo'
+      preLoaderRoute: typeof AiToolsLogoRouteImport
+      parentRoute: typeof AiToolsRoute
+    }
+    '/ai-tools/resume': {
+      id: '/ai-tools/resume'
+      path: '/resume'
+      fullPath: '/ai-tools/resume'
+      preLoaderRoute: typeof AiToolsResumeRouteImport
+      parentRoute: typeof AiToolsRoute
+    }
+    '/ai-tools/website': {
+      id: '/ai-tools/website'
+      path: '/website'
+      fullPath: '/ai-tools/website'
+      preLoaderRoute: typeof AiToolsWebsiteRouteImport
+      parentRoute: typeof AiToolsRoute
     }
     '/legal/$slug': {
       id: '/legal/$slug'
@@ -450,15 +527,31 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface AiToolsRouteChildren {
+  AiToolsLogoRoute: typeof AiToolsLogoRoute
+  AiToolsResumeRoute: typeof AiToolsResumeRoute
+  AiToolsWebsiteRoute: typeof AiToolsWebsiteRoute
+}
+
+const AiToolsRouteChildren: AiToolsRouteChildren = {
+  AiToolsLogoRoute: AiToolsLogoRoute,
+  AiToolsResumeRoute: AiToolsResumeRoute,
+  AiToolsWebsiteRoute: AiToolsWebsiteRoute,
+}
+
+const AiToolsRouteWithChildren =
+  AiToolsRoute._addFileChildren(AiToolsRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
-  AiToolsRoute: AiToolsRoute,
+  AiToolsRoute: AiToolsRouteWithChildren,
   AuthRoute: AuthRoute,
   ContactRoute: ContactRoute,
   ExploreRoute: ExploreRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SupportRoute: SupportRoute,
   LegalSlugRoute: LegalSlugRoute,
   ProductsIdRoute: ProductsIdRoute,
   RequestsIdRoute: RequestsIdRoute,
