@@ -56,7 +56,7 @@ function Home() {
             Community help, always free to receive
           </span>
           <h1 className="mt-5 font-display text-5xl font-extrabold leading-[1.02] tracking-tight sm:text-6xl">
-            Free Help. <span className="text-primary">Real Impact.</span>
+            Give More. <span className="text-primary">Help More.</span>
           </h1>
           <p className="mt-5 max-w-md text-base leading-relaxed text-muted-foreground">
             Post a request, share a skill, or give away a permitted product. Connect with people who want to help — no
