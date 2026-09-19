@@ -74,7 +74,7 @@ export function timeAgo(iso: string) {
   return new Date(iso).toLocaleDateString();
 }
 
-const PUBLIC_REQUEST_STATUSES = ["published", "receiving_offers", "in_progress"];
+const PUBLIC_REQUEST_STATUSES = ["published", "receiving_offers", "in_progress"] as const;
 
 export type RequestFilters = {
   search?: string;
@@ -129,13 +129,13 @@ export function requestsQuery(filters: RequestFilters = {}) {
       let query = supabase
         .from("help_requests")
         .select(REQUEST_SELECT)
-        .in("status", PUBLIC_REQUEST_STATUSES)
+        .in("status", [...PUBLIC_REQUEST_STATUSES])
         .is("deleted_at", null)
         .order("created_at", { ascending: false })
         .limit(filters.limit ?? 24);
 
       if (filters.search) query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
-      if (filters.type) query = query.eq("request_type", filters.type);
+      if (filters.type) query = query.eq("request_type", filters.type as "digital_service");
       if (filters.categoryId) query = query.eq("category_id", filters.categoryId);
       if (filters.remote === "remote") query = query.eq("is_remote", true);
       if (filters.remote === "local") query = query.eq("is_remote", false);
@@ -177,7 +177,7 @@ export function listingsQuery(filters: ListingFilters = {}) {
       let query = supabase
         .from("product_listings")
         .select(LISTING_SELECT)
-        .in("status", ["published", "reserved"])
+        .in("status", ["published", "reserved"] as const)
         .is("deleted_at", null)
         .order("created_at", { ascending: false })
         .limit(filters.limit ?? 24);

@@ -10,7 +10,13 @@ import { Input } from "@/components/ui/input";
 import { categoriesQuery, helpersQuery, listingsQuery, requestsQuery, REQUEST_TYPES } from "@/lib/kindora";
 
 type Tab = "requests" | "products" | "helpers";
-type ExploreSearch = { tab?: Tab; q?: string; type?: string; category?: string; remote?: "remote" | "local" };
+type ExploreSearch = {
+  tab?: Tab | undefined;
+  q?: string | undefined;
+  type?: string | undefined;
+  category?: string | undefined;
+  remote?: "remote" | "local" | undefined;
+};
 
 export const Route = createFileRoute("/explore")({
   validateSearch: (search: Record<string, unknown>): ExploreSearch => {
