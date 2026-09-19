@@ -31,6 +31,16 @@ export const Route = createFileRoute("/")({
         content:
           "Request free digital services, skills and products, offer your own help, and use free AI tools.",
       },
+      {
+        property: "og:image",
+        content:
+          "https://project--dc4e75d5-5f01-4924-ba90-204ec316802a.lovable.app/og-image.png",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://project--dc4e75d5-5f01-4924-ba90-204ec316802a.lovable.app/og-image.png",
+      },
     ],
   }),
   component: Home,
