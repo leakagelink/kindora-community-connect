@@ -104,8 +104,8 @@ function PostListing() {
           upsert: false,
         });
         if (uploadError) throw uploadError;
-        const { data: publicUrl } = supabase.storage.from("listing-photos").getPublicUrl(path);
-        photos.push(publicUrl.publicUrl);
+        // Private bucket: keep the storage path, sign it when displaying.
+        photos.push(path);
       }
 
       const { data, error } = await supabase
