@@ -5,9 +5,10 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
- * Goodivo design system — "Soft Mesh Community".
- * Brand blue + warm accent on a cream mesh ground.
- * All colours are semantic tokens. Never hardcode colours in components.
+ * Goodivo design system — "Modern vibrant community".
+ * Palette derived from the Goodivo logo: cobalt blue, sky, leaf green,
+ * warm orange and rose. All colours are semantic tokens.
+ * Never hardcode colours in components.
  */
 
 @theme inline {
@@ -17,7 +18,7 @@
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --radius-4xl: calc(var(--radius) + 20px);
 
   --font-sans: var(--font-body);
   --font-display: var(--font-heading);
@@ -47,6 +48,12 @@
   --color-cream: var(--cream);
   --color-mist: var(--mist);
   --color-brand: var(--brand);
+  --color-sky: var(--sky);
+  --color-sky-foreground: var(--sky-foreground);
+  --color-leaf: var(--leaf);
+  --color-leaf-foreground: var(--leaf-foreground);
+  --color-rose: var(--rose);
+  --color-rose-foreground: var(--rose-foreground);
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
   --color-warning: var(--warning);
@@ -67,14 +74,21 @@
 }
 
 :root {
-  --radius: 1rem;
+  --radius: 1.15rem;
   --font-heading: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  --ink: oklch(0.232 0.033 266);
-  --cream: oklch(0.977 0.008 85);
-  --mist: oklch(0.951 0.011 266);
-  --brand: oklch(0.533 0.237 266);
+  /* logo palette */
+  --ink: oklch(0.225 0.035 264);
+  --cream: oklch(0.986 0.004 250);
+  --mist: oklch(0.955 0.012 250);
+  --brand: oklch(0.548 0.203 262); /* cobalt #1E6FE8 */
+  --sky: oklch(0.762 0.138 234); /* sky #38B6FF */
+  --sky-foreground: oklch(0.225 0.035 264);
+  --leaf: oklch(0.648 0.187 139); /* leaf green #4CAF2A */
+  --leaf-foreground: oklch(0.99 0.005 139);
+  --rose: oklch(0.633 0.244 8); /* rose #FF2D6F */
+  --rose-foreground: oklch(0.99 0.005 8);
 
   --background: var(--cream);
   --foreground: var(--ink);
@@ -83,39 +97,42 @@
   --popover: oklch(1 0 0);
   --popover-foreground: var(--ink);
   --primary: var(--brand);
-  --primary-foreground: oklch(0.985 0.005 266);
+  --primary-foreground: oklch(0.99 0.004 262);
   --secondary: var(--mist);
   --secondary-foreground: var(--ink);
   --muted: var(--mist);
-  --muted-foreground: oklch(0.52 0.025 266);
-  --accent: oklch(0.755 0.163 47);
-  --accent-foreground: oklch(0.985 0.005 85);
-  --success: oklch(0.6 0.13 156);
-  --success-foreground: oklch(0.985 0.005 156);
-  --warning: oklch(0.76 0.15 75);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0.005 27);
-  --border: oklch(0.232 0.033 266 / 10%);
-  --input: oklch(0.232 0.033 266 / 14%);
+  --muted-foreground: oklch(0.545 0.025 258);
+  --accent: oklch(0.749 0.158 55); /* warm orange #FF8A3D */
+  --accent-foreground: oklch(0.225 0.035 264);
+  --success: var(--leaf);
+  --success-foreground: var(--leaf-foreground);
+  --warning: oklch(0.79 0.15 78);
+  --destructive: oklch(0.6 0.235 19);
+  --destructive-foreground: oklch(0.99 0.005 19);
+  --border: oklch(0.225 0.035 264 / 9%);
+  --input: oklch(0.225 0.035 264 / 13%);
   --ring: var(--brand);
 
   --chart-1: var(--brand);
-  --chart-2: oklch(0.755 0.163 47);
-  --chart-3: oklch(0.6 0.13 156);
-  --chart-4: oklch(0.65 0.18 300);
-  --chart-5: oklch(0.7 0.11 220);
+  --chart-2: var(--leaf);
+  --chart-3: var(--accent);
+  --chart-4: var(--rose);
+  --chart-5: var(--sky);
 
   --sidebar: oklch(1 0 0);
   --sidebar-foreground: var(--ink);
   --sidebar-primary: var(--brand);
-  --sidebar-primary-foreground: oklch(0.985 0.005 266);
+  --sidebar-primary-foreground: oklch(0.99 0.004 262);
   --sidebar-accent: var(--mist);
   --sidebar-accent-foreground: var(--ink);
-  --sidebar-border: oklch(0.232 0.033 266 / 10%);
+  --sidebar-border: oklch(0.225 0.035 264 / 9%);
   --sidebar-ring: var(--brand);
 
-  --shadow-card: 0 1px 2px oklch(0.232 0.033 266 / 6%);
-  --shadow-lift: 0 12px 30px -18px oklch(0.232 0.033 266 / 35%);
+  --shadow-card: 0 1px 2px oklch(0.225 0.035 264 / 6%);
+  --shadow-lift: 0 18px 40px -22px oklch(0.225 0.035 264 / 40%);
+  --shadow-brand: 0 14px 30px -16px oklch(0.548 0.203 262 / 55%);
+  --shadow-rose: 0 14px 30px -16px oklch(0.633 0.244 8 / 50%);
+  --shadow-leaf: 0 14px 30px -16px oklch(0.648 0.187 139 / 50%);
 }
 
 @layer base {
@@ -135,23 +152,99 @@
   h3,
   h4 {
     font-family: var(--font-heading);
-    letter-spacing: -0.015em;
+    letter-spacing: -0.02em;
   }
 }
 
-/* The signature Goodivo ground: a soft four-point colour mesh on cream. */
+/* The signature Goodivo ground: a slowly drifting logo-colour mesh. */
 @utility mesh-ground {
+  position: relative;
   background-color: var(--cream);
   background-image:
-    radial-gradient(55% 48% at 12% 6%, oklch(0.9 0.06 266 / 55%) 0%, transparent 60%),
-    radial-gradient(50% 45% at 88% 4%, oklch(0.92 0.06 47 / 55%) 0%, transparent 55%),
-    radial-gradient(60% 55% at 78% 96%, oklch(0.93 0.05 156 / 45%) 0%, transparent 55%),
-    radial-gradient(45% 40% at 25% 92%, oklch(0.92 0.05 300 / 40%) 0%, transparent 55%);
+    radial-gradient(52% 44% at 8% 4%, oklch(0.88 0.09 262 / 45%) 0%, transparent 62%),
+    radial-gradient(48% 40% at 92% 2%, oklch(0.9 0.09 55 / 42%) 0%, transparent 58%),
+    radial-gradient(58% 48% at 82% 92%, oklch(0.9 0.09 139 / 38%) 0%, transparent 58%),
+    radial-gradient(44% 38% at 18% 94%, oklch(0.9 0.1 8 / 30%) 0%, transparent 58%);
   background-attachment: fixed;
+  animation: mesh-drift 22s ease-in-out infinite alternate;
 }
 
 @utility surface-card {
   background-color: var(--card);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-card);
+}
+
+/* Cards and tiles: lift plus a soft colour bloom on hover. */
+@utility lift-hover {
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.28s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lift);
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(0.995);
+  }
+}
+
+@utility press {
+  transition: transform 0.18s ease;
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+/* Staggered fade-up used across page sections. */
+@utility reveal {
+  animation: reveal-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@utility text-gradient-brand {
+  background-image: linear-gradient(100deg, var(--brand), var(--sky) 55%, var(--leaf));
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mesh-drift {
+  from {
+    background-position:
+      0% 0%,
+      100% 0%,
+      100% 100%,
+      0% 100%;
+  }
+  to {
+    background-position:
+      6% 4%,
+      94% 6%,
+      92% 94%,
+      8% 96%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }
