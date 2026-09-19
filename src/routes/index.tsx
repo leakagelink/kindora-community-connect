@@ -4,7 +4,7 @@ import { useState } from "react";
 import { HeartHandshake, Search, ShieldCheck, Sparkles } from "lucide-react";
 
 import { AppShell } from "@/components/site/AppShell";
-import { CardSkeleton, ListingCard, RequestCard } from "@/components/kindora/Cards";
+import { CardSkeleton, HelperCard, ListingCard, RequestCard } from "@/components/kindora/Cards";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
