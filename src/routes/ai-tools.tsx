@@ -1,15 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { AppShell, PageHeading } from "@/components/site/AppShell";
-import { AI_TOOLS } from "@/lib/kindora";
+import { AI_TOOLS } from "@/lib/goodivo";
 
 export const Route = createFileRoute("/ai-tools")({
   head: () => ({
     meta: [
-      { title: "Free AI tools — Kindora" },
+      { title: "Free AI tools — Goodivo" },
       { name: "description", content: "Free community AI tools: logo maker, resume builder and website starter." },
-      { property: "og:title", content: "Free AI tools — Kindora" },
-      { property: "og:description", content: "Free community AI tools on Kindora, with fair usage limits." },
+      { property: "og:title", content: "Free AI tools — Goodivo" },
+      { property: "og:description", content: "Free community AI tools on Goodivo, with fair usage limits." },
     ],
   }),
   component: AiToolsPage,

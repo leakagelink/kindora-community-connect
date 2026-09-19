@@ -6,13 +6,13 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About Kindora — free community help, powered by Socilet" },
+      { title: "About Goodivo — free community help, powered by Socilet" },
       {
         name: "description",
         content:
-          "Kindora is a community platform where people request free services, share skills and give away permitted products. Powered by Socilet.",
+          "Goodivo is a community platform where people request free services, share skills and give away permitted products. Powered by Socilet.",
       },
-      { property: "og:title", content: "About Kindora" },
+      { property: "og:title", content: "About Goodivo" },
       { property: "og:description", content: "A community platform for free help, shared skills and free products." },
     ],
   }),
@@ -26,7 +26,7 @@ function About() {
       <div className="grid gap-4 md:grid-cols-[1.2fr_0.8fr]">
         <div className="surface-card rounded-3xl p-6 sm:p-8">
           <p className="text-sm leading-relaxed text-muted-foreground">
-            Kindora exists so that people who need practical help — a logo for a small shop, a resume review, coding
+            Goodivo exists so that people who need practical help — a logo for a small shop, a resume review, coding
             guidance, a school textbook — can ask for it openly, and people with skills or spare things can offer them
             without money getting in the way.
           </p>
@@ -52,7 +52,7 @@ function About() {
           <div className="surface-card rounded-3xl p-6">
             <h2 className="font-display text-base font-bold">Powered by Socilet</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Kindora is built and operated as part of Socilet. Product decisions favour user safety, privacy and
+              Goodivo is built and operated as part of Socilet. Product decisions favour user safety, privacy and
               maintainability over growth metrics.
             </p>
           </div>

@@ -12,11 +12,11 @@ export const Route = createFileRoute("/reset-password")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Set a new password — Kindora" },
-      { name: "description", content: "Choose a new password for your Kindora account." },
+      { title: "Set a new password — Goodivo" },
+      { name: "description", content: "Choose a new password for your Goodivo account." },
       { name: "robots", content: "noindex" },
-      { property: "og:title", content: "Set a new password — Kindora" },
-      { property: "og:description", content: "Choose a new password for your Kindora account." },
+      { property: "og:title", content: "Set a new password — Goodivo" },
+      { property: "og:description", content: "Choose a new password for your Goodivo account." },
     ],
   }),
   component: ResetPassword,

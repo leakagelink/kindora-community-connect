@@ -19,7 +19,7 @@ export function SiteFooter() {
         <div className="flex items-center gap-2.5">
           <BrandMark size="sm" />
           <div>
-            <p className="font-display text-sm font-bold">Kindora — Free Help. Real Impact.</p>
+            <p className="font-display text-sm font-bold">Goodivo — Give More. Help More.</p>
             <p className="text-xs text-muted-foreground">Powered by Socilet</p>
           </div>
         </div>

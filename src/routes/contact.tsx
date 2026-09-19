@@ -6,10 +6,10 @@ import { LEGAL_PLACEHOLDERS } from "@/lib/legal";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact and support — Kindora" },
-      { name: "description", content: "How to reach the Kindora team for support, safety concerns or policy questions." },
-      { property: "og:title", content: "Contact and support — Kindora" },
-      { property: "og:description", content: "How to reach the Kindora team for support or safety concerns." },
+      { title: "Contact and support — Goodivo" },
+      { name: "description", content: "How to reach the Goodivo team for support, safety concerns or policy questions." },
+      { property: "og:title", content: "Contact and support — Goodivo" },
+      { property: "og:description", content: "How to reach the Goodivo team for support or safety concerns." },
     ],
   }),
   component: Contact,
@@ -20,7 +20,7 @@ function Contact() {
     <AppShell>
       <PageHeading
         eyebrow="Support"
-        title="Contact Kindora"
+        title="Contact Goodivo"
         description="We read every safety report. For anything urgent, use the report button on the content itself so moderators get the full context."
       />
       <div className="grid gap-4 md:grid-cols-2">

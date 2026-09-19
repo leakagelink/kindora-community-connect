@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin, Package, Wifi } from "lucide-react";
 
-import { requestTypeLabel, statusLabel, timeAgo } from "@/lib/kindora";
+import { requestTypeLabel, statusLabel, timeAgo } from "@/lib/goodivo";
 
 function Chip({ children }: { children: React.ReactNode }) {
   return <span className="rounded-md bg-secondary px-2 py-1 text-xs font-medium text-muted-foreground">{children}</span>;
@@ -136,7 +136,7 @@ export function HelperCard({ helper }: { helper: HelperCardData }) {
           )}
         </span>
         <div className="min-w-0">
-          <p className="truncate text-sm font-bold">{helper.profile?.display_name ?? "Kindora member"}</p>
+          <p className="truncate text-sm font-bold">{helper.profile?.display_name ?? "Goodivo member"}</p>
           <p className="text-xs capitalize text-muted-foreground">{helper.experience}</p>
         </div>
       </div>

@@ -4,8 +4,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { AiToolPage, download } from "@/components/kindora/AiTool";
-import { Field, FormCard, NativeSelect } from "@/components/kindora/FormBits";
+import { AiToolPage, download } from "@/components/goodivo/AiTool";
+import { Field, FormCard, NativeSelect } from "@/components/goodivo/FormBits";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,10 +14,10 @@ import { runAiTool } from "@/lib/ai.functions";
 export const Route = createFileRoute("/ai-tools/resume")({
   head: () => ({
     meta: [
-      { title: "Free Resume Builder — Kindora" },
+      { title: "Free Resume Builder — Goodivo" },
       { name: "description", content: "Write a clean resume for free, preview it and export it as a PDF." },
-      { property: "og:title", content: "Free Resume Builder — Kindora" },
-      { property: "og:description", content: "Write a clean resume for free on Kindora." },
+      { property: "og:title", content: "Free Resume Builder — Goodivo" },
+      { property: "og:description", content: "Write a clean resume for free on Goodivo." },
     ],
   }),
   component: ResumeTool,

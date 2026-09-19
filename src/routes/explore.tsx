@@ -4,10 +4,10 @@ import { useState } from "react";
 import { Search } from "lucide-react";
 
 import { AppShell, EmptyState, PageHeading } from "@/components/site/AppShell";
-import { CardSkeleton, HelperCard, ListingCard, RequestCard } from "@/components/kindora/Cards";
+import { CardSkeleton, HelperCard, ListingCard, RequestCard } from "@/components/goodivo/Cards";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { categoriesQuery, helpersQuery, listingsQuery, requestsQuery, REQUEST_TYPES } from "@/lib/kindora";
+import { categoriesQuery, helpersQuery, listingsQuery, requestsQuery, REQUEST_TYPES } from "@/lib/goodivo";
 
 type Tab = "requests" | "products" | "helpers";
 type ExploreSearch = {
@@ -32,12 +32,12 @@ export const Route = createFileRoute("/explore")({
   },
   head: () => ({
     meta: [
-      { title: "Explore free help, products and helpers — Kindora" },
+      { title: "Explore free help, products and helpers — Goodivo" },
       {
         name: "description",
-        content: "Search open help requests, free product giveaways and volunteers offering their skills on Kindora.",
+        content: "Search open help requests, free product giveaways and volunteers offering their skills on Goodivo.",
       },
-      { property: "og:title", content: "Explore free help on Kindora" },
+      { property: "og:title", content: "Explore free help on Goodivo" },
       { property: "og:description", content: "Search help requests, free products and volunteers offering skills." },
     ],
   }),
@@ -85,7 +85,7 @@ function Explore() {
       <PageHeading
         eyebrow="Explore"
         title="Find help, products and people"
-        description="Everything here is offered free of charge. Nobody may require payment for help arranged through Kindora."
+        description="Everything here is offered free of charge. Nobody may require payment for help arranged through Goodivo."
       />
 
       <form
@@ -204,7 +204,7 @@ function Explore() {
             body="Try clearing your filters, or be the first to post in this space."
             action={
               <Button asChild variant="help" className="rounded-full">
-                <Link to="/post">Post on Kindora</Link>
+                <Link to="/post">Post on Goodivo</Link>
               </Button>
             }
           />

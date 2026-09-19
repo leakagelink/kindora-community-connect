@@ -10,11 +10,11 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { Field, FormCard, FreeNotice } from "@/components/kindora/FormBits";
+import { Field, FormCard, FreeNotice } from "@/components/goodivo/FormBits";
 import { supabase } from "@/integrations/supabase/client";
 import { unblockUser } from "@/lib/actions";
 import { useAuth } from "@/lib/auth";
-import { profileQuery, statusLabel, timeAgo } from "@/lib/kindora";
+import { profileQuery, statusLabel, timeAgo } from "@/lib/goodivo";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   component: ProfilePage,
@@ -150,7 +150,7 @@ function ProfilePage() {
 
   const deleteAccount = async () => {
     const confirmed = window.confirm(
-      "Delete your Kindora account? Your profile, posts and listings will be withdrawn from the platform. Records kept for safety and audit reasons are handled as described in the Account Deletion policy.",
+      "Delete your Goodivo account? Your profile, posts and listings will be withdrawn from the platform. Records kept for safety and audit reasons are handled as described in the Account Deletion policy.",
     );
     if (!confirmed) return;
     const now = new Date().toISOString();
@@ -395,7 +395,7 @@ function ProfilePage() {
           <section className="surface-card rounded-3xl p-6">
             <h2 className="font-display text-base font-bold">Delete account</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              This withdraws your profile, requests, listings and skill offers from Kindora.
+              This withdraws your profile, requests, listings and skill offers from Goodivo.
             </p>
             <FreeNotice>
               Some records are retained for safety, moderation and audit purposes as described in our{" "}

@@ -4,8 +4,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { AiToolPage, download } from "@/components/kindora/AiTool";
-import { Field, FormCard } from "@/components/kindora/FormBits";
+import { AiToolPage, download } from "@/components/goodivo/AiTool";
+import { Field, FormCard } from "@/components/goodivo/FormBits";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { runAiTool } from "@/lib/ai.functions";
@@ -13,10 +13,10 @@ import { runAiTool } from "@/lib/ai.functions";
 export const Route = createFileRoute("/ai-tools/logo")({
   head: () => ({
     meta: [
-      { title: "Free Logo Maker — Kindora" },
+      { title: "Free Logo Maker — Goodivo" },
       { name: "description", content: "Generate simple logo concepts for free and download them as SVG." },
-      { property: "og:title", content: "Free Logo Maker — Kindora" },
-      { property: "og:description", content: "Generate simple logo concepts for free on Kindora." },
+      { property: "og:title", content: "Free Logo Maker — Goodivo" },
+      { property: "og:description", content: "Generate simple logo concepts for free on Goodivo." },
     ],
   }),
   component: LogoTool,

@@ -9,21 +9,21 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Field, FormCard, FreeNotice } from "@/components/kindora/FormBits";
-import { ReportDialog } from "@/components/kindora/ReportDialog";
-import { ReviewDialog } from "@/components/kindora/ReviewDialog";
+import { Field, FormCard, FreeNotice } from "@/components/goodivo/FormBits";
+import { ReportDialog } from "@/components/goodivo/ReportDialog";
+import { ReviewDialog } from "@/components/goodivo/ReviewDialog";
 import { supabase } from "@/integrations/supabase/client";
 import { ensureConversation, notify } from "@/lib/actions";
 import { useAuth } from "@/lib/auth";
-import { requestQuery, requestTypeLabel, statusLabel, timeAgo } from "@/lib/kindora";
+import { requestQuery, requestTypeLabel, statusLabel, timeAgo } from "@/lib/goodivo";
 
 export const Route = createFileRoute("/requests/$id")({
   head: () => ({
     meta: [
-      { title: "Help request — Kindora" },
-      { name: "description", content: "A free help request on Kindora. Volunteers can offer to help at no cost." },
-      { property: "og:title", content: "Help request — Kindora" },
-      { property: "og:description", content: "A free help request on Kindora." },
+      { title: "Help request — Goodivo" },
+      { name: "description", content: "A free help request on Goodivo. Volunteers can offer to help at no cost." },
+      { property: "og:title", content: "Help request — Goodivo" },
+      { property: "og:description", content: "A free help request on Goodivo." },
     ],
   }),
   component: RequestDetail,
@@ -199,7 +199,7 @@ function RequestDetail() {
             <div className="surface-card rounded-3xl p-6">
               <h2 className="font-display text-base font-bold">Want to help with this?</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Sign in to offer your help. Helping on Kindora is always free.
+                Sign in to offer your help. Helping on Goodivo is always free.
               </p>
               <Button asChild className="mt-4 rounded-full" variant="help">
                 <Link to="/auth" search={{ mode: "signin", redirect: `/requests/${id}` }}>
@@ -388,7 +388,7 @@ function OwnerPanel({
               <li key={application.id} className="rounded-2xl border border-border p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <Link to="/u/$id" params={{ id: application.helper_id }} className="text-sm font-semibold">
-                    {application.helper?.display_name ?? "Kindora member"}
+                    {application.helper?.display_name ?? "Goodivo member"}
                   </Link>
                   <Badge variant="secondary">{statusLabel(application.status)}</Badge>
                 </div>

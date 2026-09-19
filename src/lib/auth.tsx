@@ -65,7 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             (meta['full_name'] as string | undefined) ??
             (meta['name'] as string | undefined) ??
             session?.user.email?.split("@")[0] ??
-            "Kindora member",
+            "Goodivo member",
           avatar_url: (meta['avatar_url'] as string | undefined) ?? null,
         },
         { onConflict: "id", ignoreDuplicates: true },

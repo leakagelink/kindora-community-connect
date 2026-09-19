@@ -5,7 +5,7 @@ import { AppShell, EmptyState, PageHeading } from "@/components/site/AppShell";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { timeAgo } from "@/lib/kindora";
+import { timeAgo } from "@/lib/goodivo";
 
 export const Route = createFileRoute("/_authenticated/notifications")({
   component: NotificationsPage,
