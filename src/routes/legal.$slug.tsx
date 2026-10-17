@@ -18,6 +18,8 @@ export const Route = createFileRoute("/legal/$slug")({
     const { doc } = loaderData;
     return {
       meta: [
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary" },
         { title: `${doc.title} — Goodivo` },
         { name: "description", content: doc.summary },
         { property: "og:title", content: `${doc.title} — Goodivo` },
