@@ -11,6 +11,7 @@ const NAV = [
   { to: "/", label: "Home" },
   { to: "/explore", label: "Explore" },
   { to: "/ai-tools", label: "Free AI Tools" },
+  { to: "/tasks", label: "Tasks" },
   { to: "/about", label: "About" },
 ] as const;
 
@@ -36,7 +37,7 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3.5 sm:px-8">
         <BrandLockup />
 
-        <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
+        <nav className="hidden items-center gap-5 text-sm font-medium lg:flex">
           {NAV.map((item) => (
             <Link
               key={item.to}

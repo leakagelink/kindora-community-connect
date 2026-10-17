@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Gift, HandHeart, Sparkles } from "lucide-react";
+import { Gift, HandHeart, Sparkles, ClipboardList } from "lucide-react";
 
 import { AppShell, PageHeading } from "@/components/site/AppShell";
 import { featureFlagsQuery } from "@/lib/goodivo";
@@ -77,6 +77,7 @@ function PostHub() {
             );
           })}
       </div>
+      <Link to="/tasks" className="mt-6 flex items-center gap-3 border-t border-border pt-5 text-sm font-semibold text-primary"><ClipboardList className="size-5" />Community tasks & checklists</Link>
     </AppShell>
   );
 }

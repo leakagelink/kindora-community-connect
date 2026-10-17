@@ -15,8 +15,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { logAudit, notify } from "@/lib/actions";
 import { useAuth } from "@/lib/auth";
 import { statusLabel, timeAgo } from "@/lib/goodivo";
+import { PlatformAdmin } from "@/components/goodivo/PlatformAdmin";
 
 export const Route = createFileRoute("/_authenticated/admin")({
+  head: () => ({ meta: [{ title: "Goodivo control room" }, { name: "description", content: "Moderation, community tasks and operational controls for Goodivo administrators." }, { property: "og:title", content: "Goodivo control room" }, { property: "og:description", content: "Goodivo platform moderation and operational controls." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: AdminPage,
 });
 
@@ -58,11 +60,13 @@ function AdminPage() {
           {isAdmin ? <TabsTrigger value="people">People & roles</TabsTrigger> : null}
           {isAdmin ? <TabsTrigger value="catalog">Categories</TabsTrigger> : null}
           {isAdmin ? <TabsTrigger value="settings">Flags & AI</TabsTrigger> : null}
+          {isAdmin ? <TabsTrigger value="platform">Tasks & operations</TabsTrigger> : null}
         </TabsList>
 
         <TabsContent value="overview">
           <Overview isAdmin={isAdmin} />
         </TabsContent>
+        {isAdmin ? <TabsContent value="platform"><PlatformAdmin /></TabsContent> : null}
         <TabsContent value="reports">
           <Reports moderatorId={user.id} />
         </TabsContent>
