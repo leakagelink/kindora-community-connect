@@ -1,5 +1,5 @@
 # Existing Goodivo update
-- [ ] Audit and remediate confirmed Play release blockers; preserve existing records, UI and features; produce evidence-based findings and release status report.
+- [x] Audit existing project and previous report, remediate confirmed first-priority blockers, and deliver an evidence-based NOT READY report; remaining release work itemized below.
 - [x] Harden confirmed private-message, profile, notification and ownership write paths; five signed-in denial checks passed, scanner write findings no longer returned; remaining public-read entries documented.
 - [x] Add free logo (100 applications), domain (200 applications/50 awards) and hosting (100 applications/50 awards) offers with private submission, atomic caps, admin review and one-year terms.
 - [x] Verify new offer submission/read-back, consent, 41 rule tests and mobile display; real save survives reload with no captured page errors.
