@@ -1,16 +1,19 @@
 # Existing Goodivo update
-- [ ] Add Socilet offer, authenticated application, confirmation and My Applications.
-- [ ] Apply campaign schema with applicant-only access and secure admin review.
-- [ ] Add disabled-by-default centralized ad controller and policy tests.
-- [ ] Verify campaign persistence/access and provide actual test/blocker report.
+- [x] Add Socilet offer, authenticated application, confirmation and My Applications.
+- [x] Apply campaign schema with applicant-only access and secure admin review.
+- [x] Add disabled-by-default centralized ad controller and policy tests.
+- [x] Verify campaign save/read-back, repeat submission, error recovery and member admin denial; report remaining checks.
+- [ ] Test campaign cross-account isolation and authorized admin review — blocked by only one member account and no admin account.
 - [x] Inspect source implementations; identify authorization and quota gaps.
 - [x] Add tasks, appeals, admin reviews and operational/budget screens with setup errors.
 - [x] Connect AI reservations and atomic product management; fail closed while SQL is pending.
 - [x] Disclose free pickup, donor-paid local delivery and no ad/task product gates.
 - [x] Keep advertising and sponsor surveys disabled; document provider requirements.
 - [x] Run 13 safety tests and public route smoke checks.
-- [ ] Apply staged SQL and inspect/test live grants, RLS, quotas and fulfilment — blocked by Cloud remaining unavailable.
+- [ ] Safely revise staged community SQL before application; audit identified validation, closure and transition concerns requiring a dedicated correction and live review.
 - [ ] Seed task definitions and disabled advertising flags — blocked by unapplied schema.
-- [ ] Test authenticated tasks/admin/product/AI and mobile flows — blocked by Cloud and absence of any auth users.
+- [ ] Test authenticated tasks/admin/product/AI flows — blocked by unapplied community schema, no admin and no separate participating accounts.
 - [ ] Configure verified advertising provider and signature flow — blocked by missing provider and policy approval; ads stay disabled.
 - [ ] Automatic product expiry and bucket validation — blocked by live schema/storage inspection.
+- [ ] Resolve account closure, misleading legacy errors, resume export escaping and database/storage findings before production release.
+- [ ] Complete verified legal/support and campaign sponsor details — blocked by missing real entity, contact and jurisdiction details.
