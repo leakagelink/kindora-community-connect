@@ -1,0 +1,14 @@
+import { test, expect } from 'bun:test';
+import { getOffer, offerSchema } from './socilet-offer-rules';
+test('logo accepts 100 applications', () => expect(getOffer('logo').applicationLimit).toBe(100));
+test('logo covers 100 recipients', () => expect(getOffer('logo').awardLimit).toBe(100));
+test('domain accepts 200 applications', () => expect(getOffer('domain').applicationLimit).toBe(200));
+test('domain has 50 recipients', () => expect(getOffer('domain').awardLimit).toBe(50));
+test('hosting accepts 100 applications', () => expect(getOffer('hosting').applicationLimit).toBe(100));
+test('hosting has 50 recipients', () => expect(getOffer('hosting').awardLimit).toBe(50));
+test('domain is free for one year', () => expect(getOffer('domain').freeYears).toBe(1));
+test('hosting is free for one year', () => expect(getOffer('hosting').freeYears).toBe(1));
+const valid = { full_name: 'Test Applicant', business_name: 'Test business', email: 'test@example.com', brief: 'A custom logo with green colours and a simple geometric symbol.', reason: 'This project needs a new brand identity.', terms_accepted: true, contact_consent: true };
+test('terms must be accepted', () => expect(offerSchema.safeParse({ ...valid, terms_accepted: false }).success).toBe(false));
+test('contact consent is required', () => expect(offerSchema.safeParse({ ...valid, contact_consent: false }).success).toBe(false));
+test('valid design brief is accepted', () => expect(offerSchema.safeParse(valid).success).toBe(true));
