@@ -1201,6 +1201,14 @@ export type Database = {
         Returns: boolean
       }
       can_view_listing_photo: { Args: { p_name: string }; Returns: boolean }
+      ensure_goodivo_conversation: {
+        Args: {
+          p_listing_id?: string
+          p_other_user: string
+          p_request_id?: string
+        }
+        Returns: string
+      }
       finish_ai_generation: {
         Args: {
           p_error: string

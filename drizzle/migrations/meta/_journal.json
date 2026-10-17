@@ -71,6 +71,13 @@
       "when": 1792253606388,
       "tag": "0009_atomic_request_offer_state",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1792253814445,
+      "tag": "0010_atomic_private_conversation_creation",
+      "breakpoints": true
     }
   ]
 }
