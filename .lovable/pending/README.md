@@ -1,5 +1,8 @@
 # Goodivo extension: deployment blocked
 
+## Superseded after live review — 17 October 2026
+Do not apply `community-safety.sql`. It is retained only as a historical draft, not deployment instructions. Reviewed additive migrations under `drizzle/migrations/0002` through `0008` now provide ownership/message guards, atomic public-account withdrawal, scoped photo access, task/appeal operations, AI reservation/budget controls and donor product transitions. Existing admin-only role/catalog policies were inspected: granting table access alone does not bypass their RLS. Full authentication-account deletion, private-data retention and cross-account/admin QA remain release blockers. Earlier infrastructure notes below are historical, not the current state.
+
 Cloud repeatedly reported that it was still starting, and schema inspection failed with a pooler timeout. No migration or seed was applied. Existing records were not changed.
 
 `community-safety.sql` is staged additive SQL, not an applied migration. Before applying: inspect the live schema and policy names, re-check Cloud health, review triggers against existing flows, then submit this exact SQL through the migration tool. Seed genuine task definitions and disabled `rewarded_ads` / `sponsor_surveys` feature flags through the data tool after migration; do not seed on page load. Regenerate integration types.
