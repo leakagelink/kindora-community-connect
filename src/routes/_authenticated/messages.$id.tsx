@@ -12,6 +12,7 @@ import { blockUser, sendMessage } from "@/lib/actions";
 import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/_authenticated/messages/$id")({
+  head: () => ({ meta: [{ title: "Private conversation — Goodivo" }, { name: "description", content: "A private Goodivo conversation with a community member." }, { property: "og:title", content: "Private conversation — Goodivo" }, { property: "og:description", content: "Private community conversation on Goodivo." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: Thread,
 });
 

@@ -1,7 +1,12 @@
 # Existing Goodivo update
-- [ ] Inspect live schema, authorization and existing flows.
-- [ ] Add validated community tasks and extend existing admin controls.
-- [ ] Harden AI quotas, budgets and audit records.
-- [ ] Extend product shipping and fulfilment disclosures safely.
-- [ ] Keep rewarded ads and sponsor surveys disabled until verified provider setup.
-- [ ] Test new rules, existing routes and authenticated flows; document blockers.
+- [x] Inspect source implementations; identify authorization and quota gaps.
+- [x] Add tasks, appeals, admin reviews and operational/budget screens with setup errors.
+- [x] Connect AI reservations and atomic product management; fail closed while SQL is pending.
+- [x] Disclose free pickup, donor-paid local delivery and no ad/task product gates.
+- [x] Keep advertising and sponsor surveys disabled; document provider requirements.
+- [x] Run 13 safety tests and public route smoke checks.
+- [ ] Apply staged SQL and inspect/test live grants, RLS, quotas and fulfilment — blocked by Cloud remaining unavailable.
+- [ ] Seed task definitions and disabled advertising flags — blocked by unapplied schema.
+- [ ] Test authenticated tasks/admin/product/AI and mobile flows — blocked by Cloud and absence of any auth users.
+- [ ] Configure verified advertising provider and signature flow — blocked by missing provider and policy approval; ads stay disabled.
+- [ ] Automatic product expiry and bucket validation — blocked by live schema/storage inspection.

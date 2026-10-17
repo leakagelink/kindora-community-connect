@@ -17,6 +17,7 @@ import { useAuth } from "@/lib/auth";
 import { profileQuery, statusLabel, timeAgo } from "@/lib/goodivo";
 
 export const Route = createFileRoute("/_authenticated/profile")({
+  head: () => ({ meta: [{ title: "Your profile & activity — Goodivo" }, { name: "description", content: "Manage your Goodivo profile, privacy and community activity." }, { property: "og:title", content: "Your profile & activity — Goodivo" }, { property: "og:description", content: "Your personal Goodivo profile and privacy settings." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: ProfilePage,
 });
 

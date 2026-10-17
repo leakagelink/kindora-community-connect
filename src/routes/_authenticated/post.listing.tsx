@@ -89,6 +89,7 @@ function PostListing() {
 
   const mutation = useMutation({
     mutationFn: async () => {
+      if (!user) throw new Error("Sign in before listing an item.");
       const parsed = schema.safeParse(form);
       if (!parsed.success) throw new Error(parsed.error.issues[0]?.message ?? "Please check the form.");
       const value = parsed.data;
@@ -98,7 +99,7 @@ function PostListing() {
 
       const photos: string[] = [];
       for (const file of files) {
-        const path = `${user!.id}/${crypto.randomUUID()}-${file.name.replace(/[^\w.\-]/g, "_")}`;
+        const path = `${user.id}/${crypto.randomUUID()}-${file.name.replace(/[^\w.\-]/g, "_")}`;
         const { error: uploadError } = await supabase.storage.from("listing-photos").upload(path, file, {
           contentType: file.type,
           upsert: false,
@@ -111,7 +112,7 @@ function PostListing() {
       const { data, error } = await supabase
         .from("product_listings")
         .insert({
-          owner_id: user!.id,
+          owner_id: user.id,
           title: value.title,
           description: value.description,
           category_id: value.category_id,
@@ -143,7 +144,7 @@ function PostListing() {
       <PageHeading
         eyebrow="Free product"
         title="Give something away"
-        description="Only permitted items. No money, no swaps, no shipping payments."
+        description="Only permitted items. Requests are free; no advertisements or tasks are required."
       />
 
       <form
@@ -235,6 +236,7 @@ function PostListing() {
           </FormCard>
 
           <FormCard title="Handover">
+            <FreeNotice>Pickup has no platform fee. Any offered local delivery is paid by you, the donor; the receiver pays nothing. Paid shipping is not supported.</FreeNotice>
             <Field id="location" label="Location" required hint="City or area only — never your exact address.">
               <Input id="location" maxLength={120} value={form.location} onChange={(e) => set("location", e.target.value)} />
             </Field>
@@ -277,6 +279,7 @@ function PostListing() {
             <FreeNotice>
               Items must be free. No payment, deposits, delivery charges or swaps are allowed.
             </FreeNotice>
+            <FreeNotice>Use genuine photos of your own item. Interest or task completion does not guarantee an item; you choose the receiver.</FreeNotice>
             <FreeNotice>
               Prohibited items include weapons, prescription medication, alcohol, tobacco, stolen or counterfeit goods,
               live animals and hazardous materials. See the Prohibited Products and Services Policy.

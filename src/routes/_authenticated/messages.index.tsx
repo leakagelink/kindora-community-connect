@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/auth";
 import { timeAgo } from "@/lib/goodivo";
 
 export const Route = createFileRoute("/_authenticated/messages/")({
+  head: () => ({ meta: [{ title: "Your messages — Goodivo" }, { name: "description", content: "Private Goodivo conversations about community help and free giveaways." }, { property: "og:title", content: "Your messages — Goodivo" }, { property: "og:description", content: "Your private Goodivo community conversations." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: MessagesList,
 });
 
