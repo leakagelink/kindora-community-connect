@@ -278,7 +278,8 @@ function ProductDetail() {
                     variant="ghost"
                     className="rounded-full text-muted-foreground"
                     onClick={async () => {
-                      await supabase.from("product_interests").delete().eq("id", myInterest.id);
+                      const { error } = await supabase.from("product_interests").delete().eq("id", myInterest.id);
+                      if (error) { toast.error(error.message); return; }
                       void queryClient.invalidateQueries({ queryKey: ["product-interests", id] });
                       toast.success("Interest withdrawn");
                     }}
@@ -341,7 +342,7 @@ function ProductDetail() {
             </div>
           ) : null}
           <p className="mt-5 rounded-xl bg-secondary px-4 py-3 text-xs text-muted-foreground">
-            Items on Goodivo are free. Never pay for an item, delivery or a deposit.
+            Items and requests are free. The donor covers any offered local delivery; paid shipping is not supported. Never pay a deposit. No advertisements or tasks are required, and expressing interest does not guarantee the item.
           </p>
         </aside>
       </div>

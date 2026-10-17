@@ -1,4 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { z } from "zod";
 
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
@@ -50,6 +52,7 @@ function parseJson(text: string): Record<string, unknown> {
 export const runAiTool = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: AiInput) => {
+    data = z.object({ tool: z.enum(["logo_maker", "resume_builder", "website_starter"]), input: z.record(z.string().max(60), z.string().max(6000)) }).parse(data);
     if (!["logo_maker", "resume_builder", "website_starter"].includes(data.tool)) throw new Error("Unknown tool");
     const joined = Object.values(data.input ?? {}).join(" ");
     if (joined.trim().length < 3) throw new Error("Please fill in the form before generating.");
@@ -60,40 +63,21 @@ export const runAiTool = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
-    const { data: flag } = await supabase
-      .from("feature_flags")
-      .select("is_enabled")
-      .eq("key", FLAG_BY_TOOL[data.tool])
-      .maybeSingle();
-    if (flag && flag.is_enabled === false) throw new Error("This tool is currently turned off.");
-
-    const { data: limitRow } = await supabase
-      .from("ai_usage_limits")
-      .select("daily_limit, is_enabled")
-      .eq("tool", data.tool)
-      .maybeSingle();
-    if (limitRow && !limitRow.is_enabled) throw new Error("This tool is currently turned off.");
-    const dailyLimit = limitRow?.daily_limit ?? 3;
-
-    const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-    const { count } = await supabase
-      .from("ai_generations")
-      .select("id", { count: "exact", head: true })
-      .eq("user_id", userId)
-      .eq("tool", data.tool)
-      .gte("created_at", since);
-    const used = count ?? 0;
-    if (used >= dailyLimit) {
-      throw new Error(`Daily free limit reached (${dailyLimit} per day). Please try again tomorrow.`);
-    }
-
     const apiKey = process.env['LOVABLE_API_KEY'];
     if (!apiKey) throw new Error("AI tools are not configured yet.");
+    const reservation = await (supabase as SupabaseClient).rpc("reserve_ai_generation", { p_tool: data.tool, p_input: data.input });
+    if (reservation.error) {
+      if (reservation.error.code === "PGRST202") throw new Error("AI tools are awaiting a safety update. Please try again later.");
+      throw new Error(reservation.error.message);
+    }
+    const reserved = z.object({ id: z.string().uuid(), remaining: z.number(), dailyLimit: z.number() }).parse(reservation.data);
 
     const { system, user } = promptFor(data.tool, data.input ?? {});
 
     let output: Record<string, unknown> | null = null;
     let errorMessage: string | null = null;
+    let inputTokens: number | null = null;
+    let outputTokens: number | null = null;
     try {
       const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
         method: "POST",
@@ -107,25 +91,29 @@ export const runAiTool = createServerFn({ method: "POST" })
         }),
       });
       if (response.status === 429) throw new Error("The AI service is busy right now. Please try again in a minute.");
-      if (!response.ok) throw new Error("The AI service could not complete this request.");
-      const payload = (await response.json()) as { choices?: { message?: { content?: string } }[] };
+      if (!response.ok) {
+        const failure = await response.json().catch(() => null) as { message?: string; error?: { message?: string } } | null;
+        throw new Error(failure?.message ?? failure?.error?.message ?? "The AI service could not complete this request.");
+      }
+      const payload = (await response.json()) as { choices?: { message?: { content?: string; refusal?: string } }[]; usage?: { prompt_tokens?: number; completion_tokens?: number } };
+      if (payload.choices?.[0]?.message?.refusal) throw new Error(payload.choices[0].message.refusal);
       const text = payload.choices?.[0]?.message?.content ?? "";
+      if (!text.trim()) throw new Error("The AI provider returned no result.");
       output = parseJson(text);
+      inputTokens = payload.usage?.prompt_tokens ?? null;
+      outputTokens = payload.usage?.completion_tokens ?? null;
     } catch (error) {
       errorMessage = error instanceof Error ? error.message : "Generation failed";
     }
 
-    await supabase.from("ai_generations").insert({
-      user_id: userId,
-      tool: data.tool,
-      input: data.input ?? {},
-      output: (output ?? null) as never,
-      model: MODEL,
-      status: errorMessage ? "failed" : "succeeded",
-      error_message: errorMessage,
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const finalized = await (supabaseAdmin as SupabaseClient).rpc("finish_ai_generation", {
+      p_id: reserved.id, p_user: userId, p_output: output, p_error: errorMessage,
+      p_input_tokens: inputTokens, p_output_tokens: outputTokens,
     });
+    if (finalized.error) throw new Error("The result could not be saved. Your usage reservation remains recorded.");
 
     if (errorMessage) throw new Error(errorMessage);
 
-    return { outputJson: JSON.stringify(output), remaining: Math.max(0, dailyLimit - used - 1), dailyLimit };
+    return { outputJson: JSON.stringify(output), remaining: reserved.remaining, dailyLimit: reserved.dailyLimit };
   });

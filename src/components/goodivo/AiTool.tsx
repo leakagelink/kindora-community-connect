@@ -17,13 +17,15 @@ export function useAiQuota(tool: string) {
     queryKey: ["ai-usage", tool, user?.id],
     enabled: Boolean(user),
     queryFn: async () => {
+      if (!user) throw new Error("Sign in required.");
       const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-      const { count } = await supabase
+      const { count, error } = await supabase
         .from("ai_generations")
         .select("id", { count: "exact", head: true })
-        .eq("user_id", user!.id)
+        .eq("user_id", user.id)
         .eq("tool", tool)
         .gte("created_at", since);
+      if (error) throw error;
       return count ?? 0;
     },
   });
