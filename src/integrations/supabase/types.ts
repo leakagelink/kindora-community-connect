@@ -952,6 +952,48 @@ export type Database = {
           },
         ]
       }
+      socilet_offer_applications: {
+        Row: {
+          awarded_at: string | null
+          created_at: string
+          id: string
+          offer_key: string
+          payload: Json
+          review_note: string | null
+          reviewed_by: string | null
+          status: string
+          terms_version: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          awarded_at?: string | null
+          created_at?: string
+          id?: string
+          offer_key: string
+          payload: Json
+          review_note?: string | null
+          reviewed_by?: string | null
+          status?: string
+          terms_version?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          awarded_at?: string | null
+          created_at?: string
+          id?: string
+          offer_key?: string
+          payload?: Json
+          review_note?: string | null
+          reviewed_by?: string | null
+          status?: string
+          terms_version?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -994,7 +1036,15 @@ export type Database = {
         Args: { p_id: string; p_note: string; p_status: string }
         Returns: undefined
       }
+      review_socilet_offer: {
+        Args: { p_id: string; p_note: string; p_status: string }
+        Returns: undefined
+      }
       submit_socilet_application: { Args: { p_payload: Json }; Returns: Json }
+      submit_socilet_offer: {
+        Args: { p_offer: string; p_payload: Json }
+        Returns: Json
+      }
     }
     Enums: {
       app_role: "member" | "moderator" | "admin"
