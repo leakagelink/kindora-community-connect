@@ -22,6 +22,13 @@
       "when": 1792253102905,
       "tag": "0002_harden_ownership_and_private_messages",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792253212760,
+      "tag": "0003_atomic_account_withdrawal_and_photo_scope",
+      "breakpoints": true
     }
   ]
 }

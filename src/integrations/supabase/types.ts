@@ -1024,6 +1024,7 @@ export type Database = {
         Args: { p_id: string; p_user: string }
         Returns: boolean
       }
+      can_view_listing_photo: { Args: { p_name: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1049,6 +1050,7 @@ export type Database = {
         Args: { p_offer: string; p_payload: Json }
         Returns: Json
       }
+      withdraw_goodivo_account: { Args: never; Returns: undefined }
     }
     Enums: {
       app_role: "member" | "moderator" | "admin"
