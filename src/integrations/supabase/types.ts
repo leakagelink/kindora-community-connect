@@ -215,6 +215,51 @@ export type Database = {
         }
         Relationships: []
       }
+      community_tasks: {
+        Row: {
+          actions: string
+          created_at: string
+          eligibility: string
+          id: string
+          is_active: boolean
+          kind: string
+          privacy: string
+          purpose: string
+          reward: string
+          title: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          actions: string
+          created_at?: string
+          eligibility: string
+          id?: string
+          is_active?: boolean
+          kind: string
+          privacy: string
+          purpose: string
+          reward?: string
+          title: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          actions?: string
+          created_at?: string
+          eligibility?: string
+          id?: string
+          is_active?: boolean
+          kind?: string
+          privacy?: string
+          purpose?: string
+          reward?: string
+          title?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: []
+      }
       conversation_participants: {
         Row: {
           conversation_id: string
@@ -840,6 +885,39 @@ export type Database = {
           },
         ]
       }
+      restriction_appeals: {
+        Row: {
+          created_at: string
+          id: string
+          reason: string
+          response: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          reason: string
+          response?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          reason?: string
+          response?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       reviews: {
         Row: {
           comment: string | null
@@ -904,6 +982,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      reward_events: {
+        Row: {
+          created_at: string
+          credits: number
+          id: string
+          provider: string
+          provider_event_id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          credits?: number
+          id?: string
+          provider: string
+          provider_event_id: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          credits?: number
+          id?: string
+          provider?: string
+          provider_event_id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       service_offers: {
         Row: {
@@ -1012,6 +1120,56 @@ export type Database = {
         }
         Relationships: []
       }
+      task_submissions: {
+        Row: {
+          created_at: string
+          entity_key: string
+          evidence: Json
+          id: string
+          review_note: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          task_id: string
+          task_version: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entity_key?: string
+          evidence?: Json
+          id?: string
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status: string
+          task_id: string
+          task_version: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entity_key?: string
+          evidence?: Json
+          id?: string
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          task_id?: string
+          task_version?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_submissions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "community_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -1066,9 +1224,19 @@ export type Database = {
         Returns: boolean
       }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      platform_operational_metrics: { Args: never; Returns: Json }
       reserve_ai_generation: {
         Args: { p_input: Json; p_tool: string }
         Returns: Json
+      }
+      review_platform_submission: {
+        Args: {
+          p_approved: boolean
+          p_id: string
+          p_note: string
+          p_type: string
+        }
+        Returns: undefined
       }
       review_socilet_application: {
         Args: { p_id: string; p_note: string; p_status: string }
@@ -1085,6 +1253,15 @@ export type Database = {
           p_global_limit: number
           p_tool: string
         }
+        Returns: undefined
+      }
+      save_community_task: { Args: { p_definition: Json }; Returns: undefined }
+      submit_community_task: {
+        Args: { p_evidence: Json; p_task_id: string }
+        Returns: Json
+      }
+      submit_restriction_appeal: {
+        Args: { p_reason: string }
         Returns: undefined
       }
       submit_socilet_application: { Args: { p_payload: Json }; Returns: Json }
