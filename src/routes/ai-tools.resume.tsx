@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { runAiTool } from "@/lib/ai.functions";
+import { resumeHtml } from "@/lib/resume-export";
+import { z } from "zod";
 
 export const Route = createFileRoute("/ai-tools/resume")({
   head: () => ({
@@ -18,6 +20,8 @@ export const Route = createFileRoute("/ai-tools/resume")({
       { name: "description", content: "Write a clean resume for free, preview it and export it as a PDF." },
       { property: "og:title", content: "Free Resume Builder — Goodivo" },
       { property: "og:description", content: "Write a clean resume for free on Goodivo." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: ResumeTool,
@@ -41,10 +45,7 @@ function ResumeTool() {
   const [resume, setResume] = useState<Resume | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const asHtml = (data: Resume) =>
-    `<!doctype html><html><head><meta charset="utf-8"><title>${form.fullName} — Resume</title><style>body{font-family:system-ui,sans-serif;max-width:760px;margin:40px auto;padding:0 24px;color:#141B2E;line-height:1.5}h1{margin-bottom:4px}h2{margin-top:28px;border-bottom:1px solid #ddd;padding-bottom:4px;font-size:15px;text-transform:uppercase;letter-spacing:.08em}li{margin-bottom:6px}</style></head><body><h1>${form.fullName}</h1><p>${form.headline}</p><p>${form.contact}</p><p>${data.summary}</p>${data.sections
-      .map((section) => `<h2>${section.heading}</h2><ul>${section.items.map((item) => `<li>${item}</li>`).join("")}</ul>`)
-      .join("")}</body></html>`;
+  const asHtml = (data: Resume) => resumeHtml(form, data);
 
   return (
     <AiToolPage
@@ -97,7 +98,7 @@ function ResumeTool() {
                 setBusy(true);
                 try {
                   const result = await generate({ data: { tool: "resume_builder", input: form } });
-                  setResume(JSON.parse(result.outputJson) as Resume);
+                  setResume(z.object({ summary: z.string(), sections: z.array(z.object({ heading: z.string(), items: z.array(z.string()) })) }).parse(JSON.parse(result.outputJson)));
                   void quota.refetchUsage();
                   void queryClient.invalidateQueries({ queryKey: ["ai-history", "resume_builder"] });
                 } catch (error) {
@@ -133,7 +134,7 @@ function ResumeTool() {
                       win.print();
                     }}
                   >
-                    Export PDF
+                    Print / Save PDF
                   </Button>
                 </div>
               </div>
