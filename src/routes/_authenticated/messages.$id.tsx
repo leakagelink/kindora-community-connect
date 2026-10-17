@@ -22,12 +22,14 @@ function Thread() {
   const queryClient = useQueryClient();
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
+  const [historyLimit, setHistoryLimit] = useState(50);
   const endRef = useRef<HTMLDivElement | null>(null);
 
-  const { data: thread } = useQuery({
+  const threadQuery = useQuery({
     queryKey: ["conversation", id],
     enabled: Boolean(user),
     queryFn: async () => {
+      if (!user) throw new Error('Sign in required.');
       const { data: conversation, error } = await supabase
         .from("conversations")
         .select("id, request_id, listing_id")
@@ -36,11 +38,12 @@ function Thread() {
       if (error) throw error;
       if (!conversation) return null;
 
-      const { data: participants } = await supabase
+      const { data: participants, error: participantError } = await supabase
         .from("conversation_participants")
         .select("user_id")
         .eq("conversation_id", id);
-      const otherId = (participants ?? []).map((row) => row.user_id).find((value) => value !== user!.id) ?? null;
+      if (participantError) throw participantError;
+      const otherId = (participants ?? []).map((row) => row.user_id).find((value) => value !== user.id) ?? null;
       const { data: other } = otherId
         ? await supabase.from("profiles").select("id, display_name").eq("id", otherId).maybeSingle()
         : { data: null };
@@ -48,9 +51,10 @@ function Thread() {
       return { conversation, other };
     },
   });
+  const thread = threadQuery.data;
 
-  const { data: messages } = useQuery({
-    queryKey: ["messages", id],
+  const messagesQuery = useQuery({
+    queryKey: ["messages", id, historyLimit],
     enabled: Boolean(user),
     queryFn: async () => {
       const { data, error } = await supabase
@@ -58,12 +62,14 @@ function Thread() {
         .select("id, sender_id, body, created_at, deleted_at")
         .eq("conversation_id", id)
         .is("deleted_at", null)
-        .order("created_at")
-        .limit(300);
+        .order("created_at", { ascending: false })
+        .order("id", { ascending: false })
+        .limit(historyLimit);
       if (error) throw error;
-      return data ?? [];
+      return (data ?? []).reverse();
     },
   });
+  const messages = messagesQuery.data;
 
   // Live updates + read receipts.
   useEffect(() => {
@@ -89,7 +95,7 @@ function Thread() {
   }, [messages]);
 
   const send = async () => {
-    if (!user) return;
+    if (!user || sending || !thread) return;
     setSending(true);
     try {
       await sendMessage(id, user.id, draft);
@@ -136,7 +142,8 @@ function Thread() {
                 className="rounded-full text-muted-foreground"
                 onClick={async () => {
                   try {
-                    await blockUser(user.id, thread.other!.id);
+                    if (!thread.other) return;
+                    await blockUser(user.id, thread.other.id);
                     toast.success("User blocked. You can unblock from your profile settings.");
                   } catch (error) {
                     toast.error(error instanceof Error ? error.message : "Could not block");
@@ -149,8 +156,11 @@ function Thread() {
           </div>
         }
       />
+      {threadQuery.isError || messagesQuery.isError ? <div role="alert"><p>Conversation could not be loaded.</p><Button variant="outline" onClick={() => { void threadQuery.refetch(); void messagesQuery.refetch(); }}>Retry</Button></div> : null}
+      {!threadQuery.isPending && !threadQuery.isError && !thread ? <p role="alert">Conversation unavailable or access denied.</p> : null}
       <div className="surface-card flex max-h-[60vh] flex-col gap-3 overflow-y-auto rounded-3xl p-5">
-        {(messages ?? []).length === 0 ? (
+        {(messages?.length ?? 0) >= historyLimit ? <Button variant="outline" onClick={() => setHistoryLimit(n => n + 50)}>Load older messages</Button> : null}
+        {messagesQuery.isPending ? <p role="status">Loading messages…</p> : !messagesQuery.isError && (messages ?? []).length === 0 ? (
           <p className="py-8 text-center text-sm text-muted-foreground">No messages yet. Say hello.</p>
         ) : (
           (messages ?? []).map((message) => {
@@ -187,7 +197,7 @@ function Thread() {
           }}
           aria-label="Message"
         />
-        <Button className="rounded-full" disabled={sending || !draft.trim()} onClick={() => void send()}>
+        <Button className="rounded-full" disabled={sending || !draft.trim() || !thread || messagesQuery.isError} onClick={() => void send()}>
           {sending ? "Sending…" : "Send"}
         </Button>
       </div>
