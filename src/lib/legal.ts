@@ -44,6 +44,15 @@ export const LEGAL_DOCS: LegalDoc[] = [
         ],
       },
       {
+        heading: "AI tools and application services",
+        body: [
+          "When you run an AI tool, the details entered in that tool are sent through the Lovable AI Gateway to the configured model provider to generate a result. Inputs, outputs, usage and error status are stored in your account for history and quota enforcement. Do not submit identity documents, passwords or other sensitive information.",
+          "Socilet campaign applications collect the contact and business/project details shown in each form for review and delivery contact. Applicants see their own records; authorized administrators can review them. Domain/hosting provider data sharing must be disclosed separately before activation.",
+          "Optional community tasks store your evidence, completion/review state and any appeal explanation. They do not unlock products or volunteer services. Advertising and donation payments are currently disabled.",
+          "Provider retention, international processing, verified operator contact and exact deletion periods remain pending final confirmation. This policy and the Play Data Safety declaration must be reviewed against the final providers before release.",
+        ],
+      },
+      {
         heading: "What we do not do",
         body: [
           "We do not publish your email address, phone number or precise home address by default.",

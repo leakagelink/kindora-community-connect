@@ -1,6 +1,6 @@
 # Existing Goodivo update
 - [ ] Audit and remediate confirmed Play release blockers; preserve existing records, UI and features; produce evidence-based findings and release status report.
-- [ ] Harden confirmed private-message, profile, notification and ownership write paths; rerun scans and relevant tests.
+- [x] Harden confirmed private-message, profile, notification and ownership write paths; five signed-in denial checks passed, scanner write findings no longer returned; remaining public-read entries documented.
 - [x] Add free logo (100 applications), domain (200 applications/50 awards) and hosting (100 applications/50 awards) offers with private submission, atomic caps, admin review and one-year terms.
 - [x] Verify new offer submission/read-back, consent, 41 rule tests and mobile display; real save survives reload with no captured page errors.
 - [ ] Verify new-offer authorized admin review and cross-account isolation — blocked by no admin and only one member account.
@@ -18,10 +18,15 @@
 - [x] Disclose free pickup, donor-paid local delivery and no ad/task product gates.
 - [x] Keep advertising and sponsor surveys disabled; document provider requirements.
 - [x] Run 13 safety tests and public route smoke checks.
-- [ ] Safely revise staged community SQL before application; audit identified validation, closure and transition concerns requiring a dedicated correction and live review.
-- [ ] Seed task definitions and disabled advertising flags — blocked by unapplied schema.
-- [ ] Test authenticated tasks/admin/product/AI flows — blocked by unapplied community schema, no admin and no separate participating accounts.
+- [x] Supersede unsafe staged draft with reviewed applied task/appeal, atomic AI/product, ownership and withdrawal migrations; original draft explicitly marked do-not-apply.
+- [x] Add two optional real task definitions; database guard prevents unverified ads/donations from being enabled.
+- [x] Verify authenticated onboarding submission/read-back/reload and member admin denial; remove QA completion afterward.
+- [ ] Complete product/request/two-user messaging/AI-provider and admin lifecycle QA — no separate participant/admin accounts; no real content engagements yet.
 - [ ] Configure verified advertising provider and signature flow — blocked by missing provider and policy approval; ads stay disabled.
-- [ ] Automatic product expiry and bucket validation — blocked by live schema/storage inspection.
-- [ ] Resolve account closure, misleading legacy errors, resume export escaping and database/storage findings before production release.
+- [x] Scope listing-photo reads to owner/staff or published media and restrict upload/update filename extensions; retain private bucket and 5 MB limit.
+- [ ] Complete file-content/MIME validation and automatic product expiry — MIME settings need a supported configuration path; expiry duration not specified.
+- [x] Escape/validate resume export and accurately label browser Print / Save PDF; add and run two regression tests.
+- [x] Add Explore and inbox paging, latest-first expandable conversation history and explicit load errors in modified views.
+- [ ] Complete auth-account/private-data deletion and verified external deletion requests — retention policy/contact and end-to-end disposable-account QA still required.
+- [ ] Complete remaining legacy admin errors, precise inbox unread counts, dynamic metadata/sitemap, AI-output reporting and actual-provider output/export checks.
 - [ ] Complete verified legal/support and campaign sponsor details — blocked by missing real entity, contact and jurisdiction details.
