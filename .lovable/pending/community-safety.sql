@@ -218,3 +218,103 @@ begin
  end if; return new;
 end $$;
 create trigger protect_profile_fields before insert or update on public.profiles for each row execute function public.protect_profile_fields();
+
+-- Atomic donor selection and listing status. Existing record identifiers are preserved.
+create or replace function public.manage_product(p_listing_id uuid,p_status text,p_interest_id uuid default null)
+returns void language plpgsql security definer set search_path=public as $$
+declare l public.product_listings; i public.product_interests; u uuid:=auth.uid();
+begin
+ if u is null then raise exception 'Sign in required'; end if;
+ select * into l from public.product_listings where id=p_listing_id for update;
+ if not found or (l.owner_id<>u and not public.is_staff(u)) then raise exception 'Donor access required'; end if;
+ if p_interest_id is not null then
+  select * into i from public.product_interests where id=p_interest_id and listing_id=l.id for update;
+  if not found then raise exception 'Interest not found'; end if;
+  if p_status='reserved' then
+   if l.status<>'published' or i.status<>'pending' then raise exception 'This item or interest is no longer available'; end if;
+   update public.product_interests set status='reserved' where id=i.id;
+   update public.product_listings set status='reserved' where id=l.id;
+  elsif p_status='completed' then
+   if l.status<>'reserved' or i.status<>'reserved' then raise exception 'Reserve the item before confirming handover'; end if;
+   update public.product_interests set status='completed' where id=i.id;
+   update public.product_interests set status='declined' where listing_id=l.id and id<>i.id and status='pending';
+   update public.product_listings set status='given_away' where id=l.id;
+  elsif p_status='declined' and i.status='pending' then update public.product_interests set status='declined' where id=i.id;
+  else raise exception 'Invalid interest transition'; end if;
+ else
+  if p_status='published' and l.status='reserved' then
+   update public.product_interests set status='pending' where listing_id=l.id and status='reserved';
+  elsif p_status in ('removed','expired') and l.status not in ('given_away','removed','expired') then
+   update public.product_interests set status='declined' where listing_id=l.id and status in ('pending','reserved');
+  elsif p_status='given_away' and l.status in ('published','reserved') then
+   update public.product_interests set status=case when status='reserved' then 'completed'::public.interest_status else 'declined'::public.interest_status end where listing_id=l.id and status in ('pending','reserved');
+  else raise exception 'Invalid listing transition'; end if;
+  update public.product_listings set status=p_status::public.listing_status where id=l.id;
+ end if;
+ insert into public.audit_logs(actor_id,action,entity_type,entity_id,metadata) values(u,'product:'||p_status,'product_listing',l.id,jsonb_build_object('interest_id',p_interest_id));
+end $$;
+revoke all on function public.manage_product(uuid,text,uuid) from public,anon;
+grant execute on function public.manage_product(uuid,text,uuid) to authenticated;
+-- State fields are changed only by trusted transition functions, not party UPDATE policies.
+revoke update on public.product_interests from authenticated;
+
+create or replace function public.guard_marketplace_write()
+returns trigger language plpgsql set search_path=public as $$
+declare actor uuid:=auth.uid(); owner uuid; parent_status text;
+begin
+ if auth.role()<>'authenticated' then return new; end if;
+ if exists(select 1 from public.profiles where id=actor and (is_restricted or suspended_until>now())) then raise exception 'Your account is restricted'; end if;
+ if TG_TABLE_NAME='help_requests' then
+  if TG_OP='INSERT' and not public.is_staff(actor) and new.status not in ('draft','pending_review') then raise exception 'Requests require review'; end if;
+  if TG_OP='UPDATE' and not public.is_staff(actor) then
+   if new.owner_id<>old.owner_id then raise exception 'Ownership cannot change'; end if;
+   if old.status in ('draft','pending_review','rejected') and new.status not in ('draft','pending_review','cancelled') then raise exception 'Requests require review'; end if;
+  end if;
+ elsif TG_TABLE_NAME='product_listings' then
+  if TG_OP='INSERT' and not public.is_staff(actor) and new.status<>'pending_review' then raise exception 'Products require review'; end if;
+  if TG_OP='UPDATE' and not public.is_staff(actor) then
+   if new.owner_id<>old.owner_id then raise exception 'Ownership cannot change'; end if;
+   if new.status is distinct from old.status and old.status='pending_review' and new.status<>'removed' then raise exception 'Products require review'; end if;
+  end if;
+ elsif TG_TABLE_NAME='request_applications' then
+  select owner_id,status::text into owner,parent_status from public.help_requests where id=new.request_id;
+  if TG_OP='INSERT' then
+   if parent_status not in ('published','receiving_offers') or owner=actor or new.status<>'pending' or not new.no_payment_confirmed then raise exception 'This request is not accepting offers'; end if;
+  elsif not public.is_staff(actor) then
+   if new.helper_id<>old.helper_id or new.request_id<>old.request_id then raise exception 'Application identity cannot change'; end if;
+   if actor<>owner and new.status is distinct from old.status and new.status<>'withdrawn' then raise exception 'Only the request owner can accept or decline'; end if;
+   if old.status<>'pending' and new.status in ('accepted','declined') then raise exception 'Application already decided'; end if;
+  end if;
+ elsif TG_TABLE_NAME='product_interests' then
+  select owner_id,status::text into owner,parent_status from public.product_listings where id=new.listing_id;
+  if TG_OP='INSERT' and (parent_status<>'published' or owner=actor or new.status<>'pending' or new.user_id<>actor) then raise exception 'This item is not accepting requests'; end if;
+ elsif TG_TABLE_NAME='service_offers' then
+  if TG_OP='UPDATE' and new.user_id<>old.user_id then raise exception 'Ownership cannot change'; end if;
+ end if;
+ return new;
+end $$;
+create trigger guard_help_request before insert or update on public.help_requests for each row execute function public.guard_marketplace_write();
+create trigger guard_product_listing before insert or update on public.product_listings for each row execute function public.guard_marketplace_write();
+create trigger guard_help_application before insert or update on public.request_applications for each row execute function public.guard_marketplace_write();
+create trigger guard_product_interest before insert or update on public.product_interests for each row execute function public.guard_marketplace_write();
+create trigger guard_service_offer before insert or update on public.service_offers for each row execute function public.guard_marketplace_write();
+
+-- Automatic server audit for admin changes; no browser-supplied actor or role is trusted.
+create or replace function public.audit_admin_change()
+returns trigger language plpgsql security definer set search_path=public as $$
+begin
+ insert into public.audit_logs(actor_id,action,entity_type,metadata) values(auth.uid(),TG_OP,TG_TABLE_NAME,jsonb_build_object('changed_at',now()));
+ if TG_OP='DELETE' then return old; end if; return new;
+end $$;
+create trigger audit_role_changes after insert or update or delete on public.user_roles for each row execute function public.audit_admin_change();
+create trigger audit_flag_changes after update on public.feature_flags for each row execute function public.audit_admin_change();
+create trigger audit_quota_changes after update on public.ai_usage_limits for each row execute function public.audit_admin_change();
+create trigger audit_category_changes after insert or update or delete on public.categories for each row execute function public.audit_admin_change();
+-- Do not let a generic feature-flag switch enable an unconfigured ad or survey integration.
+create or replace function public.guard_unconfigured_flags()
+returns trigger language plpgsql set search_path=public as $$
+begin
+ if new.key in ('rewarded_ads','sponsor_surveys') and new.is_enabled then raise exception 'Provider, verification and policy review are required before enabling this feature'; end if;
+ return new;
+end $$;
+create trigger guard_unconfigured_flags before insert or update on public.feature_flags for each row execute function public.guard_unconfigured_flags();
