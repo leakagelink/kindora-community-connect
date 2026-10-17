@@ -1,0 +1,8 @@
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { AppShell, PageHeading } from '@/components/site/AppShell';
+import { SociletOffers } from '@/components/campaign/SociletOffers';
+import { campaignHead } from '@/lib/campaign-rules';
+import { offerTerms } from '@/lib/socilet-offer-rules';
+import { Button } from '@/components/ui/button';
+export const Route = createFileRoute('/socilet_/offers')({ head: () => campaignHead('Free logo, domain & hosting offers', 'Socilet custom logo design and one-year domain and business hosting offers. Read application limits, selection and privacy terms.'), component: Offers });
+function Offers() { return <AppShell><PageHeading eyebrow="Socilet" title="Free logo, domain & hosting" /><SociletOffers /><section className="border-t border-border py-6"><h2 className="font-display text-xl font-bold">Offer terms & privacy</h2><ul className="mt-4 list-disc space-y-4 pl-5 text-sm leading-relaxed text-muted-foreground">{offerTerms.map(t => <li key={t}>{t}</li>)}</ul><div className="mt-5 flex flex-wrap gap-3"><Button asChild variant="outline"><Link to="/socilet/offers/apply" search={{ offer: 'logo' }}>My offer applications</Link></Button><Button asChild variant="ghost"><Link to="/support">Support & deletion requests</Link></Button><Button asChild variant="ghost"><Link to="/legal/$slug" params={{ slug: 'privacy' }}>Privacy policy</Link></Button></div></section></AppShell>; }
