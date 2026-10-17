@@ -2,11 +2,12 @@ import { Link } from '@tanstack/react-router';
 import { ArrowRight, Code2, Globe, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { matchingSociletServices } from '@/lib/socilet-catalog';
+import { SociletOffers } from './SociletOffers';
 
 export function SociletServices({ search = '' }: { search?: string }) {
   const services = matchingSociletServices(search);
-  if (!services.length) return null;
-  return <section aria-label="Socilet free services" className="py-5">
+  if (!services.length) return <SociletOffers search={search} />;
+  return <><section aria-label="Socilet free services" className="py-5">
     <div className="flex flex-wrap items-center justify-between gap-3">
       <div><p className="text-xs font-bold text-primary">SOCILET · #Socilet50</p><h2 className="mt-1 font-display text-xl font-extrabold">Socilet free services</h2></div>
       <Button asChild variant="outline" size="sm"><Link to="/socilet">Campaign details <ArrowRight /></Link></Button>
@@ -21,5 +22,5 @@ export function SociletServices({ search = '' }: { search?: string }) {
         <Button asChild variant="ghost" className="mt-3 justify-start px-0 text-primary"><Link to="/socilet">View service & apply <ArrowRight /></Link></Button>
       </article>;
     })}</div>
-  </section>;
+  </section><SociletOffers search={search} /></>;
 }

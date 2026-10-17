@@ -29,6 +29,7 @@ import { Route as AiToolsWebsiteRouteImport } from './routes/ai-tools.website'
 import { Route as LegalSlugRouteImport } from './routes/legal.$slug'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
 import { Route as RequestsIdRouteImport } from './routes/requests.$id'
+import { Route as SociletOffersRouteImport } from './routes/socilet_.offers'
 import { Route as UIdRouteImport } from './routes/u.$id'
 import { Route as AuthenticatedMessagesIndexRouteImport } from './routes/_authenticated/messages.index'
 import { Route as AuthenticatedMessagesIdRouteImport } from './routes/_authenticated/messages.$id'
@@ -39,6 +40,7 @@ import { Route as AuthenticatedPostRequestRouteImport } from './routes/_authenti
 import { Route as AuthenticatedSociletApplicationsRouteImport } from './routes/_authenticated/socilet_.applications'
 import { Route as AuthenticatedSociletApplyRouteImport } from './routes/_authenticated/socilet_.apply'
 import { Route as AuthenticatedSociletConfirmationRouteImport } from './routes/_authenticated/socilet_.confirmation'
+import { Route as AuthenticatedSociletOffersApplyRouteImport } from './routes/_authenticated/socilet_.offers.apply'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -140,6 +142,11 @@ const RequestsIdRoute = RequestsIdRouteImport.update({
   path: '/requests/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SociletOffersRoute = SociletOffersRouteImport.update({
+  id: '/socilet_/offers',
+  path: '/socilet/offers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UIdRoute = UIdRouteImport.update({
   id: '/u/$id',
   path: '/u/$id',
@@ -196,6 +203,12 @@ const AuthenticatedSociletConfirmationRoute =
     path: '/socilet/confirmation',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedSociletOffersApplyRoute =
+  AuthenticatedSociletOffersApplyRouteImport.update({
+    id: '/socilet_/offers/apply',
+    path: '/socilet/offers/apply',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -217,6 +230,7 @@ export interface FileRoutesByFullPath {
   '/legal/$slug': typeof LegalSlugRoute
   '/products/$id': typeof ProductsIdRoute
   '/requests/$id': typeof RequestsIdRoute
+  '/socilet/offers': typeof SociletOffersRoute
   '/u/$id': typeof UIdRoute
   '/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/post/listing': typeof AuthenticatedPostListingRoute
@@ -227,6 +241,7 @@ export interface FileRoutesByFullPath {
   '/socilet/confirmation': typeof AuthenticatedSociletConfirmationRoute
   '/messages/': typeof AuthenticatedMessagesIndexRoute
   '/post/': typeof AuthenticatedPostIndexRoute
+  '/socilet/offers/apply': typeof AuthenticatedSociletOffersApplyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -248,6 +263,7 @@ export interface FileRoutesByTo {
   '/legal/$slug': typeof LegalSlugRoute
   '/products/$id': typeof ProductsIdRoute
   '/requests/$id': typeof RequestsIdRoute
+  '/socilet/offers': typeof SociletOffersRoute
   '/u/$id': typeof UIdRoute
   '/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/post/listing': typeof AuthenticatedPostListingRoute
@@ -258,6 +274,7 @@ export interface FileRoutesByTo {
   '/socilet/confirmation': typeof AuthenticatedSociletConfirmationRoute
   '/messages': typeof AuthenticatedMessagesIndexRoute
   '/post': typeof AuthenticatedPostIndexRoute
+  '/socilet/offers/apply': typeof AuthenticatedSociletOffersApplyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -281,6 +298,7 @@ export interface FileRoutesById {
   '/legal/$slug': typeof LegalSlugRoute
   '/products/$id': typeof ProductsIdRoute
   '/requests/$id': typeof RequestsIdRoute
+  '/socilet_/offers': typeof SociletOffersRoute
   '/u/$id': typeof UIdRoute
   '/_authenticated/messages/$id': typeof AuthenticatedMessagesIdRoute
   '/_authenticated/post/listing': typeof AuthenticatedPostListingRoute
@@ -291,6 +309,7 @@ export interface FileRoutesById {
   '/_authenticated/socilet_/confirmation': typeof AuthenticatedSociletConfirmationRoute
   '/_authenticated/messages/': typeof AuthenticatedMessagesIndexRoute
   '/_authenticated/post/': typeof AuthenticatedPostIndexRoute
+  '/_authenticated/socilet_/offers/apply': typeof AuthenticatedSociletOffersApplyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -314,6 +333,7 @@ export interface FileRouteTypes {
     | '/legal/$slug'
     | '/products/$id'
     | '/requests/$id'
+    | '/socilet/offers'
     | '/u/$id'
     | '/messages/$id'
     | '/post/listing'
@@ -324,6 +344,7 @@ export interface FileRouteTypes {
     | '/socilet/confirmation'
     | '/messages/'
     | '/post/'
+    | '/socilet/offers/apply'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -345,6 +366,7 @@ export interface FileRouteTypes {
     | '/legal/$slug'
     | '/products/$id'
     | '/requests/$id'
+    | '/socilet/offers'
     | '/u/$id'
     | '/messages/$id'
     | '/post/listing'
@@ -355,6 +377,7 @@ export interface FileRouteTypes {
     | '/socilet/confirmation'
     | '/messages'
     | '/post'
+    | '/socilet/offers/apply'
   id:
     | '__root__'
     | '/'
@@ -377,6 +400,7 @@ export interface FileRouteTypes {
     | '/legal/$slug'
     | '/products/$id'
     | '/requests/$id'
+    | '/socilet_/offers'
     | '/u/$id'
     | '/_authenticated/messages/$id'
     | '/_authenticated/post/listing'
@@ -387,6 +411,7 @@ export interface FileRouteTypes {
     | '/_authenticated/socilet_/confirmation'
     | '/_authenticated/messages/'
     | '/_authenticated/post/'
+    | '/_authenticated/socilet_/offers/apply'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -403,6 +428,7 @@ export interface RootRouteChildren {
   LegalSlugRoute: typeof LegalSlugRoute
   ProductsIdRoute: typeof ProductsIdRoute
   RequestsIdRoute: typeof RequestsIdRoute
+  SociletOffersRoute: typeof SociletOffersRoute
   UIdRoute: typeof UIdRoute
 }
 
@@ -548,6 +574,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RequestsIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/socilet_/offers': {
+      id: '/socilet_/offers'
+      path: '/socilet/offers'
+      fullPath: '/socilet/offers'
+      preLoaderRoute: typeof SociletOffersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/u/$id': {
       id: '/u/$id'
       path: '/u/$id'
@@ -618,6 +651,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSociletConfirmationRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/socilet_/offers/apply': {
+      id: '/_authenticated/socilet_/offers/apply'
+      path: '/socilet/offers/apply'
+      fullPath: '/socilet/offers/apply'
+      preLoaderRoute: typeof AuthenticatedSociletOffersApplyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -635,6 +675,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSociletConfirmationRoute: typeof AuthenticatedSociletConfirmationRoute
   AuthenticatedMessagesIndexRoute: typeof AuthenticatedMessagesIndexRoute
   AuthenticatedPostIndexRoute: typeof AuthenticatedPostIndexRoute
+  AuthenticatedSociletOffersApplyRoute: typeof AuthenticatedSociletOffersApplyRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -651,6 +692,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSociletConfirmationRoute: AuthenticatedSociletConfirmationRoute,
   AuthenticatedMessagesIndexRoute: AuthenticatedMessagesIndexRoute,
   AuthenticatedPostIndexRoute: AuthenticatedPostIndexRoute,
+  AuthenticatedSociletOffersApplyRoute: AuthenticatedSociletOffersApplyRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -685,6 +727,7 @@ const rootRouteChildren: RootRouteChildren = {
   LegalSlugRoute: LegalSlugRoute,
   ProductsIdRoute: ProductsIdRoute,
   RequestsIdRoute: RequestsIdRoute,
+  SociletOffersRoute: SociletOffersRoute,
   UIdRoute: UIdRoute,
 }
 export const routeTree = rootRouteImport

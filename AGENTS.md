@@ -17,3 +17,4 @@
 - Campaign submissions and reviews use authenticated server functions and database RPCs with applicant-only reads, idempotent submission, approval caps and audit writes; direct client writes are not authorized.
 - Keep advertising centralized and disabled without a verified platform adapter; navigation and verified submission must always proceed without ad delivery.
 - Keep public Socilet campaign service scopes in a shared catalog module and community inventory in existing public queries; campaign applications are private records, not product inventory.
+- Keep additional Socilet offers separate from the development campaign; enforce per-offer application and lifetime-award caps in locked database RPCs to preserve independent limits and private records.
