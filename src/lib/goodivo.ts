@@ -83,6 +83,7 @@ export type RequestFilters = {
   remote?: "any" | "remote" | "local" | undefined;
   language?: string | undefined;
   limit?: number | undefined;
+  page?: number | undefined;
 };
 
 export const categoriesQuery = queryOptions({
@@ -132,7 +133,8 @@ export function requestsQuery(filters: RequestFilters = {}) {
         .in("status", [...PUBLIC_REQUEST_STATUSES])
         .is("deleted_at", null)
         .order("created_at", { ascending: false })
-        .limit(filters.limit ?? 24);
+        .order("id")
+        .range((filters.page ?? 0) * (filters.limit ?? 24), ((filters.page ?? 0) + 1) * (filters.limit ?? 24) - 1);
 
       if (filters.search) query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
       if (filters.type) query = query.eq("request_type", filters.type as "digital_service");
@@ -168,7 +170,7 @@ export function requestQuery(id: string) {
 const LISTING_SELECT =
   "id, title, description, condition, photos, location, pickup_available, delivery_available, quantity, status, created_at, owner_id, category:categories(id, name)";
 
-export type ListingFilters = { search?: string | undefined; categoryId?: string | undefined; location?: string; limit?: number };
+export type ListingFilters = { search?: string | undefined; categoryId?: string | undefined; location?: string; limit?: number; page?: number };
 
 export function listingsQuery(filters: ListingFilters = {}) {
   return queryOptions({
@@ -180,7 +182,8 @@ export function listingsQuery(filters: ListingFilters = {}) {
         .in("status", ["published", "reserved"] as const)
         .is("deleted_at", null)
         .order("created_at", { ascending: false })
-        .limit(filters.limit ?? 24);
+        .order("id")
+        .range((filters.page ?? 0) * (filters.limit ?? 24), ((filters.page ?? 0) + 1) * (filters.limit ?? 24) - 1);
 
       if (filters.search) query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
       if (filters.categoryId) query = query.eq("category_id", filters.categoryId);
@@ -210,7 +213,7 @@ export function listingQuery(id: string) {
   });
 }
 
-export function helpersQuery(filters: { search?: string | undefined; limit?: number } = {}) {
+export function helpersQuery(filters: { search?: string | undefined; limit?: number; page?: number } = {}) {
   return queryOptions({
     queryKey: ["service-offers", filters],
     queryFn: async () => {
@@ -222,15 +225,17 @@ export function helpersQuery(filters: { search?: string | undefined; limit?: num
         .eq("is_active", true)
         .is("deleted_at", null)
         .order("created_at", { ascending: false })
-        .limit(filters.limit ?? 24);
+        .order("id")
+        .range((filters.page ?? 0) * (filters.limit ?? 24), ((filters.page ?? 0) + 1) * (filters.limit ?? 24) - 1);
       if (filters.search) query = query.or(`headline.ilike.%${filters.search}%,intro.ilike.%${filters.search}%`);
       const { data, error } = await query;
       if (error) throw error;
       const offers = data ?? [];
       const ids = [...new Set(offers.map((offer) => offer.user_id))];
-      const { data: people } = ids.length
+      const { data: people, error: peopleError } = ids.length
         ? await supabase.from("profiles").select("id, display_name, avatar_url").in("id", ids)
-        : { data: [] };
+        : { data: [], error: null };
+      if (peopleError) throw peopleError;
       const byId = new Map((people ?? []).map((person) => [person.id, person]));
       return offers.map((offer) => ({
         ...offer,

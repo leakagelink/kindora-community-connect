@@ -15,6 +15,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { unblockUser } from "@/lib/actions";
 import { useAuth } from "@/lib/auth";
 import { profileQuery, statusLabel, timeAgo } from "@/lib/goodivo";
+import { useServerFn } from "@tanstack/react-start";
+import { withdrawAccount } from "@/lib/account.functions";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({ meta: [{ title: "Your profile & activity — Goodivo" }, { name: "description", content: "Manage your Goodivo profile, privacy and community activity." }, { property: "og:title", content: "Your profile & activity — Goodivo" }, { property: "og:description", content: "Your personal Goodivo profile and privacy settings." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
@@ -33,42 +35,48 @@ function ProfilePage() {
   const { user, signOut, isStaff } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { data: profile } = useQuery({ ...profileQuery(user?.id ?? ""), enabled: Boolean(user) });
+  const withdraw = useServerFn(withdrawAccount);
+  const [withdrawing, setWithdrawing] = useState(false);
+  const profileResult = useQuery({ ...profileQuery(user?.id ?? ""), enabled: Boolean(user) });
+  const { data: profile } = profileResult;
 
-  const { data: mine } = useQuery({
+  const activityResult = useQuery({
     queryKey: ["my-activity", user?.id],
     enabled: Boolean(user),
     queryFn: async () => {
+      if (!user) throw new Error('Sign in required.');
       const [requests, listings, offers, applications, blocks] = await Promise.all([
         supabase
           .from("help_requests")
           .select("id, title, status, created_at, offers_count")
-          .eq("owner_id", user!.id)
+          .eq("owner_id", user.id)
           .is("deleted_at", null)
           .order("created_at", { ascending: false }),
         supabase
           .from("product_listings")
           .select("id, title, status, created_at")
-          .eq("owner_id", user!.id)
+          .eq("owner_id", user.id)
           .is("deleted_at", null)
           .order("created_at", { ascending: false }),
         supabase
           .from("service_offers")
           .select("id, headline, is_active, created_at")
-          .eq("user_id", user!.id)
+          .eq("user_id", user.id)
           .is("deleted_at", null)
           .order("created_at", { ascending: false }),
         supabase
           .from("request_applications")
           .select("id, status, created_at, request:help_requests!request_applications_request_id_fkey(id, title)")
-          .eq("helper_id", user!.id)
+          .eq("helper_id", user.id)
           .order("created_at", { ascending: false }),
-        supabase.from("blocked_users").select("blocked_id, created_at").eq("blocker_id", user!.id),
+        supabase.from("blocked_users").select("blocked_id, created_at").eq("blocker_id", user.id),
       ]);
+      for (const result of [requests, listings, offers, applications, blocks]) if (result.error) throw new Error('Your activity could not be loaded. Please retry.');
       const blockedIds = (blocks.data ?? []).map((row) => row.blocked_id);
-      const { data: blockedPeople } = blockedIds.length
+      const { data: blockedPeople, error: peopleError } = blockedIds.length
         ? await supabase.from("profiles").select("id, display_name").in("id", blockedIds)
-        : { data: [] };
+        : { data: [], error: null };
+      if (peopleError) throw new Error('Blocked people could not be loaded. Please retry.');
       return {
         requests: requests.data ?? [],
         listings: listings.data ?? [],
@@ -83,6 +91,7 @@ function ProfilePage() {
       };
     },
   });
+  const mine = activityResult.data;
 
   const [form, setForm] = useState({
     display_name: "",
@@ -116,6 +125,7 @@ function ProfilePage() {
   }, [profile]);
 
   const save = async () => {
+    if (!user) return;
     if (form.display_name.trim().length < 2) {
       toast.error("Please enter a display name.");
       return;
@@ -140,35 +150,25 @@ function ProfilePage() {
         show_location: form.show_location,
         is_public: form.is_public,
       })
-      .eq("id", user!.id);
+      .eq("id", user.id);
     if (error) {
       toast.error(error.message);
       return;
     }
-    void queryClient.invalidateQueries({ queryKey: ["profile", user!.id] });
+    void queryClient.invalidateQueries({ queryKey: ["profile", user.id] });
     toast.success("Profile saved");
   };
 
   const deleteAccount = async () => {
+    if (!user || withdrawing) return;
     const confirmed = window.confirm(
-      "Delete your Goodivo account? Your profile, posts and listings will be withdrawn from the platform. Records kept for safety and audit reasons are handled as described in the Account Deletion policy.",
+      "Withdraw your profile and posts from public view? This is not complete account deletion: your sign-in account and private records remain until the full deletion process is finalized.",
     );
     if (!confirmed) return;
-    const now = new Date().toISOString();
-    await supabase.from("help_requests").update({ deleted_at: now, status: "cancelled" as never }).eq("owner_id", user!.id);
-    await supabase.from("product_listings").update({ deleted_at: now, status: "removed" as never }).eq("owner_id", user!.id);
-    await supabase.from("service_offers").update({ deleted_at: now, is_active: false }).eq("user_id", user!.id);
-    const { error } = await supabase
-      .from("profiles")
-      .update({ deleted_at: now, is_public: false, display_name: "Deleted member", bio: null, avatar_url: null })
-      .eq("id", user!.id);
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-    toast.success("Your account has been closed.");
-    await signOut();
-    void navigate({ to: "/" });
+    setWithdrawing(true);
+    try { await withdraw(); toast.success('Your profile and posts were withdrawn. Full account deletion is not yet complete.'); await signOut(); void navigate({ to: '/' }); }
+    catch (error) { toast.error(error instanceof Error ? error.message : 'Withdrawal failed. Please retry.'); }
+    finally { setWithdrawing(false); }
   };
 
   return (
@@ -195,6 +195,7 @@ function ProfilePage() {
         }
       />
 
+      {profileResult.isError || activityResult.isError ? <div role="alert" className="mb-5 border border-destructive/30 p-4"><p>Account information could not be loaded.</p><Button variant="outline" onClick={() => { void profileResult.refetch(); void activityResult.refetch(); }}>Retry</Button></div> : null}
       <Tabs defaultValue="posts">
         <TabsList className="mb-5 flex-wrap">
           <TabsTrigger value="posts">My posts</TabsTrigger>
@@ -267,7 +268,8 @@ function ProfilePage() {
                       variant="ghost"
                       className="rounded-full"
                       onClick={async () => {
-                        await supabase.from("service_offers").update({ is_active: !row.is_active }).eq("id", row.id);
+                        const result = await supabase.from("service_offers").update({ is_active: !row.is_active }).eq("id", row.id);
+                        if (result.error) { toast.error('Skill offer could not be updated.'); return; }
                         void queryClient.invalidateQueries({ queryKey: ["my-activity", user?.id] });
                         void queryClient.invalidateQueries({ queryKey: ["service-offers"] });
                       }}
@@ -380,7 +382,8 @@ function ProfilePage() {
                       variant="ghost"
                       className="rounded-full"
                       onClick={async () => {
-                        await unblockUser(user!.id, person.id);
+                        if (!user) return;
+                        try { await unblockUser(user.id, person.id); } catch { toast.error('Could not unblock this person.'); return; }
                         void queryClient.invalidateQueries({ queryKey: ["my-activity", user?.id] });
                         toast.success("Unblocked");
                       }}
@@ -394,9 +397,9 @@ function ProfilePage() {
           </section>
 
           <section className="surface-card rounded-3xl p-6">
-            <h2 className="font-display text-base font-bold">Delete account</h2>
+            <h2 className="font-display text-base font-bold">Account withdrawal & deletion</h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              This withdraws your profile, requests, listings and skill offers from Goodivo.
+              Withdraw your public profile and posts. Full sign-in account deletion and private-data cleanup are not yet available; this is not complete account erasure.
             </p>
             <FreeNotice>
               Some records are retained for safety, moderation and audit purposes as described in our{" "}
@@ -405,8 +408,8 @@ function ProfilePage() {
               </Link>
               .
             </FreeNotice>
-            <Button variant="destructive" className="mt-4 rounded-full" onClick={() => void deleteAccount()}>
-              Delete my account
+            <Button variant="destructive" disabled={withdrawing} className="mt-4 rounded-full" onClick={() => void deleteAccount()}>
+              {withdrawing ? 'Withdrawing…' : 'Withdraw profile & posts'}
             </Button>
           </section>
 

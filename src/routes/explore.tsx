@@ -17,6 +17,7 @@ type ExploreSearch = {
   type?: string | undefined;
   category?: string | undefined;
   remote?: "remote" | "local" | undefined;
+  page?: number | undefined;
 };
 
 export const Route = createFileRoute("/explore")({
@@ -24,6 +25,7 @@ export const Route = createFileRoute("/explore")({
     const tab = search['tab'];
     const remote = search['remote'];
     return {
+      page: Number.isInteger(Number(search['page'])) && Number(search['page']) >= 0 ? Math.min(Number(search['page']), 10000) : 0,
       tab: tab === "products" || tab === "helpers" || tab === "digital" || tab === "socilet" ? tab : "requests",
       q: typeof search['q'] === "string" && search['q'] ? (search['q'] as string) : undefined,
       type: typeof search['type'] === "string" ? (search['type'] as string) : undefined,
@@ -68,22 +70,24 @@ function Explore() {
       type: tab === "digital" ? "digital_service" : searchParams.type,
       categoryId: searchParams.category,
       remote: searchParams.remote,
+      page: searchParams.page,
     }),
     enabled: tab === "requests" || tab === "digital",
   });
   const listings = useQuery({
-    ...listingsQuery({ search: searchParams.q, categoryId: searchParams.category }),
+    ...listingsQuery({ search: searchParams.q, categoryId: searchParams.category, page: searchParams.page ?? 0 }),
     enabled: tab === "products",
   });
-  const helpers = useQuery({ ...helpersQuery({ search: searchParams.q }), enabled: tab === "helpers" || tab === "digital" });
+  const helpers = useQuery({ ...helpersQuery({ search: searchParams.q, page: searchParams.page ?? 0 }), enabled: tab === "helpers" || tab === "digital" });
 
   function update(next: Partial<ExploreSearch>) {
-    void navigate({ to: "/explore", search: { ...searchParams, ...next } });
+    void navigate({ to: "/explore", search: { ...searchParams, page: 0, ...next } });
   }
 
   const relevantCategories = (categories.data ?? []).filter((c) =>
     tab === "products" ? c.group_name === "Free Products" : c.group_name !== "Free Products",
   );
+  const active = tab === 'products' ? listings : tab === 'helpers' ? helpers : requests;
 
   return (
     <AppShell>
@@ -205,7 +209,9 @@ function Explore() {
 
       {tab === "digital" ? <section className="py-7"><h2 className="font-display text-xl font-bold">Community skill offers</h2><div className="mt-5 grid gap-4 md:grid-cols-3">{helpers.isLoading ? <CardSkeleton /> : helpers.isError ? <p role="alert" className="text-destructive">Could not load community offers.</p> : helpers.data?.length ? helpers.data.map(helper => <HelperCard key={helper.id} helper={helper} />) : <p className="text-sm text-muted-foreground">No community skill offers published yet.</p>}</div></section> : null}
 
-      {!requests.isLoading &&
+      {tab !== 'socilet' && active.isError ? <div role="alert" className="mt-5"><p>Results could not be loaded.</p><Button variant="outline" onClick={() => void active.refetch()}>Retry</Button></div> : null}
+      {tab !== 'socilet' ? <div className="mt-5 flex items-center gap-3"><Button variant="outline" disabled={!searchParams.page} onClick={() => update({ page: Math.max(0, (searchParams.page ?? 0) - 1) })}>Previous</Button><span className="text-sm">Page {(searchParams.page ?? 0) + 1}</span><Button variant="outline" disabled={active.isLoading || active.isError || (active.data?.length ?? 0) < 24 && (tab !== 'digital' || (helpers.data?.length ?? 0) < 24)} onClick={() => update({ page: (searchParams.page ?? 0) + 1 })}>Next</Button></div> : null}
+      {!active.isError && !requests.isLoading &&
       !listings.isLoading &&
       !helpers.isLoading &&
        (((tab === "requests" || tab === "digital") && !requests.data?.length) ||

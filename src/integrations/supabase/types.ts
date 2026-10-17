@@ -18,10 +18,13 @@ export type Database = {
         Row: {
           created_at: string
           error_message: string | null
+          estimated_cost_usd: number
           id: string
           input: Json
+          input_tokens: number | null
           model: string | null
           output: Json | null
+          output_tokens: number | null
           output_url: string | null
           status: string
           tool: string
@@ -30,10 +33,13 @@ export type Database = {
         Insert: {
           created_at?: string
           error_message?: string | null
+          estimated_cost_usd?: number
           id?: string
           input?: Json
+          input_tokens?: number | null
           model?: string | null
           output?: Json | null
+          output_tokens?: number | null
           output_url?: string | null
           status?: string
           tool: string
@@ -42,10 +48,13 @@ export type Database = {
         Update: {
           created_at?: string
           error_message?: string | null
+          estimated_cost_usd?: number
           id?: string
           input?: Json
+          input_tokens?: number | null
           model?: string | null
           output?: Json | null
+          output_tokens?: number | null
           output_url?: string | null
           status?: string
           tool?: string
@@ -55,19 +64,28 @@ export type Database = {
       }
       ai_usage_limits: {
         Row: {
+          daily_budget_usd: number
           daily_limit: number
+          estimated_cost_per_run_usd: number
+          global_daily_limit: number
           is_enabled: boolean
           tool: string
           updated_at: string
         }
         Insert: {
+          daily_budget_usd?: number
           daily_limit?: number
+          estimated_cost_per_run_usd?: number
+          global_daily_limit?: number
           is_enabled?: boolean
           tool: string
           updated_at?: string
         }
         Update: {
+          daily_budget_usd?: number
           daily_limit?: number
+          estimated_cost_per_run_usd?: number
+          global_daily_limit?: number
           is_enabled?: boolean
           tool?: string
           updated_at?: string
@@ -194,6 +212,51 @@ export type Database = {
           slug?: string
           sort_order?: number
           updated_at?: string
+        }
+        Relationships: []
+      }
+      community_tasks: {
+        Row: {
+          actions: string
+          created_at: string
+          eligibility: string
+          id: string
+          is_active: boolean
+          kind: string
+          privacy: string
+          purpose: string
+          reward: string
+          title: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          actions: string
+          created_at?: string
+          eligibility: string
+          id?: string
+          is_active?: boolean
+          kind: string
+          privacy: string
+          purpose: string
+          reward?: string
+          title: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          actions?: string
+          created_at?: string
+          eligibility?: string
+          id?: string
+          is_active?: boolean
+          kind?: string
+          privacy?: string
+          purpose?: string
+          reward?: string
+          title?: string
+          updated_at?: string
+          version?: number
         }
         Relationships: []
       }
@@ -822,6 +885,39 @@ export type Database = {
           },
         ]
       }
+      restriction_appeals: {
+        Row: {
+          created_at: string
+          id: string
+          reason: string
+          response: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          reason: string
+          response?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          reason?: string
+          response?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       reviews: {
         Row: {
           comment: string | null
@@ -886,6 +982,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      reward_events: {
+        Row: {
+          created_at: string
+          credits: number
+          id: string
+          provider: string
+          provider_event_id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          credits?: number
+          id?: string
+          provider: string
+          provider_event_id: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          credits?: number
+          id?: string
+          provider?: string
+          provider_event_id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       service_offers: {
         Row: {
@@ -994,6 +1120,56 @@ export type Database = {
         }
         Relationships: []
       }
+      task_submissions: {
+        Row: {
+          created_at: string
+          entity_key: string
+          evidence: Json
+          id: string
+          review_note: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          task_id: string
+          task_version: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entity_key?: string
+          evidence?: Json
+          id?: string
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status: string
+          task_id: string
+          task_version: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entity_key?: string
+          evidence?: Json
+          id?: string
+          review_note?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          task_id?: string
+          task_version?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_submissions_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "community_tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -1024,6 +1200,18 @@ export type Database = {
         Args: { p_id: string; p_user: string }
         Returns: boolean
       }
+      can_view_listing_photo: { Args: { p_name: string }; Returns: boolean }
+      finish_ai_generation: {
+        Args: {
+          p_error: string
+          p_id: string
+          p_input_tokens: number
+          p_output: Json
+          p_output_tokens: number
+          p_user: string
+        }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1036,6 +1224,24 @@ export type Database = {
         Returns: boolean
       }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      manage_product: {
+        Args: { p_interest_id?: string; p_listing_id: string; p_status: string }
+        Returns: undefined
+      }
+      platform_operational_metrics: { Args: never; Returns: Json }
+      reserve_ai_generation: {
+        Args: { p_input: Json; p_tool: string }
+        Returns: Json
+      }
+      review_platform_submission: {
+        Args: {
+          p_approved: boolean
+          p_id: string
+          p_note: string
+          p_type: string
+        }
+        Returns: undefined
+      }
       review_socilet_application: {
         Args: { p_id: string; p_note: string; p_status: string }
         Returns: undefined
@@ -1044,11 +1250,30 @@ export type Database = {
         Args: { p_id: string; p_note: string; p_status: string }
         Returns: undefined
       }
+      save_ai_budget: {
+        Args: {
+          p_budget: number
+          p_estimate: number
+          p_global_limit: number
+          p_tool: string
+        }
+        Returns: undefined
+      }
+      save_community_task: { Args: { p_definition: Json }; Returns: undefined }
+      submit_community_task: {
+        Args: { p_evidence: Json; p_task_id: string }
+        Returns: Json
+      }
+      submit_restriction_appeal: {
+        Args: { p_reason: string }
+        Returns: undefined
+      }
       submit_socilet_application: { Args: { p_payload: Json }; Returns: Json }
       submit_socilet_offer: {
         Args: { p_offer: string; p_payload: Json }
         Returns: Json
       }
+      withdraw_goodivo_account: { Args: never; Returns: undefined }
     }
     Enums: {
       app_role: "member" | "moderator" | "admin"

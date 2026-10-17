@@ -55,7 +55,7 @@ export const LEGAL_DOCS: LegalDoc[] = [
         heading: "Your choices",
         body: [
           "You can edit or delete your content, control privacy settings on your profile, adjust non-essential notification preferences, and block other users.",
-          "You can request account deletion at any time from your profile settings. See the Account Deletion page for what is removed and what is retained for safety and legal reasons.",
+          "Profile settings currently support public-profile and post withdrawal, not complete account erasure. Full account deletion, retention periods and a verified external request contact must be finalized before release. See the Account Deletion page for the current limitations.",
         ],
       },
       {
@@ -262,14 +262,14 @@ export const LEGAL_DOCS: LegalDoc[] = [
       {
         heading: "How to delete",
         body: [
-          "Open Profile, then Settings, then Delete account. You will be asked to confirm. You can also email a deletion request to " +
-            `${P.email} from your registered address.`,
+          "Open Profile, then Privacy & account, then Withdraw profile & posts. This withdraws public content in one checked transaction but does not delete your sign-in account or all private records.",
+          `Complete account deletion and a verified external request contact are not yet operational. Contact details pending confirmation: ${P.email}. Goodivo is not ready for production release until these are finalized.`,
         ],
       },
       {
         heading: "What is deleted",
         body: [
-          "Your profile is removed from public view, along with your help requests, helper profile, product listings and applications. Your messages are removed from your side of conversations.",
+          "Withdrawal removes your profile, requests, volunteer offers and product listings from public view, and clears profile personal fields. Applications, private messages, uploaded files and the authentication account are not erased by this withdrawal action.",
         ],
       },
       {

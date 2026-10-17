@@ -22,6 +22,48 @@
       "when": 1792253102905,
       "tag": "0002_harden_ownership_and_private_messages",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1792253212760,
+      "tag": "0003_atomic_account_withdrawal_and_photo_scope",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792253246333,
+      "tag": "0004_trusted_withdrawal_profile_guard",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1792253326706,
+      "tag": "0005_marketplace_identity_reviews_and_notifications",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1792253357876,
+      "tag": "0006_atomic_ai_reservations_and_budget",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1792253412346,
+      "tag": "0007_community_tasks_and_private_appeals",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1792253442901,
+      "tag": "0008_atomic_product_transitions",
+      "breakpoints": true
     }
   ]
 }

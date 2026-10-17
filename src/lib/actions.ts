@@ -7,14 +7,15 @@ export async function notify(input: {
   body?: string | null;
   link?: string | null;
 }) {
-  // Best effort: a failed notification must never block the action itself.
-  await supabase.from("notifications").insert({
+  // Ordinary notifications are emitted by trusted database events. Staff notices remain best effort.
+  const result = await supabase.from("notifications").insert({
     user_id: input.userId,
     type: input.type,
     title: input.title,
     body: input.body ?? null,
     link: input.link ?? null,
   });
+  if (result.error) console.warn('Notification was not delivered.');
 }
 
 export async function logAudit(input: {
@@ -99,25 +100,7 @@ export async function sendMessage(conversationId: string, senderId: string, body
     .insert({ conversation_id: conversationId, sender_id: senderId, body: trimmed });
   if (error) throw error;
 
-  await supabase
-    .from("conversations")
-    .update({ last_message_at: new Date().toISOString() })
-    .eq("id", conversationId);
-
-  const { data: others } = await supabase
-    .from("conversation_participants")
-    .select("user_id")
-    .eq("conversation_id", conversationId)
-    .neq("user_id", senderId);
-  for (const row of others ?? []) {
-    await notify({
-      userId: row.user_id,
-      type: "message",
-      title: "New message",
-      body: trimmed.slice(0, 120),
-      link: `/messages/${conversationId}`,
-    });
-  }
+  // Timestamp and recipient notifications commit atomically with the message in Cloud.
 }
 
 export async function blockUser(blockerId: string, blockedId: string) {

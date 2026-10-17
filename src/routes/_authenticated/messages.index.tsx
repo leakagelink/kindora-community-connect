@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 import { AppShell, EmptyState, PageHeading } from "@/components/site/AppShell";
 import { Button } from "@/components/ui/button";
@@ -21,44 +22,54 @@ type ConversationRow = {
 
 function MessagesList() {
   const { user } = useAuth();
+  const [page, setPage] = useState(0);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["conversations", user?.id],
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["conversations", user?.id, page],
     enabled: Boolean(user),
     queryFn: async () => {
+      if (!user) throw new Error('Sign in required.');
       const { data: participation, error } = await supabase
         .from("conversation_participants")
         .select("conversation_id, last_read_at")
-        .eq("user_id", user!.id);
+        .eq("user_id", user.id);
       if (error) throw error;
       const ids = (participation ?? []).map((row) => row.conversation_id);
       if (!ids.length) return [];
 
-      const { data: conversations } = await supabase
+      const { data: conversations, error: conversationError } = await supabase
         .from("conversations")
         .select("id, request_id, listing_id, last_message_at")
         .in("id", ids)
-        .order("last_message_at", { ascending: false });
+        .order("last_message_at", { ascending: false })
+        .order("id")
+        .range(page * 20, page * 20 + 19);
+      if (conversationError) throw conversationError;
+      const pageIds = (conversations ?? []).map(c => c.id);
+      if (!pageIds.length) return [];
 
-      const { data: others } = await supabase
+      const { data: others, error: otherError } = await supabase
         .from("conversation_participants")
         .select("conversation_id, user_id")
-        .in("conversation_id", ids)
-        .neq("user_id", user!.id);
+        .in("conversation_id", pageIds)
+        .neq("user_id", user.id);
+      if (otherError) throw otherError;
 
       const personIds = [...new Set((others ?? []).map((row) => row.user_id))];
-      const { data: people } = personIds.length
+      const { data: people, error: peopleError } = personIds.length
         ? await supabase.from("profiles").select("id, display_name, avatar_url").in("id", personIds)
-        : { data: [] };
+        : { data: [], error: null };
+      if (peopleError) throw peopleError;
       const personById = new Map((people ?? []).map((person) => [person.id, person]));
       const otherByConversation = new Map((others ?? []).map((row) => [row.conversation_id, row.user_id]));
 
-      const { data: recent } = await supabase
+      const { data: recent, error: recentError } = await supabase
         .from("messages")
         .select("conversation_id, body, created_at, sender_id")
-        .in("conversation_id", ids)
+        .in("conversation_id", pageIds)
         .order("created_at", { ascending: false })
         .limit(200);
+      if (recentError) throw recentError;
 
       const lastRead = new Map((participation ?? []).map((row) => [row.conversation_id, row.last_read_at]));
 
@@ -67,7 +78,7 @@ function MessagesList() {
         const last = messages[0] ?? null;
         const readAt = lastRead.get(conversation.id);
         const unread = messages.filter(
-          (row) => row.sender_id !== user!.id && (!readAt || new Date(row.created_at) > new Date(readAt)),
+          (row) => row.sender_id !== user.id && (!readAt || new Date(row.created_at) > new Date(readAt)),
         ).length;
         const otherId = otherByConversation.get(conversation.id) ?? null;
         return {
@@ -87,7 +98,7 @@ function MessagesList() {
         title="Messages"
         description="Private conversations about requests and listings. Never share payment details here."
       />
-      {isLoading ? (
+      {isError ? <EmptyState title="Inbox unavailable" body="Conversations could not be loaded." action={<Button variant="outline" onClick={() => void refetch()}>Retry</Button>} /> : isLoading ? (
         <div className="space-y-3">
           {[0, 1, 2].map((key) => (
             <div key={key} className="surface-card h-20 animate-pulse rounded-3xl" />
@@ -135,6 +146,7 @@ function MessagesList() {
           ))}
         </ul>
       )}
+      <div className="mt-5 flex items-center gap-3"><Button variant="outline" disabled={!page} onClick={() => setPage(p => p - 1)}>Previous</Button><span>Page {page + 1}</span><Button variant="outline" disabled={isError || isLoading || (data?.length ?? 0) < 20} onClick={() => setPage(p => p + 1)}>Next</Button></div>
     </AppShell>
   );
 }
