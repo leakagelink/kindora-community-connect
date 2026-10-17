@@ -1,4 +1,4 @@
--- Additive extension. Apply only after live schema inspection and healthy Cloud status.
+-- SUPERSEDED HISTORICAL DRAFT. DO NOT APPLY. Reviewed replacements are in drizzle/migrations/0002 through 0009; see README.md.
 create table if not exists public.community_tasks (
  id uuid primary key default gen_random_uuid(), title text not null, purpose text not null,
  kind text not null check(kind in ('profile','request_details','eligibility','onboarding','feedback')),
