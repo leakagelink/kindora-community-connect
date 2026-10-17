@@ -1,0 +1,18 @@
+import { useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useServerFn } from '@tanstack/react-start';
+import { toast } from 'sonner';
+import { getOfferAdmin, reviewOffer } from '@/lib/socilet-offers.functions';
+import { getOffer, offerStatuses, type OfferApplication } from '@/lib/socilet-offer-rules';
+import { Field, NativeSelect } from '@/components/goodivo/FormBits';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+export function SociletOfferAdmin() {
+  const [page, setPage] = useState(0); const load = useServerFn(getOfferAdmin);
+  const query = useQuery({ queryKey: ['socilet-offer-admin', page], queryFn: () => load({ data: { page } }) });
+  return <section className="mt-10 border-t border-border pt-6"><h2 className="font-display text-xl font-bold">Logo, domain & hosting review</h2><p className="my-3 text-sm text-muted-foreground">100 logo recipients; 50 domains; 50 hosting awards. Approved awards keep their place permanently. Confirm provider, one-year scope and renewal terms with applicants before activation.</p>{query.isPending ? <p role="status">Loading offers…</p> : query.isError ? <div role="alert"><p>{query.error.message}</p><Button variant="outline" onClick={() => void query.refetch()}>Retry</Button></div> : <><div className="space-y-5">{query.data.rows.length ? query.data.rows.map(a => <Item key={a.id} a={a} />) : <p>No offer applications.</p>}</div><div className="mt-5 flex flex-wrap items-center gap-3"><Button variant="outline" disabled={!page} onClick={() => setPage(p => p - 1)}>Previous</Button><span>Page {page + 1} · {query.data.count} applications</span><Button variant="outline" disabled={(page + 1) * 20 >= query.data.count} onClick={() => setPage(p => p + 1)}>Next</Button></div></>}</section>;
+}
+function Item({ a }: { a: OfferApplication }) {
+  const [status, setStatus] = useState(a.status); const [note, setNote] = useState(a.review_note ?? ''); const [busy, setBusy] = useState(false); const review = useServerFn(reviewOffer); const client = useQueryClient();
+  return <article className="rounded-lg border border-border p-5"><h3 className="font-display text-lg font-bold">{a.payload.business_name} · {getOffer(a.offer_key).title}</h3><p className="mt-2 text-sm">{a.payload.full_name} · <span className="break-all">{a.payload.email}</span></p><p className="mt-3 whitespace-pre-wrap break-words text-sm text-muted-foreground">{a.payload.brief}</p><p className="mt-3 whitespace-pre-wrap break-words text-sm">{a.payload.reason}</p><form className="mt-5 space-y-3" onSubmit={async e => { e.preventDefault(); if (busy) return; setBusy(true); try { await review({ data: { id: a.id, status, note } }); toast.success('Offer review saved.'); await client.invalidateQueries({ queryKey: ['socilet-offer-admin'] }); await client.invalidateQueries({ queryKey: ['socilet-offer-applications'] }); } catch (e) { toast.error(e instanceof Error ? e.message : 'Review failed.'); } finally { setBusy(false); } }}><Field id={`offer-status-${a.id}`} label="Status"><NativeSelect id={`offer-status-${a.id}`} value={status} onChange={v => { const next = offerStatuses.find(s => s === v); if (next) setStatus(next); }}>{offerStatuses.map(s => <option key={s} value={s}>{s.replaceAll('_', ' ')}</option>)}</NativeSelect></Field><Field id={`offer-note-${a.id}`} label="Note visible to applicant"><Textarea id={`offer-note-${a.id}`} required minLength={5} maxLength={2000} value={note} onChange={e => setNote(e.target.value)} /></Field><Button disabled={busy} variant="outline">{busy ? 'Saving…' : 'Save offer review'}</Button></form></article>;
+}
