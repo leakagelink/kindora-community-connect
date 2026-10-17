@@ -29,6 +29,13 @@
       "when": 1792253212760,
       "tag": "0003_atomic_account_withdrawal_and_photo_scope",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1792253246333,
+      "tag": "0004_trusted_withdrawal_profile_guard",
+      "breakpoints": true
     }
   ]
 }
