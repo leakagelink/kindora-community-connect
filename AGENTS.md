@@ -14,3 +14,5 @@
 - Enforce task validation, AI reservations and marketplace transitions in database functions/triggers; browser controls are not authorization.
 - Store unapplied additive SQL under `.lovable/pending/` and expose setup errors until it is applied; never simulate persistence.
 - Keep new database types in an app-owned extension rather than editing generated integration files.
+- Campaign submissions and reviews use authenticated server functions and database RPCs with applicant-only reads, idempotent submission, approval caps and audit writes; direct client writes are not authorized.
+- Keep advertising centralized and disabled without a verified platform adapter; navigation and verified submission must always proceed without ad delivery.

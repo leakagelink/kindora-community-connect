@@ -17,6 +17,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as ExploreRouteImport } from './routes/explore'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SociletRouteImport } from './routes/socilet'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
@@ -35,6 +36,9 @@ import { Route as AuthenticatedPostIndexRouteImport } from './routes/_authentica
 import { Route as AuthenticatedPostListingRouteImport } from './routes/_authenticated/post.listing'
 import { Route as AuthenticatedPostOfferRouteImport } from './routes/_authenticated/post.offer'
 import { Route as AuthenticatedPostRequestRouteImport } from './routes/_authenticated/post.request'
+import { Route as AuthenticatedSociletApplicationsRouteImport } from './routes/_authenticated/socilet_.applications'
+import { Route as AuthenticatedSociletApplyRouteImport } from './routes/_authenticated/socilet_.apply'
+import { Route as AuthenticatedSociletConfirmationRouteImport } from './routes/_authenticated/socilet_.confirmation'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -73,6 +77,11 @@ const ExploreRoute = ExploreRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SociletRoute = SociletRouteImport.update({
+  id: '/socilet',
+  path: '/socilet',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SupportRoute = SupportRouteImport.update({
@@ -169,6 +178,24 @@ const AuthenticatedPostRequestRoute =
     path: '/post/request',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedSociletApplicationsRoute =
+  AuthenticatedSociletApplicationsRouteImport.update({
+    id: '/socilet_/applications',
+    path: '/socilet/applications',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSociletApplyRoute =
+  AuthenticatedSociletApplyRouteImport.update({
+    id: '/socilet_/apply',
+    path: '/socilet/apply',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSociletConfirmationRoute =
+  AuthenticatedSociletConfirmationRouteImport.update({
+    id: '/socilet_/confirmation',
+    path: '/socilet/confirmation',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -178,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/contact': typeof ContactRoute
   '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/socilet': typeof SociletRoute
   '/support': typeof SupportRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
@@ -194,6 +222,9 @@ export interface FileRoutesByFullPath {
   '/post/listing': typeof AuthenticatedPostListingRoute
   '/post/offer': typeof AuthenticatedPostOfferRoute
   '/post/request': typeof AuthenticatedPostRequestRoute
+  '/socilet/applications': typeof AuthenticatedSociletApplicationsRoute
+  '/socilet/apply': typeof AuthenticatedSociletApplyRoute
+  '/socilet/confirmation': typeof AuthenticatedSociletConfirmationRoute
   '/messages/': typeof AuthenticatedMessagesIndexRoute
   '/post/': typeof AuthenticatedPostIndexRoute
 }
@@ -205,6 +236,7 @@ export interface FileRoutesByTo {
   '/contact': typeof ContactRoute
   '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/socilet': typeof SociletRoute
   '/support': typeof SupportRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
@@ -221,6 +253,9 @@ export interface FileRoutesByTo {
   '/post/listing': typeof AuthenticatedPostListingRoute
   '/post/offer': typeof AuthenticatedPostOfferRoute
   '/post/request': typeof AuthenticatedPostRequestRoute
+  '/socilet/applications': typeof AuthenticatedSociletApplicationsRoute
+  '/socilet/apply': typeof AuthenticatedSociletApplyRoute
+  '/socilet/confirmation': typeof AuthenticatedSociletConfirmationRoute
   '/messages': typeof AuthenticatedMessagesIndexRoute
   '/post': typeof AuthenticatedPostIndexRoute
 }
@@ -234,6 +269,7 @@ export interface FileRoutesById {
   '/contact': typeof ContactRoute
   '/explore': typeof ExploreRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/socilet': typeof SociletRoute
   '/support': typeof SupportRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
@@ -250,6 +286,9 @@ export interface FileRoutesById {
   '/_authenticated/post/listing': typeof AuthenticatedPostListingRoute
   '/_authenticated/post/offer': typeof AuthenticatedPostOfferRoute
   '/_authenticated/post/request': typeof AuthenticatedPostRequestRoute
+  '/_authenticated/socilet_/applications': typeof AuthenticatedSociletApplicationsRoute
+  '/_authenticated/socilet_/apply': typeof AuthenticatedSociletApplyRoute
+  '/_authenticated/socilet_/confirmation': typeof AuthenticatedSociletConfirmationRoute
   '/_authenticated/messages/': typeof AuthenticatedMessagesIndexRoute
   '/_authenticated/post/': typeof AuthenticatedPostIndexRoute
 }
@@ -263,6 +302,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/explore'
     | '/reset-password'
+    | '/socilet'
     | '/support'
     | '/admin'
     | '/notifications'
@@ -279,6 +319,9 @@ export interface FileRouteTypes {
     | '/post/listing'
     | '/post/offer'
     | '/post/request'
+    | '/socilet/applications'
+    | '/socilet/apply'
+    | '/socilet/confirmation'
     | '/messages/'
     | '/post/'
   fileRoutesByTo: FileRoutesByTo
@@ -290,6 +333,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/explore'
     | '/reset-password'
+    | '/socilet'
     | '/support'
     | '/admin'
     | '/notifications'
@@ -306,6 +350,9 @@ export interface FileRouteTypes {
     | '/post/listing'
     | '/post/offer'
     | '/post/request'
+    | '/socilet/applications'
+    | '/socilet/apply'
+    | '/socilet/confirmation'
     | '/messages'
     | '/post'
   id:
@@ -318,6 +365,7 @@ export interface FileRouteTypes {
     | '/contact'
     | '/explore'
     | '/reset-password'
+    | '/socilet'
     | '/support'
     | '/_authenticated/admin'
     | '/_authenticated/notifications'
@@ -334,6 +382,9 @@ export interface FileRouteTypes {
     | '/_authenticated/post/listing'
     | '/_authenticated/post/offer'
     | '/_authenticated/post/request'
+    | '/_authenticated/socilet_/applications'
+    | '/_authenticated/socilet_/apply'
+    | '/_authenticated/socilet_/confirmation'
     | '/_authenticated/messages/'
     | '/_authenticated/post/'
   fileRoutesById: FileRoutesById
@@ -347,6 +398,7 @@ export interface RootRouteChildren {
   ContactRoute: typeof ContactRoute
   ExploreRoute: typeof ExploreRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SociletRoute: typeof SociletRoute
   SupportRoute: typeof SupportRoute
   LegalSlugRoute: typeof LegalSlugRoute
   ProductsIdRoute: typeof ProductsIdRoute
@@ -410,6 +462,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/socilet': {
+      id: '/socilet'
+      path: '/socilet'
+      fullPath: '/socilet'
+      preLoaderRoute: typeof SociletRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/support': {
@@ -538,6 +597,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPostRequestRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/socilet_/applications': {
+      id: '/_authenticated/socilet_/applications'
+      path: '/socilet/applications'
+      fullPath: '/socilet/applications'
+      preLoaderRoute: typeof AuthenticatedSociletApplicationsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/socilet_/apply': {
+      id: '/_authenticated/socilet_/apply'
+      path: '/socilet/apply'
+      fullPath: '/socilet/apply'
+      preLoaderRoute: typeof AuthenticatedSociletApplyRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/socilet_/confirmation': {
+      id: '/_authenticated/socilet_/confirmation'
+      path: '/socilet/confirmation'
+      fullPath: '/socilet/confirmation'
+      preLoaderRoute: typeof AuthenticatedSociletConfirmationRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -550,6 +630,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedPostListingRoute: typeof AuthenticatedPostListingRoute
   AuthenticatedPostOfferRoute: typeof AuthenticatedPostOfferRoute
   AuthenticatedPostRequestRoute: typeof AuthenticatedPostRequestRoute
+  AuthenticatedSociletApplicationsRoute: typeof AuthenticatedSociletApplicationsRoute
+  AuthenticatedSociletApplyRoute: typeof AuthenticatedSociletApplyRoute
+  AuthenticatedSociletConfirmationRoute: typeof AuthenticatedSociletConfirmationRoute
   AuthenticatedMessagesIndexRoute: typeof AuthenticatedMessagesIndexRoute
   AuthenticatedPostIndexRoute: typeof AuthenticatedPostIndexRoute
 }
@@ -563,6 +646,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedPostListingRoute: AuthenticatedPostListingRoute,
   AuthenticatedPostOfferRoute: AuthenticatedPostOfferRoute,
   AuthenticatedPostRequestRoute: AuthenticatedPostRequestRoute,
+  AuthenticatedSociletApplicationsRoute: AuthenticatedSociletApplicationsRoute,
+  AuthenticatedSociletApplyRoute: AuthenticatedSociletApplyRoute,
+  AuthenticatedSociletConfirmationRoute: AuthenticatedSociletConfirmationRoute,
   AuthenticatedMessagesIndexRoute: AuthenticatedMessagesIndexRoute,
   AuthenticatedPostIndexRoute: AuthenticatedPostIndexRoute,
 }
@@ -594,6 +680,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactRoute: ContactRoute,
   ExploreRoute: ExploreRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SociletRoute: SociletRoute,
   SupportRoute: SupportRoute,
   LegalSlugRoute: LegalSlugRoute,
   ProductsIdRoute: ProductsIdRoute,

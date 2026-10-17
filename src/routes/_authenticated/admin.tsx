@@ -16,6 +16,7 @@ import { logAudit, notify } from "@/lib/actions";
 import { useAuth } from "@/lib/auth";
 import { statusLabel, timeAgo } from "@/lib/goodivo";
 import { PlatformAdmin } from "@/components/goodivo/PlatformAdmin";
+import { CampaignAdmin } from "@/components/campaign/CampaignAdmin";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({ meta: [{ title: "Goodivo control room" }, { name: "description", content: "Moderation, community tasks and operational controls for Goodivo administrators." }, { property: "og:title", content: "Goodivo control room" }, { property: "og:description", content: "Goodivo platform moderation and operational controls." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
@@ -61,12 +62,14 @@ function AdminPage() {
           {isAdmin ? <TabsTrigger value="catalog">Categories</TabsTrigger> : null}
           {isAdmin ? <TabsTrigger value="settings">Flags & AI</TabsTrigger> : null}
           {isAdmin ? <TabsTrigger value="platform">Tasks & operations</TabsTrigger> : null}
+          {isAdmin ? <TabsTrigger value="campaign">Socilet applications</TabsTrigger> : null}
         </TabsList>
 
         <TabsContent value="overview">
           <Overview isAdmin={isAdmin} />
         </TabsContent>
         {isAdmin ? <TabsContent value="platform"><PlatformAdmin /></TabsContent> : null}
+        {isAdmin ? <TabsContent value="campaign"><CampaignAdmin /></TabsContent> : null}
         <TabsContent value="reports">
           <Reports moderatorId={user.id} />
         </TabsContent>
