@@ -18,10 +18,13 @@ export type Database = {
         Row: {
           created_at: string
           error_message: string | null
+          estimated_cost_usd: number
           id: string
           input: Json
+          input_tokens: number | null
           model: string | null
           output: Json | null
+          output_tokens: number | null
           output_url: string | null
           status: string
           tool: string
@@ -30,10 +33,13 @@ export type Database = {
         Insert: {
           created_at?: string
           error_message?: string | null
+          estimated_cost_usd?: number
           id?: string
           input?: Json
+          input_tokens?: number | null
           model?: string | null
           output?: Json | null
+          output_tokens?: number | null
           output_url?: string | null
           status?: string
           tool: string
@@ -42,10 +48,13 @@ export type Database = {
         Update: {
           created_at?: string
           error_message?: string | null
+          estimated_cost_usd?: number
           id?: string
           input?: Json
+          input_tokens?: number | null
           model?: string | null
           output?: Json | null
+          output_tokens?: number | null
           output_url?: string | null
           status?: string
           tool?: string
@@ -55,19 +64,28 @@ export type Database = {
       }
       ai_usage_limits: {
         Row: {
+          daily_budget_usd: number
           daily_limit: number
+          estimated_cost_per_run_usd: number
+          global_daily_limit: number
           is_enabled: boolean
           tool: string
           updated_at: string
         }
         Insert: {
+          daily_budget_usd?: number
           daily_limit?: number
+          estimated_cost_per_run_usd?: number
+          global_daily_limit?: number
           is_enabled?: boolean
           tool: string
           updated_at?: string
         }
         Update: {
+          daily_budget_usd?: number
           daily_limit?: number
+          estimated_cost_per_run_usd?: number
+          global_daily_limit?: number
           is_enabled?: boolean
           tool?: string
           updated_at?: string
@@ -1025,6 +1043,17 @@ export type Database = {
         Returns: boolean
       }
       can_view_listing_photo: { Args: { p_name: string }; Returns: boolean }
+      finish_ai_generation: {
+        Args: {
+          p_error: string
+          p_id: string
+          p_input_tokens: number
+          p_output: Json
+          p_output_tokens: number
+          p_user: string
+        }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1037,12 +1066,25 @@ export type Database = {
         Returns: boolean
       }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      reserve_ai_generation: {
+        Args: { p_input: Json; p_tool: string }
+        Returns: Json
+      }
       review_socilet_application: {
         Args: { p_id: string; p_note: string; p_status: string }
         Returns: undefined
       }
       review_socilet_offer: {
         Args: { p_id: string; p_note: string; p_status: string }
+        Returns: undefined
+      }
+      save_ai_budget: {
+        Args: {
+          p_budget: number
+          p_estimate: number
+          p_global_limit: number
+          p_tool: string
+        }
         Returns: undefined
       }
       submit_socilet_application: { Args: { p_payload: Json }; Returns: Json }
