@@ -16,3 +16,4 @@
 - Keep new database types in an app-owned extension rather than editing generated integration files.
 - Campaign submissions and reviews use authenticated server functions and database RPCs with applicant-only reads, idempotent submission, approval caps and audit writes; direct client writes are not authorized.
 - Keep advertising centralized and disabled without a verified platform adapter; navigation and verified submission must always proceed without ad delivery.
+- Keep public Socilet campaign service scopes in a shared catalog module and community inventory in existing public queries; campaign applications are private records, not product inventory.
