@@ -7,6 +7,8 @@ import { profileQuery, reviewsQuery } from "@/lib/goodivo";
 export const Route = createFileRoute("/u/$id")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Member profile — Goodivo" },
       { name: "description", content: "A public Goodivo member profile with skills, languages and completed help." },
       { property: "og:title", content: "Member profile — Goodivo" },

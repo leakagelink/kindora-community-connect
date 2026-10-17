@@ -22,6 +22,8 @@ export const Route = createFileRoute("/auth")({
   }),
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Log in or sign up — Goodivo" },
       { name: "description", content: "Create a free Goodivo account to request help, offer skills or give products." },
       { property: "og:title", content: "Log in or sign up — Goodivo" },

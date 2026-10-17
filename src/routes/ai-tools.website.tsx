@@ -14,6 +14,8 @@ import { runAiTool } from "@/lib/ai.functions";
 export const Route = createFileRoute("/ai-tools/website")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Free Website Starter — Goodivo" },
       { name: "description", content: "Generate a simple one-page website for free, preview it and export the code." },
       { property: "og:title", content: "Free Website Starter — Goodivo" },

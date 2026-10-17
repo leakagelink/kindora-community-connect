@@ -11,7 +11,9 @@ export const Route = createFileRoute("/legal/$slug")({
   },
   head: ({ loaderData }) => {
     if (!loaderData) {
-      return { meta: [{ title: "Policy not found — Goodivo" }, { name: "robots", content: "noindex" }] };
+      return { meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },{ title: "Policy not found — Goodivo" }, { name: "robots", content: "noindex" }] };
     }
     const { doc } = loaderData;
     return {

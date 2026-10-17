@@ -20,6 +20,8 @@ import { requestQuery, requestTypeLabel, statusLabel, timeAgo } from "@/lib/good
 export const Route = createFileRoute("/requests/$id")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Help request — Goodivo" },
       { name: "description", content: "A free help request on Goodivo. Volunteers can offer to help at no cost." },
       { property: "og:title", content: "Help request — Goodivo" },

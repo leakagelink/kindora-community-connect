@@ -6,6 +6,8 @@ import { LEGAL_PLACEHOLDERS } from "@/lib/legal";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Contact and support — Goodivo" },
       { name: "description", content: "How to reach the Goodivo team for support, safety concerns or policy questions." },
       { property: "og:title", content: "Contact and support — Goodivo" },
