@@ -1020,6 +1020,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_create_conversation_member: {
+        Args: { p_id: string; p_user: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
