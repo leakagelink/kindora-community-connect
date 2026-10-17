@@ -64,6 +64,13 @@
       "when": 1792253442901,
       "tag": "0008_atomic_product_transitions",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1792253606388,
+      "tag": "0009_atomic_request_offer_state",
+      "breakpoints": true
     }
   ]
 }
