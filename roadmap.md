@@ -1,4 +1,8 @@
 # Existing Goodivo update
+- [ ] Add Socilet offer, authenticated application, confirmation and My Applications.
+- [ ] Apply campaign schema with applicant-only access and secure admin review.
+- [ ] Add disabled-by-default centralized ad controller and policy tests.
+- [ ] Verify campaign persistence/access and provide actual test/blocker report.
 - [x] Inspect source implementations; identify authorization and quota gaps.
 - [x] Add tasks, appeals, admin reviews and operational/budget screens with setup errors.
 - [x] Connect AI reservations and atomic product management; fail closed while SQL is pending.
