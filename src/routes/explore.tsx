@@ -75,7 +75,7 @@ function Explore() {
     ...listingsQuery({ search: searchParams.q, categoryId: searchParams.category }),
     enabled: tab === "products",
   });
-  const helpers = useQuery({ ...helpersQuery({ search: searchParams.q }), enabled: tab === "helpers" });
+  const helpers = useQuery({ ...helpersQuery({ search: searchParams.q }), enabled: tab === "helpers" || tab === "digital" });
 
   function update(next: Partial<ExploreSearch>) {
     void navigate({ to: "/explore", search: { ...searchParams, ...next } });
@@ -202,6 +202,8 @@ function Explore() {
           helpers.data.map((helper) => <HelperCard key={helper.id} helper={helper} />)
         ) : null}
       </div>
+
+      {tab === "digital" ? <section className="py-7"><h2 className="font-display text-xl font-bold">Community skill offers</h2><div className="mt-5 grid gap-4 md:grid-cols-3">{helpers.isLoading ? <CardSkeleton /> : helpers.isError ? <p role="alert" className="text-destructive">Could not load community offers.</p> : helpers.data?.length ? helpers.data.map(helper => <HelperCard key={helper.id} helper={helper} />) : <p className="text-sm text-muted-foreground">No community skill offers published yet.</p>}</div></section> : null}
 
       {!requests.isLoading &&
       !listings.isLoading &&
