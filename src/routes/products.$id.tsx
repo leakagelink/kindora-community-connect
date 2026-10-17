@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -15,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ensureConversation, notify } from "@/lib/actions";
 import { useAuth } from "@/lib/auth";
 import { listingQuery, statusLabel, timeAgo } from "@/lib/goodivo";
+import { manageProduct } from "@/lib/products.functions";
 
 export const Route = createFileRoute("/products/$id")({
   head: () => ({
@@ -38,6 +40,7 @@ type InterestRow = {
 };
 
 function ProductDetail() {
+  const manage = useServerFn(manageProduct);
   const { id } = Route.useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -123,12 +126,10 @@ function ProductDetail() {
   };
 
   const setListingStatus = async (status: string, label: string) => {
-    const { error } = await supabase
-      .from("product_listings")
-      .update({ status: status as never })
-      .eq("id", id);
-    if (error) {
-      toast.error(error.message);
+    if (!["published", "given_away", "removed", "expired"].includes(status)) return;
+    try { await manage({ data: { listingId: id, status: status as "published" | "given_away" | "removed" | "expired" } }); }
+    catch (error) {
+      toast.error(error instanceof Error ? error.message : "Couldn't update the listing.");
       return;
     }
     void queryClient.invalidateQueries({ queryKey: ["product-listing", id] });
@@ -137,16 +138,14 @@ function ProductDetail() {
   };
 
   const decideInterest = async (interest: InterestRow, status: "reserved" | "declined" | "completed") => {
-    const { error } = await supabase
-      .from("product_interests")
-      .update({ status: status as never })
-      .eq("id", interest.id);
-    if (error) {
-      toast.error(error.message);
+    try { await manage({ data: { listingId: id, interestId: interest.id, status } }); }
+    catch (error) {
+      toast.error(error instanceof Error ? error.message : "Couldn't update the interest.");
       return;
     }
-    if (status === "reserved") await setListingStatus("reserved", "Item reserved");
-    if (status === "completed") await setListingStatus("given_away", "Marked as given away");
+    void queryClient.invalidateQueries({ queryKey: ["product-listing", id] });
+    void queryClient.invalidateQueries({ queryKey: ["product-listings"] });
+    toast.success(status === "reserved" ? "Item reserved" : status === "completed" ? "Handover recorded" : "Interest declined");
     await notify({
       userId: interest.user_id,
       type: "interest_update",
