@@ -21,6 +21,7 @@ import { Route as SupportRouteImport } from './routes/support'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
+import { Route as AuthenticatedTasksRouteImport } from './routes/_authenticated/tasks'
 import { Route as AiToolsLogoRouteImport } from './routes/ai-tools.logo'
 import { Route as AiToolsResumeRouteImport } from './routes/ai-tools.resume'
 import { Route as AiToolsWebsiteRouteImport } from './routes/ai-tools.website'
@@ -93,6 +94,11 @@ const AuthenticatedNotificationsRoute =
 const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTasksRoute = AuthenticatedTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AiToolsLogoRoute = AiToolsLogoRouteImport.update({
@@ -176,6 +182,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/tasks': typeof AuthenticatedTasksRoute
   '/ai-tools/logo': typeof AiToolsLogoRoute
   '/ai-tools/resume': typeof AiToolsResumeRoute
   '/ai-tools/website': typeof AiToolsWebsiteRoute
@@ -202,6 +209,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AuthenticatedAdminRoute
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/profile': typeof AuthenticatedProfileRoute
+  '/tasks': typeof AuthenticatedTasksRoute
   '/ai-tools/logo': typeof AiToolsLogoRoute
   '/ai-tools/resume': typeof AiToolsResumeRoute
   '/ai-tools/website': typeof AiToolsWebsiteRoute
@@ -230,6 +238,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
+  '/_authenticated/tasks': typeof AuthenticatedTasksRoute
   '/ai-tools/logo': typeof AiToolsLogoRoute
   '/ai-tools/resume': typeof AiToolsResumeRoute
   '/ai-tools/website': typeof AiToolsWebsiteRoute
@@ -258,6 +267,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/notifications'
     | '/profile'
+    | '/tasks'
     | '/ai-tools/logo'
     | '/ai-tools/resume'
     | '/ai-tools/website'
@@ -284,6 +294,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/notifications'
     | '/profile'
+    | '/tasks'
     | '/ai-tools/logo'
     | '/ai-tools/resume'
     | '/ai-tools/website'
@@ -311,6 +322,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/notifications'
     | '/_authenticated/profile'
+    | '/_authenticated/tasks'
     | '/ai-tools/logo'
     | '/ai-tools/resume'
     | '/ai-tools/website'
@@ -428,6 +440,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/tasks': {
+      id: '/_authenticated/tasks'
+      path: '/tasks'
+      fullPath: '/tasks'
+      preLoaderRoute: typeof AuthenticatedTasksRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/ai-tools/logo': {
       id: '/ai-tools/logo'
       path: '/logo'
@@ -526,6 +545,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedTasksRoute: typeof AuthenticatedTasksRoute
   AuthenticatedMessagesIdRoute: typeof AuthenticatedMessagesIdRoute
   AuthenticatedPostListingRoute: typeof AuthenticatedPostListingRoute
   AuthenticatedPostOfferRoute: typeof AuthenticatedPostOfferRoute
@@ -538,6 +558,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedTasksRoute: AuthenticatedTasksRoute,
   AuthenticatedMessagesIdRoute: AuthenticatedMessagesIdRoute,
   AuthenticatedPostListingRoute: AuthenticatedPostListingRoute,
   AuthenticatedPostOfferRoute: AuthenticatedPostOfferRoute,

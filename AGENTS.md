@@ -8,3 +8,9 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+## Extension rules
+- Keep community tasks and appeals in dedicated authenticated modules; neither can gate product claims or human help.
+- Enforce task validation, AI reservations and marketplace transitions in database functions/triggers; browser controls are not authorization.
+- Store unapplied additive SQL under `.lovable/pending/` and expose setup errors until it is applied; never simulate persistence.
+- Keep new database types in an app-owned extension rather than editing generated integration files.
