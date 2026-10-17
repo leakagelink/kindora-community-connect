@@ -1,5 +1,6 @@
 # Existing Goodivo update
-- [ ] Highlight Socilet free services and combine genuine community/Socilet offers in digital services and free products.
+- [x] Highlight Socilet free services; show existing campaign scopes alongside community requests/offers in Digital services, retaining all-member free product browsing; verify navigation, tests and phone layout.
+- [ ] Populate genuine Socilet product inventory — blocked by missing actual product listings; no products fabricated.
 - [x] Add Socilet offer, authenticated application, confirmation and My Applications.
 - [x] Apply campaign schema with applicant-only access and secure admin review.
 - [x] Add disabled-by-default centralized ad controller and policy tests.
