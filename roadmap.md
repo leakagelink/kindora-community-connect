@@ -1,6 +1,8 @@
 # Existing Goodivo update
-- [ ] Add free logo (100 applications), domain (200 applications/50 awards) and hosting (100 applications/50 awards) offers with private submission, atomic caps, admin review and one-year terms.
-- [ ] Verify new offer submission/read-back, limits, consent, review authorization and mobile display.
+- [x] Add free logo (100 applications), domain (200 applications/50 awards) and hosting (100 applications/50 awards) offers with private submission, atomic caps, admin review and one-year terms.
+- [x] Verify new offer submission/read-back, consent, 41 rule tests and mobile display; real save survives reload with no captured page errors.
+- [ ] Verify new-offer authorized admin review and cross-account isolation — blocked by no admin and only one member account.
+- [ ] Finalize domain/hosting activation details — provider, domain extensions, hosting resources, transfer and post-year renewal terms not supplied; disclose and agree before activation.
 - [x] Highlight Socilet free services; show existing campaign scopes alongside community requests/offers in Digital services, retaining all-member free product browsing; verify navigation, tests and phone layout.
 - [ ] Populate genuine Socilet product inventory — blocked by missing actual product listings; no products fabricated.
 - [x] Add Socilet offer, authenticated application, confirmation and My Applications.
