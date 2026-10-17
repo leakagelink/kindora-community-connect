@@ -15,6 +15,7 @@ import {
 
 import { AppShell } from "@/components/site/AppShell";
 import { CampaignOffer } from "@/components/campaign/CampaignOffer";
+import { SociletServices } from "@/components/campaign/SociletCatalog";
 import { CardSkeleton, HelperCard, ListingCard, RequestCard } from "@/components/goodivo/Cards";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -193,7 +194,7 @@ function Home() {
               <Link
                 key={group}
                 to="/explore"
-                search={{ tab: group === "Free Products" ? "products" : "requests" }}
+                search={{ tab: group === "Free Products" ? "products" : group === "Digital Services" ? "digital" : "requests" }}
                 className="surface-card lift-hover flex flex-col items-start rounded-3xl p-5"
               >
                 <span className={`grid size-14 place-items-center rounded-2xl ${tone.wrap}`}>{tone.icon}</span>
@@ -207,6 +208,12 @@ function Home() {
               </Link>
             );
           })}
+          <Link to="/explore" search={{ tab: "socilet" }} className="surface-card lift-hover flex flex-col items-start rounded-lg border border-primary/30 bg-primary/5 p-5">
+            <span className="grid size-14 place-items-center rounded-lg bg-primary/10 text-primary"><Sparkles className="size-7" /></span>
+            <p className="mt-3.5 font-display text-sm font-bold">Socilet free services</p>
+            <p className="mt-1 text-xs text-muted-foreground">Website · Web app · Mobile app</p>
+            <span className="mt-3 text-xs font-bold text-primary">Featured · #Socilet50</span>
+          </Link>
           <Link to="/ai-tools" className="surface-card lift-hover flex flex-col items-start rounded-3xl p-5">
             <span className="grid size-14 place-items-center rounded-2xl bg-rose/10 text-rose">
               <Wand2 className="size-7" />
@@ -216,6 +223,8 @@ function Home() {
           </Link>
         </div>
       </section>
+
+      <SociletServices />
 
       {/* Fresh requests */}
       <section className="reveal py-6" style={{ animationDelay: "120ms" }}>

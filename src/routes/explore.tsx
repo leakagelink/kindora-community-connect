@@ -7,9 +7,10 @@ import { AppShell, EmptyState, PageHeading } from "@/components/site/AppShell";
 import { CardSkeleton, HelperCard, ListingCard, RequestCard } from "@/components/goodivo/Cards";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { SociletServices } from "@/components/campaign/SociletCatalog";
 import { categoriesQuery, helpersQuery, listingsQuery, requestsQuery, REQUEST_TYPES } from "@/lib/goodivo";
 
-type Tab = "requests" | "products" | "helpers";
+type Tab = "requests" | "products" | "helpers" | "digital" | "socilet";
 type ExploreSearch = {
   tab?: Tab | undefined;
   q?: string | undefined;
@@ -23,7 +24,7 @@ export const Route = createFileRoute("/explore")({
     const tab = search['tab'];
     const remote = search['remote'];
     return {
-      tab: tab === "products" || tab === "helpers" ? tab : "requests",
+      tab: tab === "products" || tab === "helpers" || tab === "digital" || tab === "socilet" ? tab : "requests",
       q: typeof search['q'] === "string" && search['q'] ? (search['q'] as string) : undefined,
       type: typeof search['type'] === "string" ? (search['type'] as string) : undefined,
       category: typeof search['category'] === "string" ? (search['category'] as string) : undefined,
@@ -39,6 +40,8 @@ export const Route = createFileRoute("/explore")({
       },
       { property: "og:title", content: "Explore free help on Goodivo" },
       { property: "og:description", content: "Search help requests, free products and volunteers offering skills." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Explore,
@@ -48,6 +51,8 @@ const TABS: { value: Tab; label: string }[] = [
   { value: "requests", label: "Requests" },
   { value: "products", label: "Free products" },
   { value: "helpers", label: "Helpers" },
+  { value: "digital", label: "Digital services" },
+  { value: "socilet", label: "Socilet free services" },
 ];
 
 function Explore() {
@@ -60,17 +65,17 @@ function Explore() {
   const requests = useQuery({
     ...requestsQuery({
       search: searchParams.q,
-      type: searchParams.type,
+      type: tab === "digital" ? "digital_service" : searchParams.type,
       categoryId: searchParams.category,
       remote: searchParams.remote,
     }),
-    enabled: tab === "requests",
+    enabled: tab === "requests" || tab === "digital",
   });
   const listings = useQuery({
     ...listingsQuery({ search: searchParams.q, categoryId: searchParams.category }),
     enabled: tab === "products",
   });
-  const helpers = useQuery({ ...helpersQuery({ search: searchParams.q }), enabled: tab === "helpers" });
+  const helpers = useQuery({ ...helpersQuery({ search: searchParams.q }), enabled: tab === "helpers" || tab === "digital" });
 
   function update(next: Partial<ExploreSearch>) {
     void navigate({ to: "/explore", search: { ...searchParams, ...next } });
@@ -110,16 +115,18 @@ function Explore() {
 
       <div className="mt-5 flex flex-wrap gap-2">
         {TABS.map((item) => (
-          <button
+          <Button
             key={item.value}
             type="button"
             onClick={() => update({ tab: item.value, type: undefined, category: undefined })}
             className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
               tab === item.value ? "bg-foreground text-background" : "border border-border bg-card text-muted-foreground"
             }`}
+            variant={tab === item.value ? "ink" : "outline"}
+            aria-pressed={tab === item.value}
           >
             {item.label}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -154,7 +161,7 @@ function Explore() {
             ))}
           </>
         ) : null}
-        {tab !== "helpers"
+        {tab !== "helpers" && tab !== "socilet"
           ? relevantCategories.slice(0, 10).map((category) => (
               <button
                 key={category.id}
@@ -172,8 +179,12 @@ function Explore() {
           : null}
       </div>
 
+      {tab === "socilet" || tab === "digital" ? <SociletServices search={searchParams.q ?? ""} /> : null}
+      {tab === "socilet" ? <section className="py-5"><h2 className="font-display text-xl font-bold">Socilet free products</h2><p className="mt-2 text-sm text-muted-foreground">No Socilet product catalogue has been provided yet.</p><Button asChild variant="outline" className="mt-4"><Link to="/explore" search={{ tab: "products" }}>Browse all free products</Link></Button></section> : null}
+      {tab === "digital" ? <h2 className="mt-7 font-display text-xl font-bold">Community digital requests</h2> : null}
+      {tab === "products" ? <p className="mt-5 text-sm text-muted-foreground">Published giveaways from all members, including Socilet when listed.</p> : null}
       <div className="mt-7 grid gap-4 md:grid-cols-3">
-        {tab === "requests" ? (
+        {tab === "requests" || tab === "digital" ? (
           requests.isLoading ? (
             <CardSkeleton count={6} />
           ) : requests.data?.length ? (
@@ -185,17 +196,19 @@ function Explore() {
           ) : listings.data?.length ? (
             listings.data.map((listing) => <ListingCard key={listing.id} listing={listing} />)
           ) : null
-        ) : helpers.isLoading ? (
+        ) : tab === "helpers" && helpers.isLoading ? (
           <CardSkeleton count={6} />
-        ) : helpers.data?.length ? (
+        ) : tab === "helpers" && helpers.data?.length ? (
           helpers.data.map((helper) => <HelperCard key={helper.id} helper={helper} />)
         ) : null}
       </div>
 
+      {tab === "digital" ? <section className="py-7"><h2 className="font-display text-xl font-bold">Community skill offers</h2><div className="mt-5 grid gap-4 md:grid-cols-3">{helpers.isLoading ? <CardSkeleton /> : helpers.isError ? <p role="alert" className="text-destructive">Could not load community offers.</p> : helpers.data?.length ? helpers.data.map(helper => <HelperCard key={helper.id} helper={helper} />) : <p className="text-sm text-muted-foreground">No community skill offers published yet.</p>}</div></section> : null}
+
       {!requests.isLoading &&
       !listings.isLoading &&
       !helpers.isLoading &&
-      ((tab === "requests" && !requests.data?.length) ||
+       (((tab === "requests" || tab === "digital") && !requests.data?.length) ||
         (tab === "products" && !listings.data?.length) ||
         (tab === "helpers" && !helpers.data?.length)) ? (
         <div className="mt-7">
