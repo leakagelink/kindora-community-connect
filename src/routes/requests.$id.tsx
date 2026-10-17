@@ -308,9 +308,7 @@ function OwnerPanel({
       toast.error(error.message);
       return;
     }
-    if (decision === "accepted") {
-      await supabase.from("help_requests").update({ status: "in_progress" as never }).eq("id", requestId);
-    }
+    // Request assignment commits atomically with the accepted application in Cloud.
     await notify({
       userId: application.helper_id,
       type: "application",
@@ -454,11 +452,12 @@ function ApplyForm({
 
   const mutation = useMutation({
     mutationFn: async () => {
+      if (!user) throw new Error('Sign in required.');
       if (message.trim().length < 30) throw new Error("Please write at least 30 characters about how you can help.");
       if (!confirmed) throw new Error("Please confirm that you will not ask for payment.");
       const { error } = await supabase.from("request_applications").insert({
         request_id: requestId,
-        helper_id: user!.id,
+        helper_id: user.id,
         message: message.trim(),
         relevant_skills: skills
           .split(",")
@@ -472,7 +471,7 @@ function ApplyForm({
       });
       if (error) throw new Error(error.code === "23505" ? "You already offered help here." : error.message);
 
-      await supabase.from("help_requests").update({ status: "receiving_offers" as never }).eq("id", requestId);
+      // Offer count and request status commit with the application in Cloud.
       await notify({
         userId: ownerId,
         type: "application",
