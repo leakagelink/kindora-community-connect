@@ -1,4 +1,5 @@
 # Existing Goodivo update
+- [ ] Highlight Socilet free services and combine genuine community/Socilet offers in digital services and free products.
 - [x] Add Socilet offer, authenticated application, confirmation and My Applications.
 - [x] Apply campaign schema with applicant-only access and secure admin review.
 - [x] Add disabled-by-default centralized ad controller and policy tests.
