@@ -43,42 +43,11 @@ export async function ensureConversation(options: {
 }) {
   const { meId, otherUserId, requestId = null, listingId = null } = options;
 
-  const { data: mine } = await supabase
-    .from("conversation_participants")
-    .select("conversation_id")
-    .eq("user_id", meId);
-  const myIds = (mine ?? []).map((row) => row.conversation_id);
-
-  if (myIds.length) {
-    const { data: shared } = await supabase
-      .from("conversation_participants")
-      .select("conversation_id")
-      .eq("user_id", otherUserId)
-      .in("conversation_id", myIds);
-    const candidates = (shared ?? []).map((row) => row.conversation_id);
-    if (candidates.length) {
-      let query = supabase.from("conversations").select("id, request_id, listing_id").in("id", candidates);
-      query = requestId ? query.eq("request_id", requestId) : query.is("request_id", null);
-      query = listingId ? query.eq("listing_id", listingId) : query.is("listing_id", null);
-      const { data: match } = await query.maybeSingle();
-      if (match) return match.id;
-    }
-  }
-
-  const { data: created, error } = await supabase
-    .from("conversations")
-    .insert({ created_by: meId, request_id: requestId, listing_id: listingId })
-    .select("id")
-    .single();
-  if (error) throw error;
-
-  const { error: partError } = await supabase.from("conversation_participants").insert([
-    { conversation_id: created.id, user_id: meId },
-    { conversation_id: created.id, user_id: otherUserId },
-  ]);
-  if (partError) throw partError;
-
-  return created.id;
+  const identity = await supabase.auth.getUser();
+  if (identity.error || identity.data.user?.id !== meId) throw new Error('Sign in required.');
+  const result = await supabase.rpc('ensure_goodivo_conversation', { p_other_user: otherUserId, ...(requestId ? { p_request_id: requestId } : {}), ...(listingId ? { p_listing_id: listingId } : {}) });
+  if (result.error || !result.data) throw new Error('Conversation could not be opened. Please retry.');
+  return result.data;
 }
 
 export async function sendMessage(conversationId: string, senderId: string, body: string) {

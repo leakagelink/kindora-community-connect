@@ -12,6 +12,8 @@ export const Route = createFileRoute("/reset-password")({
   ssr: false,
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Set a new password — Goodivo" },
       { name: "description", content: "Choose a new password for your Goodivo account." },
       { name: "robots", content: "noindex" },

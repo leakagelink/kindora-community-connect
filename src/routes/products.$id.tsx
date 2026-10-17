@@ -21,6 +21,8 @@ import { manageProduct } from "@/lib/products.functions";
 export const Route = createFileRoute("/products/$id")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Free product — Goodivo" },
       { name: "description", content: "A permitted item being given away free on Goodivo." },
       { property: "og:title", content: "Free product — Goodivo" },

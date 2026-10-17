@@ -35,6 +35,8 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 export const Route = createFileRoute("/_authenticated/post/listing")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Give away a product — Goodivo" },
       { name: "description", content: "List a permitted item you no longer need, free for someone who does." },
       { property: "og:title", content: "Give away a product — Goodivo" },

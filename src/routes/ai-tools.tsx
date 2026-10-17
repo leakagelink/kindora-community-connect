@@ -6,6 +6,8 @@ import { AI_TOOLS } from "@/lib/goodivo";
 export const Route = createFileRoute("/ai-tools")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Free AI tools — Goodivo" },
       { name: "description", content: "Free community AI tools: logo maker, resume builder and website starter." },
       { property: "og:title", content: "Free AI tools — Goodivo" },

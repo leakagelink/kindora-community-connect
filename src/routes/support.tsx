@@ -5,6 +5,8 @@ import { AppShell, PageHeading } from "@/components/site/AppShell";
 export const Route = createFileRoute("/support")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Support Goodivo — Goodivo" },
       { name: "description", content: "Optional voluntary support for Goodivo. Help on Goodivo is always free." },
       { property: "og:title", content: "Support Goodivo" },

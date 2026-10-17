@@ -37,6 +37,8 @@ function splitList(value: string) {
 export const Route = createFileRoute("/_authenticated/post/offer")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Offer your help — Goodivo" },
       { name: "description", content: "Publish a helper profile with your skills, availability and languages." },
       { property: "og:title", content: "Offer your help — Goodivo" },

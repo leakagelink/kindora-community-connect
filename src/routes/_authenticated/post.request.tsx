@@ -35,6 +35,8 @@ const HIGH_EFFORT_HINT = ["digital_service"];
 export const Route = createFileRoute("/_authenticated/post/request")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Request free help — Goodivo" },
       { name: "description", content: "Describe what you need. Receiving help on Goodivo is always free." },
       { property: "og:title", content: "Request free help — Goodivo" },
