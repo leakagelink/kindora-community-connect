@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/auth";
 import { timeAgo } from "@/lib/goodivo";
 
 export const Route = createFileRoute("/_authenticated/notifications")({
+  head: () => ({ meta: [{ title: "Your notifications — Goodivo" }, { name: "description", content: "Updates about your help requests, giveaways and community conversations." }, { property: "og:title", content: "Your notifications — Goodivo" }, { property: "og:description", content: "Personal community activity updates on Goodivo." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: NotificationsPage,
 });
 
