@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { AppShell } from "@/components/site/AppShell";
+import { CampaignOffer } from "@/components/campaign/CampaignOffer";
 import { CardSkeleton, HelperCard, ListingCard, RequestCard } from "@/components/goodivo/Cards";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,6 +37,8 @@ export const Route = createFileRoute("/")({
           "Request free digital services, skills and products, offer your own help, and use free AI tools. No payment required to receive help.",
       },
       { property: "og:title", content: "Goodivo: Free Help & Services" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         property: "og:description",
         content:
@@ -176,13 +179,16 @@ function Home() {
         </div>
       </section>
 
+      <CampaignOffer compact />
+
       {/* Categories */}
       <section className="reveal py-8" style={{ animationDelay: "80ms" }}>
         <SectionHeading title="Browse categories" linkLabel="View all" to="/explore" />
         <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {groups.slice(0, 3).map((group, i) => {
             const items = (categories.data ?? []).filter((c) => c.group_name === group);
-            const tone = TILE_TONES[i % TILE_TONES.length]!;
+            const tone = TILE_TONES[i % TILE_TONES.length] ?? TILE_TONES[0];
+            if (!tone) return null;
             return (
               <Link
                 key={group}

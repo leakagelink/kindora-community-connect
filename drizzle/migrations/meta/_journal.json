@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1792218404621,
+      "tag": "0000_socilet_campaign_applications",
+      "breakpoints": true
+    }
+  ]
+}

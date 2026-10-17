@@ -122,6 +122,45 @@ export type Database = {
         }
         Relationships: []
       }
+      campaign_applications: {
+        Row: {
+          campaign_key: string
+          created_at: string
+          id: string
+          payload: Json
+          review_note: string | null
+          reviewed_by: string | null
+          status: string
+          terms_version: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          campaign_key?: string
+          created_at?: string
+          id?: string
+          payload: Json
+          review_note?: string | null
+          reviewed_by?: string | null
+          status?: string
+          terms_version?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          campaign_key?: string
+          created_at?: string
+          id?: string
+          payload?: Json
+          review_note?: string | null
+          reviewed_by?: string | null
+          status?: string
+          terms_version?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
@@ -951,6 +990,11 @@ export type Database = {
         Returns: boolean
       }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      review_socilet_application: {
+        Args: { p_id: string; p_note: string; p_status: string }
+        Returns: undefined
+      }
+      submit_socilet_application: { Args: { p_payload: Json }; Returns: Json }
     }
     Enums: {
       app_role: "member" | "moderator" | "admin"
