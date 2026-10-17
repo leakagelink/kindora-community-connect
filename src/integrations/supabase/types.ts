@@ -1224,6 +1224,10 @@ export type Database = {
         Returns: boolean
       }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      manage_product: {
+        Args: { p_interest_id?: string; p_listing_id: string; p_status: string }
+        Returns: undefined
+      }
       platform_operational_metrics: { Args: never; Returns: Json }
       reserve_ai_generation: {
         Args: { p_input: Json; p_tool: string }
