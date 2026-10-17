@@ -45,7 +45,7 @@ export async function ensureConversation(options: {
 
   const identity = await supabase.auth.getUser();
   if (identity.error || identity.data.user?.id !== meId) throw new Error('Sign in required.');
-  const result = await supabase.rpc('ensure_goodivo_conversation', { p_other_user: otherUserId, p_request_id: requestId ?? undefined, p_listing_id: listingId ?? undefined });
+  const result = await supabase.rpc('ensure_goodivo_conversation', { p_other_user: otherUserId, ...(requestId ? { p_request_id: requestId } : {}), ...(listingId ? { p_listing_id: listingId } : {}) });
   if (result.error || !result.data) throw new Error('Conversation could not be opened. Please retry.');
   return result.data;
 }
