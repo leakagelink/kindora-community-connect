@@ -21,3 +21,7 @@
 - Protect immutable identities and moderation fields in database triggers; trusted RPCs handle product transitions, AI reservations and account withdrawal so browser updates cannot authorize them.
 - Emit routine community/message notifications from database events; clients cannot create arbitrary recipient notices.
 - Account withdrawal is not authentication-account deletion; label it truthfully until a verified full-erasure workflow exists.
+- One-to-one conversation creation and membership are RPC-only; creator-wide locks and trusted timestamps enforce rate limits without browser authority.
+- Moderation report resolution, enforcement and audit commit through one staff-authorized database RPC so a failed action cannot appear resolved.
+- Listing uploads go through authenticated server decoding/reencoding; public photos use a no-store visibility-checked endpoint rather than durable signed links.
+- Account deletion requests require verified email ownership and remain explicitly pending until shared-record-safe erasure and retention are operational.

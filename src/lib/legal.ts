@@ -111,7 +111,7 @@ export const LEGAL_DOCS: LegalDoc[] = [
       {
         heading: "Suspension and termination",
         body: [
-          "We may warn, restrict, suspend or remove accounts that violate these terms or endanger others. You may stop using Goodivo and delete your account at any time.",
+          "We may warn, restrict, suspend or remove accounts that violate these terms or endanger others. You may stop using Goodivo, withdraw public content and submit a verified deletion request. Full erasure processing is not yet operational; see Account Deletion for current limitations.",
         ],
       },
       {
@@ -272,7 +272,7 @@ export const LEGAL_DOCS: LegalDoc[] = [
         heading: "How to delete",
         body: [
           "Open Profile, then Privacy & account, then Withdraw profile & posts. This withdraws public content in one checked transaction but does not delete your sign-in account or all private records.",
-          `Complete account deletion and a verified external request contact are not yet operational. Contact details pending confirmation: ${P.email}. Goodivo is not ready for production release until these are finalized.`,
+          `You can submit a private account-deletion request on this page or in Profile after signing in with a verified email. The request is saved, but full erasure processing and a verified support contact remain pending. Contact details pending confirmation: ${P.email}. Goodivo is not ready for production release until these are finalized.`,
         ],
       },
       {

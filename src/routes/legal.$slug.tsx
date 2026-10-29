@@ -2,6 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 
 import { AppShell } from "@/components/site/AppShell";
 import { LEGAL_DOCS, getLegalDoc } from "@/lib/legal";
+import { DeletionRequest } from "@/components/goodivo/DeletionRequest";
 
 export const Route = createFileRoute("/legal/$slug")({
   loader: ({ params }) => {
@@ -66,6 +67,7 @@ function LegalPage() {
             registration, licence or address that has not been verified.
           </p>
           <div className="mt-8 space-y-8">
+            {doc.slug === "account-deletion" ? <DeletionRequest /> : null}
             {doc.sections.map((section) => (
               <section key={section.heading}>
                 <h2 className="font-display text-lg font-bold">{section.heading}</h2>

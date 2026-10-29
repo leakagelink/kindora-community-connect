@@ -246,85 +246,13 @@ function Reports({ moderatorId }: { moderatorId: string }) {
   });
 
   const act = async (report: ReportRow, action: string) => {
-    const reason = note[report.id] ?? "";
-    const { error } = await supabase.from("moderation_actions").insert({
-      moderator_id: moderatorId,
-      report_id: report.id,
-      target_type: report.target_type,
-      target_id: report.target_id,
-      action,
-      reason: report.reason as never,
-      note: reason || null,
+    const result = await supabase.rpc("review_goodivo_report", {
+      p_report: report.id, p_action: action, p_note: note[report.id] ?? "",
     });
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-
-    if (action === "content_removed") {
-      if (report.target_type === "request") {
-        await supabase
-          .from("help_requests")
-          .update({ status: "rejected" as never, deleted_at: new Date().toISOString(), moderation_note: reason || null })
-          .eq("id", report.target_id);
-      }
-      if (report.target_type === "listing") {
-        await supabase
-          .from("product_listings")
-          .update({ status: "removed" as never, deleted_at: new Date().toISOString(), moderation_note: reason || null })
-          .eq("id", report.target_id);
-      }
-      if (report.target_type === "review") {
-        await supabase.from("reviews").update({ is_hidden: true }).eq("id", report.target_id);
-      }
-      if (report.target_type === "message") {
-        await supabase.from("messages").update({ deleted_at: new Date().toISOString() }).eq("id", report.target_id);
-      }
-    }
-
-    if (action === "warning" && report.target_type === "user") {
-      await notify({
-        userId: report.target_id,
-        type: "moderation",
-        title: "Warning from the Goodivo moderators",
-        body: reason || "Your recent activity may break our Community Guidelines.",
-        link: "/legal/community-guidelines",
-      });
-    }
-
-    if (action === "suspended" && report.target_type === "user") {
-      const until = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
-      await supabase.from("profiles").update({ suspended_until: until }).eq("id", report.target_id);
-      await notify({
-        userId: report.target_id,
-        type: "moderation",
-        title: "Your account is suspended for 7 days",
-        body: reason || "A moderator reviewed a report about your activity.",
-        link: "/legal/community-guidelines",
-      });
-    }
-
-    if (action === "restricted" && report.target_type === "user") {
-      await supabase.from("profiles").update({ is_restricted: true, is_public: false }).eq("id", report.target_id);
-      await notify({
-        userId: report.target_id,
-        type: "moderation",
-        title: "Your account has been restricted",
-        body: reason || "A moderator reviewed a report about your activity.",
-        link: "/legal/community-guidelines",
-      });
-    }
-
-    const nextStatus = action === "dismissed" ? "dismissed" : "resolved";
-    await supabase
-      .from("reports")
-      .update({ status: nextStatus as never, reviewed_by: moderatorId, reviewed_at: new Date().toISOString() })
-      .eq("id", report.id);
-    await logAudit({ action: `moderation:${action}`, entityType: report.target_type, entityId: report.target_id });
-
+    if (result.error) { toast.error(result.error.message); return; }
     void queryClient.invalidateQueries({ queryKey: ["admin-reports"] });
     void queryClient.invalidateQueries({ queryKey: ["admin-overview"] });
-    toast.success("Action recorded");
+    toast.success("Moderation action completed and recorded");
   };
 
   return (
@@ -374,16 +302,16 @@ function Reports({ moderatorId }: { moderatorId: string }) {
                   />
                 </Field>
                 <div className="flex flex-wrap gap-2">
-                  <Button size="sm" className="rounded-full" onClick={() => void act(report, "content_removed")}>
+                  <Button size="sm" className="rounded-full" disabled={report.target_type === "user"} onClick={() => void act(report, "content_removed")}>
                     Remove content
                   </Button>
-                  <Button size="sm" variant="outline" className="rounded-full" onClick={() => void act(report, "warning")}>
+                  <Button size="sm" variant="outline" className="rounded-full" disabled={report.target_type !== "user"} onClick={() => void act(report, "warning")}>
                     Warn user
                   </Button>
-                  <Button size="sm" variant="outline" className="rounded-full" onClick={() => void act(report, "suspended")}>
+                  <Button size="sm" variant="outline" className="rounded-full" disabled={report.target_type !== "user"} onClick={() => void act(report, "suspended")}>
                     Suspend 7 days
                   </Button>
-                  <Button size="sm" variant="destructive" className="rounded-full" onClick={() => void act(report, "restricted")}>
+                  <Button size="sm" variant="destructive" className="rounded-full" disabled={report.target_type !== "user"} onClick={() => void act(report, "restricted")}>
                     Restrict account
                   </Button>
                   <Button size="sm" variant="ghost" className="rounded-full" onClick={() => void act(report, "dismissed")}>
@@ -780,7 +708,8 @@ function Settings() {
                     );
                     if (!ok) return;
                   }
-                  await supabase.from("feature_flags").update({ is_enabled: value }).eq("key", flag.key);
+                  const changed = await supabase.from("feature_flags").update({ is_enabled: value }).eq("key", flag.key);
+                  if (changed.error) { toast.error(changed.error.message); return; }
                   await logAudit({ action: `flag:${flag.key}:${value ? "on" : "off"}`, entityType: "feature_flag" });
                   void queryClient.invalidateQueries({ queryKey: ["admin-flags"] });
                   void queryClient.invalidateQueries({ queryKey: ["feature-flags"] });
@@ -808,7 +737,8 @@ function Settings() {
                   onBlur={async (event) => {
                     const value = Number(event.target.value);
                     if (Number.isNaN(value) || value === limit.daily_limit) return;
-                    await supabase.from("ai_usage_limits").update({ daily_limit: value }).eq("tool", limit.tool);
+                    const changed = await supabase.from("ai_usage_limits").update({ daily_limit: value }).eq("tool", limit.tool);
+                    if (changed.error) { toast.error(changed.error.message); return; }
                     await logAudit({ action: `ai_limit:${limit.tool}:${value}`, entityType: "ai_usage_limits" });
                     void queryClient.invalidateQueries({ queryKey: ["admin-ai-limits"] });
                     void queryClient.invalidateQueries({ queryKey: ["ai-limits"] });
@@ -818,7 +748,8 @@ function Settings() {
                   checked={limit.is_enabled}
                   aria-label={`Enable ${limit.tool}`}
                   onCheckedChange={async (value) => {
-                    await supabase.from("ai_usage_limits").update({ is_enabled: value }).eq("tool", limit.tool);
+                    const changed = await supabase.from("ai_usage_limits").update({ is_enabled: value }).eq("tool", limit.tool);
+                    if (changed.error) { toast.error(changed.error.message); return; }
                     void queryClient.invalidateQueries({ queryKey: ["admin-ai-limits"] });
                   }}
                 />

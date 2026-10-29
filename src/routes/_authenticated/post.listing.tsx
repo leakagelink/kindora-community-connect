@@ -13,6 +13,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { categoriesQuery, PRODUCT_CONDITIONS } from "@/lib/goodivo";
+import { useServerFn } from "@tanstack/react-start";
+import { uploadListingPhoto } from "@/lib/photos.functions";
 
 const schema = z.object({
   title: z.string().trim().min(6, "Add a clear title (at least 6 characters).").max(120),
@@ -30,7 +32,7 @@ const schema = z.object({
 
 const MAX_PHOTOS = 4;
 const MAX_BYTES = 5 * 1024 * 1024;
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const ALLOWED_TYPES = ["image/jpeg", "image/png"];
 
 export const Route = createFileRoute("/_authenticated/post/listing")({
   head: () => ({
@@ -50,6 +52,7 @@ function PostListing() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user } = useAuth();
+  const uploadPhoto = useServerFn(uploadListingPhoto);
   const categories = useQuery(categoriesQuery);
   const productCategories = (categories.data ?? []).filter((c) => c.group_name === "Free Products");
 
@@ -77,7 +80,7 @@ function PostListing() {
     const picked: File[] = [];
     for (const file of Array.from(list).slice(0, MAX_PHOTOS)) {
       if (!ALLOWED_TYPES.includes(file.type)) {
-        toast.error(`${file.name} isn't a JPG, PNG or WebP image.`);
+        toast.error(`${file.name} isn't a JPG or PNG image.`);
         continue;
       }
       if (file.size > MAX_BYTES) {
@@ -101,14 +104,10 @@ function PostListing() {
 
       const photos: string[] = [];
       for (const file of files) {
-        const path = `${user.id}/${crypto.randomUUID()}-${file.name.replace(/[^\w.\-]/g, "_")}`;
-        const { error: uploadError } = await supabase.storage.from("listing-photos").upload(path, file, {
-          contentType: file.type,
-          upsert: false,
-        });
-        if (uploadError) throw uploadError;
-        // Private bucket: keep the storage path, sign it when displaying.
-        photos.push(path);
+        const data = new FormData();
+        data.set("photo", file);
+        const uploaded = await uploadPhoto({ data });
+        photos.push(uploaded.path);
       }
 
       const { data, error } = await supabase
@@ -222,7 +221,7 @@ function PostListing() {
                 id="photos"
                 type="file"
                 multiple
-                accept="image/jpeg,image/png,image/webp"
+                accept="image/jpeg,image/png"
                 onChange={(e) => handleFiles(e.target.files)}
               />
             </Field>

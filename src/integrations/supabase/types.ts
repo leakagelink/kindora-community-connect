@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      account_deletion_requests: {
+        Row: {
+          id: string
+          processing_note: string | null
+          requested_at: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          processing_note?: string | null
+          requested_at?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          processing_note?: string | null
+          requested_at?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_generations: {
         Row: {
           created_at: string
@@ -1220,6 +1247,21 @@ export type Database = {
         }
         Returns: undefined
       }
+      goodivo_public_ai_limits: {
+        Args: never
+        Returns: {
+          daily_limit: number
+          is_enabled: boolean
+          tool: string
+        }[]
+      }
+      goodivo_public_flags: {
+        Args: never
+        Returns: {
+          is_enabled: boolean
+          key: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -1237,6 +1279,7 @@ export type Database = {
         Returns: undefined
       }
       platform_operational_metrics: { Args: never; Returns: Json }
+      request_goodivo_account_deletion: { Args: never; Returns: string }
       reserve_ai_generation: {
         Args: { p_input: Json; p_tool: string }
         Returns: Json

@@ -85,6 +85,27 @@
       "when": 1793252140782,
       "tag": "0011_private_chat_rates_and_atomic_moderation",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1793252406980,
+      "tag": "0012_request_lifecycle_and_private_deletion_requests",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1793252457004,
+      "tag": "0013_server_verified_photo_uploads",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1793252597703,
+      "tag": "0014_public_configuration_projection",
+      "breakpoints": true
     }
   ]
 }
