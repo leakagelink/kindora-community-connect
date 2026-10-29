@@ -40,6 +40,7 @@ import { Route as AuthenticatedPostRequestRouteImport } from './routes/_authenti
 import { Route as AuthenticatedSociletApplicationsRouteImport } from './routes/_authenticated/socilet_.applications'
 import { Route as AuthenticatedSociletApplyRouteImport } from './routes/_authenticated/socilet_.apply'
 import { Route as AuthenticatedSociletConfirmationRouteImport } from './routes/_authenticated/socilet_.confirmation'
+import { Route as ApiPublicListingPhotoRouteImport } from './routes/api/public/listing-photo'
 import { Route as AuthenticatedSociletOffersApplyRouteImport } from './routes/_authenticated/socilet_.offers.apply'
 
 const IndexRoute = IndexRouteImport.update({
@@ -203,6 +204,11 @@ const AuthenticatedSociletConfirmationRoute =
     path: '/socilet/confirmation',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const ApiPublicListingPhotoRoute = ApiPublicListingPhotoRouteImport.update({
+  id: '/api/public/listing-photo',
+  path: '/api/public/listing-photo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedSociletOffersApplyRoute =
   AuthenticatedSociletOffersApplyRouteImport.update({
     id: '/socilet_/offers/apply',
@@ -239,6 +245,7 @@ export interface FileRoutesByFullPath {
   '/socilet/applications': typeof AuthenticatedSociletApplicationsRoute
   '/socilet/apply': typeof AuthenticatedSociletApplyRoute
   '/socilet/confirmation': typeof AuthenticatedSociletConfirmationRoute
+  '/api/public/listing-photo': typeof ApiPublicListingPhotoRoute
   '/messages/': typeof AuthenticatedMessagesIndexRoute
   '/post/': typeof AuthenticatedPostIndexRoute
   '/socilet/offers/apply': typeof AuthenticatedSociletOffersApplyRoute
@@ -272,6 +279,7 @@ export interface FileRoutesByTo {
   '/socilet/applications': typeof AuthenticatedSociletApplicationsRoute
   '/socilet/apply': typeof AuthenticatedSociletApplyRoute
   '/socilet/confirmation': typeof AuthenticatedSociletConfirmationRoute
+  '/api/public/listing-photo': typeof ApiPublicListingPhotoRoute
   '/messages': typeof AuthenticatedMessagesIndexRoute
   '/post': typeof AuthenticatedPostIndexRoute
   '/socilet/offers/apply': typeof AuthenticatedSociletOffersApplyRoute
@@ -307,6 +315,7 @@ export interface FileRoutesById {
   '/_authenticated/socilet_/applications': typeof AuthenticatedSociletApplicationsRoute
   '/_authenticated/socilet_/apply': typeof AuthenticatedSociletApplyRoute
   '/_authenticated/socilet_/confirmation': typeof AuthenticatedSociletConfirmationRoute
+  '/api/public/listing-photo': typeof ApiPublicListingPhotoRoute
   '/_authenticated/messages/': typeof AuthenticatedMessagesIndexRoute
   '/_authenticated/post/': typeof AuthenticatedPostIndexRoute
   '/_authenticated/socilet_/offers/apply': typeof AuthenticatedSociletOffersApplyRoute
@@ -342,6 +351,7 @@ export interface FileRouteTypes {
     | '/socilet/applications'
     | '/socilet/apply'
     | '/socilet/confirmation'
+    | '/api/public/listing-photo'
     | '/messages/'
     | '/post/'
     | '/socilet/offers/apply'
@@ -375,6 +385,7 @@ export interface FileRouteTypes {
     | '/socilet/applications'
     | '/socilet/apply'
     | '/socilet/confirmation'
+    | '/api/public/listing-photo'
     | '/messages'
     | '/post'
     | '/socilet/offers/apply'
@@ -409,6 +420,7 @@ export interface FileRouteTypes {
     | '/_authenticated/socilet_/applications'
     | '/_authenticated/socilet_/apply'
     | '/_authenticated/socilet_/confirmation'
+    | '/api/public/listing-photo'
     | '/_authenticated/messages/'
     | '/_authenticated/post/'
     | '/_authenticated/socilet_/offers/apply'
@@ -430,6 +442,7 @@ export interface RootRouteChildren {
   RequestsIdRoute: typeof RequestsIdRoute
   SociletOffersRoute: typeof SociletOffersRoute
   UIdRoute: typeof UIdRoute
+  ApiPublicListingPhotoRoute: typeof ApiPublicListingPhotoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -651,6 +664,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSociletConfirmationRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/listing-photo': {
+      id: '/api/public/listing-photo'
+      path: '/api/public/listing-photo'
+      fullPath: '/api/public/listing-photo'
+      preLoaderRoute: typeof ApiPublicListingPhotoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/socilet_/offers/apply': {
       id: '/_authenticated/socilet_/offers/apply'
       path: '/socilet/offers/apply'
@@ -729,6 +749,7 @@ const rootRouteChildren: RootRouteChildren = {
   RequestsIdRoute: RequestsIdRoute,
   SociletOffersRoute: SociletOffersRoute,
   UIdRoute: UIdRoute,
+  ApiPublicListingPhotoRoute: ApiPublicListingPhotoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

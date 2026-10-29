@@ -1,0 +1,2 @@
+CREATE POLICY verified_listing_upload_only ON storage.objects AS RESTRICTIVE FOR INSERT TO authenticated WITH CHECK(bucket_id<>'listing-photos');
+CREATE POLICY verified_listing_update_only ON storage.objects AS RESTRICTIVE FOR UPDATE TO authenticated USING(bucket_id<>'listing-photos') WITH CHECK(bucket_id<>'listing-photos');

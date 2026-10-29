@@ -92,6 +92,13 @@
       "when": 1793252406980,
       "tag": "0012_request_lifecycle_and_private_deletion_requests",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1793252457004,
+      "tag": "0013_server_verified_photo_uploads",
+      "breakpoints": true
     }
   ]
 }
