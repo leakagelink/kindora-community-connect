@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { aiLimitsQuery, featureFlagsQuery, timeAgo } from "@/lib/goodivo";
+import { ReportDialog } from "@/components/goodivo/ReportDialog";
 
 export function useAiQuota(tool: string) {
   const { user } = useAuth();
@@ -48,12 +49,13 @@ export function AiHistory({ tool }: { tool: string }) {
     queryKey: ["ai-history", tool, user?.id],
     enabled: Boolean(user),
     queryFn: async () => {
-      const { data: rows } = await supabase
+      const { data: rows, error } = await supabase
         .from("ai_generations")
         .select("id, status, created_at")
         .eq("tool", tool)
         .order("created_at", { ascending: false })
         .limit(10);
+      if (error) throw new Error("Your AI history could not be loaded.");
       return rows ?? [];
     },
   });
@@ -67,6 +69,7 @@ export function AiHistory({ tool }: { tool: string }) {
         {(data ?? []).map((row) => (
           <li key={row.id}>
             {timeAgo(row.created_at)} · {row.status}
+            <ReportDialog targetType="ai_generation" targetId={row.id} label="Report AI content" />
           </li>
         ))}
       </ul>

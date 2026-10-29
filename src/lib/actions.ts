@@ -88,7 +88,7 @@ export async function unblockUser(blockerId: string, blockedId: string) {
 
 export async function submitReport(input: {
   reporterId: string;
-  targetType: "user" | "request" | "listing" | "message" | "review" | "offer";
+  targetType: "user" | "request" | "listing" | "message" | "review" | "offer" | "ai_generation";
   targetId: string;
   reason: string;
   details?: string;

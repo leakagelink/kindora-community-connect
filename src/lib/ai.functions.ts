@@ -3,6 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { aiInputSchema, AI_SAFETY_INSTRUCTIONS, validateAiOutput } from "@/lib/ai-safety";
 
 const MODEL = "openai/gpt-6-astra";
 
@@ -19,7 +20,7 @@ const FLAG_BY_TOOL: Record<AiTool, string> = {
 const BANNED = /\b(weapon|gun|ammo|explosive|cocaine|heroin|meth|prescription drug|child porn|nude|escort)\b/i;
 
 function promptFor(tool: AiTool, input: Record<string, string>) {
-  const clean = (value: string | undefined) => (value ?? "").slice(0, 600);
+  const clean = (value: string | undefined) => value ?? "";
   if (tool === "logo_maker") {
     return {
       system:
@@ -52,7 +53,7 @@ function parseJson(text: string): Record<string, unknown> {
 export const runAiTool = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: AiInput) => {
-    data = z.object({ tool: z.enum(["logo_maker", "resume_builder", "website_starter"]), input: z.record(z.string().max(60), z.string().max(6000)) }).parse(data);
+    data = aiInputSchema.parse(data);
     if (!["logo_maker", "resume_builder", "website_starter"].includes(data.tool)) throw new Error("Unknown tool");
     const joined = Object.values(data.input ?? {}).join(" ");
     if (joined.trim().length < 3) throw new Error("Please fill in the form before generating.");
@@ -85,7 +86,7 @@ export const runAiTool = createServerFn({ method: "POST" })
         body: JSON.stringify({
           model: MODEL,
           messages: [
-            { role: "system", content: system },
+            { role: "system", content: `${AI_SAFETY_INSTRUCTIONS}\n${system}` },
             { role: "user", content: user },
           ],
         }),
@@ -99,7 +100,8 @@ export const runAiTool = createServerFn({ method: "POST" })
       if (payload.choices?.[0]?.message?.refusal) throw new Error(payload.choices[0].message.refusal);
       const text = payload.choices?.[0]?.message?.content ?? "";
       if (!text.trim()) throw new Error("The AI provider returned no result.");
-      output = parseJson(text);
+      if (text.length > 120000) throw new Error("The generated result was too large. Please try a shorter request.");
+      output = validateAiOutput(data.tool, parseJson(text));
       inputTokens = payload.usage?.prompt_tokens ?? null;
       outputTokens = payload.usage?.completion_tokens ?? null;
     } catch (error) {
@@ -115,5 +117,5 @@ export const runAiTool = createServerFn({ method: "POST" })
 
     if (errorMessage) throw new Error(errorMessage);
 
-    return { outputJson: JSON.stringify(output), remaining: reserved.remaining, dailyLimit: reserved.dailyLimit };
+    return { generationId: reserved.id, outputJson: JSON.stringify(output), remaining: reserved.remaining, dailyLimit: reserved.dailyLimit };
   });
