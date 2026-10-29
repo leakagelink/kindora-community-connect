@@ -111,8 +111,7 @@ export async function resolvePhotoUrls(paths: string[]) {
       out.push(value);
       continue;
     }
-    const { data } = await supabase.storage.from("listing-photos").createSignedUrl(value, 60 * 60);
-    if (data?.signedUrl) out.push(data.signedUrl);
+    out.push(`/api/public/listing-photo?path=${encodeURIComponent(value)}`);
   }
   return out;
 }
