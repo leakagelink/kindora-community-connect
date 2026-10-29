@@ -11,7 +11,8 @@ export const requestAccountDeletion = createServerFn({ method: 'POST' })
   .handler(async ({ context }) => {
     const identity = await context.supabase.auth.getUser();
     if (identity.error || !identity.data.user?.email_confirmed_at) throw new Error('Verify your email before requesting deletion.');
-    const result = await context.supabase.rpc('request_goodivo_account_deletion');
+    const { supabaseAdmin } = await import('@/integrations/supabase/client.server');
+    const result = await supabaseAdmin.rpc('record_verified_deletion_request', { p_user: context.userId });
     if (result.error || !result.data) throw new Error('Your deletion request could not be saved. Please retry.');
     return { requestId: result.data, status: 'requested' as const };
   });
