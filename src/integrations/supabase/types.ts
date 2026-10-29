@@ -1279,6 +1279,10 @@ export type Database = {
         Returns: undefined
       }
       platform_operational_metrics: { Args: never; Returns: Json }
+      record_verified_deletion_request: {
+        Args: { p_user: string }
+        Returns: string
+      }
       request_goodivo_account_deletion: { Args: never; Returns: string }
       reserve_ai_generation: {
         Args: { p_input: Json; p_tool: string }
