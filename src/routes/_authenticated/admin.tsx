@@ -347,6 +347,7 @@ function ReviewQueue({ moderatorId }: { moderatorId: string }) {
           .is("deleted_at", null)
           .order("created_at"),
       ]);
+      if (requests.error || listings.error) throw new Error("Review queue could not be loaded.");
       return { requests: requests.data ?? [], listings: listings.data ?? [] };
     },
   });
@@ -356,27 +357,8 @@ function ReviewQueue({ moderatorId }: { moderatorId: string }) {
     row: { id: string; title: string; owner_id: string },
     approve: boolean,
   ) => {
-    const table = kind === "request" ? "help_requests" : "product_listings";
-    const status = approve ? (kind === "request" ? "published" : "published") : kind === "request" ? "rejected" : "removed";
-    const { error } = await supabase.from(table).update({ status: status as never }).eq("id", row.id);
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
-    await supabase.from("moderation_actions").insert({
-      moderator_id: moderatorId,
-      target_type: kind,
-      target_id: row.id,
-      action: approve ? "approved" : "rejected",
-    });
-    await notify({
-      userId: row.owner_id,
-      type: "moderation",
-      title: approve ? "Your post is now live" : "Your post was not approved",
-      body: row.title,
-      link: kind === "request" ? `/requests/${row.id}` : `/products/${row.id}`,
-    });
-    await logAudit({ action: `review:${approve ? "approved" : "rejected"}`, entityType: kind, entityId: row.id });
+    const result = await supabase.rpc("review_goodivo_post", { p_kind: kind, p_id: row.id, p_approve: approve });
+    if (result.error) { toast.error(result.error.message); return; }
     void queryClient.invalidateQueries({ queryKey: ["admin-queue"] });
     void queryClient.invalidateQueries({ queryKey: ["help-requests"] });
     void queryClient.invalidateQueries({ queryKey: ["product-listings"] });
