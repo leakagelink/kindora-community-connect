@@ -17,6 +17,7 @@ import { useAuth } from "@/lib/auth";
 import { profileQuery, statusLabel, timeAgo } from "@/lib/goodivo";
 import { useServerFn } from "@tanstack/react-start";
 import { withdrawAccount } from "@/lib/account.functions";
+import { DeletionRequest } from "@/components/goodivo/DeletionRequest";
 
 export const Route = createFileRoute("/_authenticated/profile")({
   head: () => ({ meta: [{ title: "Your profile & activity — Goodivo" }, { name: "description", content: "Manage your Goodivo profile, privacy and community activity." }, { property: "og:title", content: "Your profile & activity — Goodivo" }, { property: "og:description", content: "Your personal Goodivo profile and privacy settings." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
@@ -411,6 +412,7 @@ function ProfilePage() {
             <Button variant="destructive" disabled={withdrawing} className="mt-4 rounded-full" onClick={() => void deleteAccount()}>
               {withdrawing ? 'Withdrawing…' : 'Withdraw profile & posts'}
             </Button>
+            <DeletionRequest />
           </section>
 
           <Button variant="outline" className="rounded-full" onClick={() => void signOut()}>
