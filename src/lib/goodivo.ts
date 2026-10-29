@@ -103,7 +103,7 @@ export const categoriesQuery = queryOptions({
 export const featureFlagsQuery = queryOptions({
   queryKey: ["feature-flags"],
   queryFn: async () => {
-    const { data, error } = await supabase.from("feature_flags").select("key, description, is_enabled");
+    const { data, error } = await supabase.rpc("goodivo_public_flags");
     if (error) throw error;
     return Object.fromEntries(data.map((row) => [row.key, row.is_enabled])) as Record<string, boolean>;
   },
@@ -113,7 +113,7 @@ export const featureFlagsQuery = queryOptions({
 export const aiLimitsQuery = queryOptions({
   queryKey: ["ai-limits"],
   queryFn: async () => {
-    const { data, error } = await supabase.from("ai_usage_limits").select("tool, daily_limit, is_enabled");
+    const { data, error } = await supabase.rpc("goodivo_public_ai_limits");
     if (error) throw error;
     return data;
   },

@@ -221,7 +221,7 @@ function PostListing() {
                 id="photos"
                 type="file"
                 multiple
-                accept="image/jpeg,image/png,image/webp"
+                accept="image/jpeg,image/png"
                 onChange={(e) => handleFiles(e.target.files)}
               />
             </Field>
