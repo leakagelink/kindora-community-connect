@@ -1241,6 +1241,10 @@ export type Database = {
         Args: { p_input: Json; p_tool: string }
         Returns: Json
       }
+      review_goodivo_report: {
+        Args: { p_action: string; p_note?: string; p_report: string }
+        Returns: undefined
+      }
       review_platform_submission: {
         Args: {
           p_approved: boolean
