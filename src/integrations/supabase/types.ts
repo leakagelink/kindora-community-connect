@@ -1247,6 +1247,21 @@ export type Database = {
         }
         Returns: undefined
       }
+      goodivo_public_ai_limits: {
+        Args: never
+        Returns: {
+          daily_limit: number
+          is_enabled: boolean
+          tool: string
+        }[]
+      }
+      goodivo_public_flags: {
+        Args: never
+        Returns: {
+          is_enabled: boolean
+          key: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

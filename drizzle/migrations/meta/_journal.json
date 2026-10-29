@@ -99,6 +99,13 @@
       "when": 1793252457004,
       "tag": "0013_server_verified_photo_uploads",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1793252597703,
+      "tag": "0014_public_configuration_projection",
+      "breakpoints": true
     }
   ]
 }
