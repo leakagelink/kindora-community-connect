@@ -111,7 +111,15 @@ export async function resolvePhotoUrls(paths: string[]) {
       out.push(value);
       continue;
     }
-    out.push(`/api/public/listing-photo?path=${encodeURIComponent(value)}`);
+    const publicUrl = `/api/public/listing-photo?path=${encodeURIComponent(value)}`;
+    const visible = await fetch(publicUrl, { cache: "no-store" });
+    if (visible.ok) {
+      out.push(publicUrl);
+      continue;
+    }
+    // Pending listings remain visible to their owner without issuing bearer links.
+    const privatePhoto = await supabase.storage.from("listing-photos").download(value);
+    if (privatePhoto.data) out.push(URL.createObjectURL(privatePhoto.data));
   }
   return out;
 }

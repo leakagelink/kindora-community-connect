@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
 
 import { AppShell, PageHeading } from "@/components/site/AppShell";
 import { AI_TOOLS } from "@/lib/goodivo";
@@ -18,6 +19,8 @@ export const Route = createFileRoute("/ai-tools")({
 });
 
 function AiToolsPage() {
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  if (pathname !== "/ai-tools" && pathname !== "/ai-tools/") return <Outlet />;
   return (
     <AppShell>
       <PageHeading
@@ -30,7 +33,7 @@ function AiToolsPage() {
           <div key={tool.key} className="surface-card rounded-3xl p-6">
             <h2 className="font-display text-base font-bold">{tool.name}</h2>
             <p className="mt-2 text-sm text-muted-foreground">{tool.blurb}</p>
-            <p className="mt-4 text-xs text-muted-foreground">Coming in the next build step.</p>
+            <Button asChild variant="outline" className="mt-4"><Link to={tool.path}>Open {tool.name}</Link></Button>
           </div>
         ))}
       </div>
