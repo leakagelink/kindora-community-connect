@@ -1,4 +1,8 @@
 # Existing Goodivo update
+- [ ] Resolve October 29 audit: immutable private chats, trusted rate limits, request transitions, atomic moderation, AI reports/safety, verified uploads and offline fallback.
+- [ ] Remove reported dependency advisories and verify selected regression tests and signed-in flows.
+- [ ] Add verified account deletion requests accessible from the app and public web page; full erasure remains pending until cleanup/retention is verified.
+- [ ] Final Play release verification — requires real operator/privacy contact, sponsor/provider terms and signed Android AAB/device/Console evidence.
 - [x] Audit existing project and previous report, remediate confirmed first-priority blockers, and deliver an evidence-based NOT READY report; remaining release work itemized below.
 - [x] Harden confirmed private-message, profile, notification and ownership write paths; five signed-in denial checks passed, scanner write findings no longer returned; remaining public-read entries documented.
 - [x] Add free logo (100 applications), domain (200 applications/50 awards) and hosting (100 applications/50 awards) offers with private submission, atomic caps, admin review and one-year terms.
