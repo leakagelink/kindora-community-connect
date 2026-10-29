@@ -1,5 +1,5 @@
 // Goodivo offline shell: cache static assets, always prefer the network for data.
-const CACHE = "goodivo-shell-v1";
+const CACHE = "goodivo-shell-v2";
 const SHELL = ["/", "/manifest.webmanifest", "/favicon.png", "/icons/icon-192.png", "/icons/icon-512.png"];
 
 self.addEventListener("install", (event) => {
@@ -33,8 +33,11 @@ self.addEventListener("fetch", (event) => {
       .catch(async () => {
         const cached = await caches.match(request);
         if (cached) return cached;
-        const shell = await caches.match("/");
-        return shell ?? new Response("You are offline.", { status: 503, headers: { "content-type": "text/plain" } });
+        if (request.mode === "navigate") {
+          const shell = await caches.match("/");
+          if (shell) return shell;
+        }
+        return new Response("You are offline.", { status: 503, headers: { "content-type": "text/plain" } });
       }),
   );
 });

@@ -3,6 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 
 import { AppShell, EmptyState, PageHeading } from "@/components/site/AppShell";
 import { profileQuery, reviewsQuery } from "@/lib/goodivo";
+import { ReportDialog } from "@/components/goodivo/ReportDialog";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/auth";
+import { blockUser } from "@/lib/actions";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/u/$id")({
   head: () => ({
@@ -22,6 +27,7 @@ function PublicProfile() {
   const { id } = Route.useParams();
   const profile = useQuery(profileQuery(id));
   const reviews = useQuery(reviewsQuery(id));
+  const { user } = useAuth();
 
   if (profile.isLoading) {
     return (
@@ -44,6 +50,13 @@ function PublicProfile() {
   return (
     <AppShell>
       <PageHeading eyebrow="Member" title={person.display_name ?? "Goodivo member"} description={person.bio ?? undefined} />
+      {user && user.id !== id ? <div className="mb-4 flex gap-2">
+        <ReportDialog targetType="user" targetId={id} label="Report member" />
+        <Button variant="outline" size="sm" onClick={async () => {
+          try { await blockUser(user.id, id); toast.success("Member blocked"); }
+          catch { toast.error("Could not block this member. Please retry."); }
+        }}>Block member</Button>
+      </div> : null}
       <div className="grid gap-4 md:grid-cols-2">
         <div className="surface-card rounded-3xl p-6">
           <h2 className="font-display text-sm font-bold">About</h2>
@@ -73,6 +86,7 @@ function PublicProfile() {
                 <li key={review.id} className="rounded-xl bg-secondary p-3">
                   <p className="text-sm font-semibold">{review.rating} / 5</p>
                   {review.comment ? <p className="mt-1 text-sm text-muted-foreground">{review.comment}</p> : null}
+                  <ReportDialog targetType="review" targetId={review.id} label="Report review" />
                 </li>
               ))}
             </ul>

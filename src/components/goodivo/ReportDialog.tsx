@@ -22,7 +22,7 @@ export function ReportDialog({
   targetId,
   label = "Report",
 }: {
-  targetType: "user" | "request" | "listing" | "message" | "review" | "offer";
+  targetType: "user" | "request" | "listing" | "message" | "review" | "offer" | "ai_generation";
   targetId: string;
   label?: string;
 }) {
