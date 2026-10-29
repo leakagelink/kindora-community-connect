@@ -216,7 +216,7 @@ function PostListing() {
                 />
               </Field>
             </div>
-            <Field id="photos" label="Photos" hint={`Up to ${MAX_PHOTOS} images, JPG/PNG/WebP, max 5 MB each.`}>
+            <Field id="photos" label="Photos" hint={`Up to ${MAX_PHOTOS} JPG/PNG images, max 5 MB and 4 megapixels each.`}>
               <Input
                 id="photos"
                 type="file"
