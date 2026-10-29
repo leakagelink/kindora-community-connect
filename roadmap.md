@@ -1,7 +1,9 @@
 # Existing Goodivo update
-- [ ] Resolve October 29 audit: immutable private chats, trusted rate limits, request transitions, atomic moderation, AI reports/safety, verified uploads and offline fallback.
-- [ ] Remove reported dependency advisories and verify selected regression tests and signed-in flows.
-- [ ] Add verified account deletion requests accessible from the app and public web page; full erasure remains pending until cleanup/retention is verified.
+- [x] Apply October 29 guards: RPC-only private chats, trusted message timestamps/sender limits, request lifecycle, atomic moderation/publication, AI history reporting and output checks, decoded/reencoded uploads and destination-aware offline fallback.
+- [x] Remove reported dependency advisories: fresh scan reports none across 56 production dependencies; 50 tests pass; real signed-in PNG upload/listing save and denial checks pass, temporary rows/files removed.
+- [x] Add email-verified account-deletion request controls in Profile and the public policy page; privileged recording boundary applied, submission/processing verification remains below.
+- [ ] Verify deletion-request submission and implement shared-record-safe full erasure — blocked by unconfirmed retention/operator details and shared-record handling; do not claim withdrawal or queued requests are complete deletion.
+- [ ] Verify new request/chat concurrency, authorized moderation/publication and AI reporting/provider flows — blocked by no separate participant/admin accounts and unverified provider safety/retention.
 - [ ] Final Play release verification — requires real operator/privacy contact, sponsor/provider terms and signed Android AAB/device/Console evidence.
 - [x] Audit existing project and previous report, remediate confirmed first-priority blockers, and deliver an evidence-based NOT READY report; remaining release work itemized below.
 - [x] Harden confirmed private-message, profile, notification and ownership write paths; five signed-in denial checks passed, scanner write findings no longer returned; remaining public-read entries documented.
@@ -28,7 +30,8 @@
 - [ ] Complete product/request/two-user messaging/AI-provider and admin lifecycle QA — no separate participant/admin accounts; no real content engagements yet.
 - [ ] Configure verified advertising provider and signature flow — blocked by missing provider and policy approval; ads stay disabled.
 - [x] Scope listing-photo reads to owner/staff or published media and restrict upload/update filename extensions; retain private bucket and 5 MB limit.
-- [ ] Complete file-content/MIME validation and automatic product expiry — MIME settings need a supported configuration path; expiry duration not specified.
+- [x] Validate listing JPG/PNG bytes by bounded decoding and reencoding; deny direct storage insert/update; preserve private bucket and owner previews; signed-in real upload/save verified.
+- [ ] Automatic product expiry — blocked by unspecified expiry duration.
 - [x] Escape/validate resume export and accurately label browser Print / Save PDF; add and run two regression tests.
 - [x] Add Explore and inbox paging, latest-first expandable conversation history and explicit load errors in modified views.
 - [ ] Complete auth-account/private-data deletion and verified external deletion requests — retention policy/contact and end-to-end disposable-account QA still required.
