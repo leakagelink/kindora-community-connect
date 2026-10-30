@@ -24,8 +24,8 @@ export function DeletionRequest() {
   return <section className="my-6 space-y-3 border-t border-border pt-5">
     <h2 className="font-display text-lg font-bold">Request account deletion</h2>
     <p className="text-sm text-muted-foreground">Your verified request is recorded privately. Automatic full erasure is not yet operational; submitting does not mean your account or private data has been deleted.</p>
-    {!user ? <Button asChild variant="outline"><Link to="/auth" search={{ mode: "signin", redirect: "/legal/account-deletion" }}>Sign in to verify ownership</Link></Button> : request.data ? <p role="status" className="text-sm">Request saved · {request.data.status}. Full deletion is pending.</p> : <Button variant="destructive" disabled={busy || request.isPending || request.isError} onClick={async () => {
-      if (!window.confirm("Record a request to delete your account and associated personal data? Processing is currently pending; this does not immediately erase data.")) return;
+    {!user ? <Button asChild variant="outline"><Link to="/auth" search={{ mode: "signin", redirect: "/legal/account-deletion" }}>Sign in to verify ownership</Link></Button> : request.data ? <p role="status" className="text-sm">Request saved · {request.data.status}. We will erase your account within 90 days.</p> : <Button variant="destructive" disabled={busy || request.isPending || request.isError} onClick={async () => {
+      if (!window.confirm("Record a request to delete your account and associated personal data? It will be processed manually within 90 days.")) return;
       setBusy(true); setError("");
       try { await requestDeletion(); await request.refetch(); }
       catch (failure) { setError(failure instanceof Error ? failure.message : "Could not save request."); }
