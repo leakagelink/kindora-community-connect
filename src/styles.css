@@ -239,6 +239,101 @@
   }
 }
 
+/* Splash screen motion */
+@keyframes splash-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes splash-ring {
+  0% {
+    opacity: 0.7;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes splash-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes splash-glow {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes splash-bloom {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-14px) scale(1.08);
+  }
+}
+
+@keyframes splash-bar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@utility splash-pop {
+  animation: splash-pop 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@utility splash-ring {
+  animation: splash-ring 1.8s ease-out infinite;
+}
+
+@utility splash-orbit {
+  animation: splash-orbit 4s linear infinite;
+}
+
+@utility splash-glow {
+  animation: splash-glow 2s ease-in-out infinite;
+}
+
+@utility splash-bloom {
+  animation: splash-bloom 5s ease-in-out infinite;
+}
+
+@utility splash-bar {
+  animation: splash-bar 1.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash-ring,
+  .splash-orbit,
+  .splash-glow,
+  .splash-bloom {
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
