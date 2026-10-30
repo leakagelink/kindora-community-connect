@@ -18,6 +18,8 @@
     "seroval": "1.6.11"
   },
   "dependencies": {
+    "@capacitor-community/admob": "^8",
+    "@capacitor/core": "^8",
     "@hookform/resolvers": "^5.2.2",
     "@lovable.dev/cloud-auth-js": "^1.1.2",
     "@radix-ui/react-accordion": "^1.2.12",
