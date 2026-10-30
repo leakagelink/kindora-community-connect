@@ -14,6 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AuthProvider } from "@/lib/auth";
 import { Toaster } from "@/components/ui/sonner";
+import { SplashScreen } from "@/components/goodivo/SplashScreen";
 
 function NotFoundComponent() {
   return (
@@ -131,8 +132,12 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   // Installable PWA: register the offline shell once, after hydration.
+  // Never in dev or in the Lovable preview host — a service worker is browser-held
+  // state and would keep serving stale files there.
   useEffect(() => {
     if (!("serviceWorker" in navigator)) return;
+    if (import.meta.env.DEV) return;
+    if (window.location.hostname.includes("id-preview--")) return;
     const timer = window.setTimeout(() => {
       void navigator.serviceWorker.register("/sw.js").catch(() => undefined);
     }, 1200);
@@ -142,6 +147,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
+        <SplashScreen />
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
         <Toaster />

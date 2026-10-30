@@ -7,8 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
+import { useServerFn } from "@tanstack/react-start";
+import { sendPhoneOtp, verifyPhoneOtp } from "@/lib/phone-auth.functions";
 import { useAuth } from "@/lib/auth";
+import { Eye, EyeOff, Gift, HeartHandshake, ShieldCheck } from "lucide-react";
 
 type AuthSearch = { mode?: "signin" | "signup" | "reset" | undefined; redirect?: string | undefined };
 
@@ -43,6 +45,13 @@ function AuthPage() {
   const [displayName, setDisplayName] = useState("");
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState<null | "confirm" | "reset">(null);
+  const [usePhone, setUsePhone] = useState(false);
+  const [showPw, setShowPw] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [code, setCode] = useState("");
+  const [codeSent, setCodeSent] = useState(false);
+  const sendOtp = useServerFn(sendPhoneOtp);
+  const verifyOtp = useServerFn(verifyPhoneOtp);
 
   useEffect(() => {
     if (user) void navigate({ to: redirect ?? "/", replace: true });
@@ -85,22 +94,79 @@ function AuthPage() {
     }
   }
 
-  async function handleGoogle() {
+  async function handleSendCode(event?: React.FormEvent) {
+    event?.preventDefault();
     setBusy(true);
-    const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-    if (result.error) {
-      toast.error("Google sign-in didn't work. Please try again.");
+    try {
+      await sendOtp({ data: { phone } });
+      setCodeSent(true);
+      toast.success("Code sent by SMS.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not send the code");
+    } finally {
       setBusy(false);
-      return;
     }
-    if (result.redirected) return;
-    void navigate({ to: redirect ?? "/", replace: true });
+  }
+
+  async function handleVerifyCode(event: React.FormEvent) {
+    event.preventDefault();
+    setBusy(true);
+    try {
+      const { tokenHash } = await verifyOtp({ data: { phone, code, displayName: displayName || undefined } });
+      const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: "magiclink" });
+      if (error) throw error;
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not verify the code");
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
-    <div className="mesh-ground flex min-h-screen flex-col items-center justify-center px-5 py-10">
-      <BrandLockup />
-      <div className="surface-card mt-7 w-full max-w-md rounded-3xl p-6 sm:p-8">
+    <div className="mesh-ground min-h-dvh px-4 py-6 sm:px-6 sm:py-10">
+      <div className="mx-auto grid w-full max-w-5xl items-center gap-8 lg:min-h-[calc(100dvh-5rem)] lg:grid-cols-[1fr_minmax(0,28rem)] lg:gap-14">
+      <aside className="hidden animate-in fade-in slide-in-from-left-4 duration-700 lg:block">
+        <BrandLockup />
+        <h2 className="mt-8 font-display text-4xl font-extrabold leading-tight tracking-tight">
+          Give more. <span className="text-primary">Help more.</span>
+        </h2>
+        <p className="mt-3 max-w-md text-muted-foreground">
+          Join a community where asking for help, sharing skills and giving away useful things is always free.
+        </p>
+        <ul className="mt-8 space-y-3">
+          {[
+            { icon: HeartHandshake, text: "Request or offer help — no payment ever required" },
+            { icon: Gift, text: "Give and receive free products locally" },
+            { icon: ShieldCheck, text: "Private contact details, report and block tools" },
+          ].map(({ icon: Icon, text }) => (
+            <li key={text} className="flex items-center gap-3 rounded-2xl bg-card/70 p-3 text-sm shadow-sm backdrop-blur">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+                <Icon className="h-4 w-4" />
+              </span>
+              {text}
+            </li>
+          ))}
+        </ul>
+      </aside>
+      <main className="mx-auto flex w-full max-w-md flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="lg:hidden"><BrandLockup /></div>
+      <div className="surface-card mt-6 w-full rounded-3xl p-5 shadow-xl sm:p-8 lg:mt-0">
+        {mode !== "reset" && !sent ? (
+          <div className="mb-6 grid grid-cols-2 rounded-full bg-muted p-1 text-sm font-semibold" role="tablist">
+            {(["signin", "signup"] as const).map((m) => (
+              <Link
+                key={m}
+                to="/auth"
+                search={{ mode: m, redirect }}
+                role="tab"
+                aria-selected={mode === m}
+                className={`rounded-full py-2 text-center transition-all ${mode === m ? "bg-background text-foreground shadow" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                {m === "signin" ? "Log in" : "Sign up"}
+              </Link>
+            ))}
+          </div>
+        ) : null}
         {sent ? (
           <div className="text-center">
             <h1 className="font-display text-xl font-bold">Check your email</h1>
@@ -117,7 +183,7 @@ function AuthPage() {
           </div>
         ) : (
           <>
-            <h1 className="font-display text-2xl font-extrabold tracking-tight">
+            <h1 className="font-display text-2xl font-extrabold sm:text-3xl tracking-tight">
               {mode === "signup" ? "Create your account" : mode === "reset" ? "Reset your password" : "Welcome back"}
             </h1>
             <p className="mt-1.5 text-sm text-muted-foreground">
@@ -134,6 +200,7 @@ function AuthPage() {
                   <Label htmlFor="displayName">Display name</Label>
                   <Input
                     id="displayName"
+                    className="h-11"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     maxLength={60}
@@ -145,6 +212,7 @@ function AuthPage() {
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
+                  className="h-11"
                   type="email"
                   required
                   autoComplete="email"
@@ -156,15 +224,21 @@ function AuthPage() {
               {mode !== "reset" ? (
                 <div className="space-y-1.5">
                   <Label htmlFor="password">Password</Label>
+                  <div className="relative">
                   <Input
                     id="password"
-                    type="password"
+                    className="h-11 pr-11"
+                    type={showPw ? "text" : "password"}
                     required
                     minLength={8}
                     autoComplete={mode === "signup" ? "new-password" : "current-password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
+                  <button type="button" onClick={() => setShowPw((v) => !v)} aria-label={showPw ? "Hide password" : "Show password"} className="absolute inset-y-0 right-0 grid w-11 place-items-center text-muted-foreground hover:text-foreground">
+                    {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                  </div>
                   {mode === "signup" ? (
                     <p className="text-xs text-muted-foreground">Use at least 8 characters.</p>
                   ) : null}
@@ -180,9 +254,58 @@ function AuthPage() {
                 <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground">
                   <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
                 </div>
-                <Button variant="outline" size="pill" className="w-full" disabled={busy} onClick={handleGoogle}>
-                  Continue with Google
-                </Button>
+                {!usePhone ? (
+                  <Button variant="outline" size="pill" className="w-full" disabled={busy} onClick={() => setUsePhone(true)}>
+                    {mode === "signup" ? "Sign up with mobile number" : "Log in with mobile number"}
+                  </Button>
+                ) : (
+                  <form className="space-y-3" onSubmit={codeSent ? handleVerifyCode : handleSendCode}>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="phone">Mobile number (India)</Label>
+                      <div className="flex gap-2">
+                        <span className="flex items-center rounded-md border border-input px-3 text-sm text-muted-foreground">+91</span>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          inputMode="numeric"
+                          autoComplete="tel-national"
+                          required
+                          maxLength={14}
+                          placeholder="98765 43210"
+                          value={phone}
+                          disabled={codeSent}
+                          onChange={(e) => setPhone(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    {codeSent ? (
+                      <div className="space-y-1.5">
+                        <Label htmlFor="otp">6-digit code</Label>
+                        <Input
+                          id="otp"
+                          inputMode="numeric"
+                          autoComplete="one-time-code"
+                          required
+                          pattern="\d{6}"
+                          maxLength={6}
+                          value={code}
+                          onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                        />
+                        <div className="flex justify-between text-xs">
+                          <button type="button" className="text-muted-foreground underline" onClick={() => { setCodeSent(false); setCode(""); }}>
+                            Change number
+                          </button>
+                          <button type="button" className="font-semibold text-primary" disabled={busy} onClick={() => void handleSendCode()}>
+                            Resend code
+                          </button>
+                        </div>
+                      </div>
+                    ) : null}
+                    <Button type="submit" disabled={busy} size="pill" className="w-full">
+                      {busy ? "Please wait…" : codeSent ? "Verify & continue" : "Send code by SMS"}
+                    </Button>
+                  </form>
+                )}
               </>
             ) : null}
 
@@ -213,7 +336,7 @@ function AuthPage() {
           </>
         )}
       </div>
-      <p className="mt-6 max-w-md text-center text-xs text-muted-foreground">
+      <p className="mt-5 max-w-md text-center text-xs text-muted-foreground">
         By continuing you agree to our{" "}
         <Link to="/legal/$slug" params={{ slug: "terms" }} className="underline">
           Terms
@@ -224,6 +347,8 @@ function AuthPage() {
         </Link>
         .
       </p>
+      </main>
+      </div>
     </div>
   );
 }
