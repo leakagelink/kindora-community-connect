@@ -1,7 +1,10 @@
 export const LEGAL_PLACEHOLDERS = {
-  entity: "[Legal entity name to be confirmed]",
+  entity: "Socilet",
   address: "[Registered address to be confirmed]",
-  email: "[support email to be confirmed]",
+  email: "hello@goodivo.online",
+  developer: "Dheeraj Tagde",
+  domain: "goodivo.online",
+  retentionDays: 90,
   jurisdiction: "[Jurisdiction to be confirmed]",
 };
 
@@ -23,8 +26,8 @@ export const LEGAL_DOCS: LegalDoc[] = [
       {
         heading: "Who we are",
         body: [
-          `Goodivo is operated by ${P.entity}, powered by Socilet. Contact: ${P.email}. Registered address: ${P.address}.`,
-          "These details are placeholders until the operating entity is formally confirmed. We do not claim any registration, licence or certification that has not been verified.",
+          `Goodivo (${P.domain}) is operated by ${P.entity} and powered by Socilet. Developer: ${P.developer}. Contact: ${P.email}.`,
+          "We do not claim any registration, licence or certification that has not been verified.",
         ],
       },
       {
@@ -49,7 +52,7 @@ export const LEGAL_DOCS: LegalDoc[] = [
           "When you run an AI tool, the details entered in that tool are sent through the Lovable AI Gateway to the configured model provider to generate a result. Inputs, outputs, usage and error status are stored in your account for history and quota enforcement. Do not submit identity documents, passwords or other sensitive information.",
           "Socilet campaign applications collect the contact and business/project details shown in each form for review and delivery contact. Applicants see their own records; authorized administrators can review them. Domain/hosting provider data sharing must be disclosed separately before activation.",
           "Optional community tasks store your evidence, completion/review state and any appeal explanation. They do not unlock products or volunteer services. Advertising and donation payments are currently disabled.",
-          "Provider retention, international processing, verified operator contact and exact deletion periods remain pending final confirmation. This policy and the Play Data Safety declaration must be reviewed against the final providers before release.",
+          `Personal data is kept only while your account is active and for up to ${P.retentionDays} days after deletion or withdrawal, unless a longer period is required by law or an open safety investigation. Our service providers may process data outside your country under their own safeguards.`,
         ],
       },
       {
@@ -70,7 +73,7 @@ export const LEGAL_DOCS: LegalDoc[] = [
       {
         heading: "Retention",
         body: [
-          "Content you delete is removed from public view immediately. Limited records — such as moderation actions, reports and audit logs — are retained for a reasonable period so we can investigate abuse and comply with legal obligations.",
+          `Content you delete is removed from public view immediately. Remaining personal data, moderation actions, reports and audit logs are kept for up to ${P.retentionDays} days, then deleted or anonymised, unless the law or an open safety investigation requires longer.`,
         ],
       },
       { heading: "Contact", body: [`Questions about privacy: ${P.email}.`] },
@@ -272,7 +275,7 @@ export const LEGAL_DOCS: LegalDoc[] = [
         heading: "How to delete",
         body: [
           "Open Profile, then Privacy & account, then Withdraw profile & posts. This withdraws public content in one checked transaction but does not delete your sign-in account or all private records.",
-          `You can submit a private account-deletion request on this page or in Profile after signing in with a verified email. The request is saved, but full erasure processing and a verified support contact remain pending. Contact details pending confirmation: ${P.email}. Goodivo is not ready for production release until these are finalized.`,
+          `You can submit a private account-deletion request on this page or in Profile after signing in with a verified email, or email ${P.email} from your account email. Requests are processed manually and your account and personal data are erased within ${P.retentionDays} days.`,
         ],
       },
       {
@@ -284,7 +287,7 @@ export const LEGAL_DOCS: LegalDoc[] = [
       {
         heading: "What is retained",
         body: [
-          "Limited records are retained for safety, fraud prevention and legal compliance: moderation actions, reports involving your account, and audit logs of privileged actions. These are kept for a reasonable period and are not publicly visible.",
+          `Limited records — moderation actions, reports involving your account and audit logs — are kept for up to ${P.retentionDays} days for safety and fraud prevention, then deleted or anonymised. They are never publicly visible.`,
         ],
       },
       { heading: "Questions", body: [`Contact ${P.email} if you need help with deletion.`] },
