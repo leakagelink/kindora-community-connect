@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable/index";
+import { useServerFn } from "@tanstack/react-start";
+import { sendPhoneOtp, verifyPhoneOtp } from "@/lib/phone-auth.functions";
 import { useAuth } from "@/lib/auth";
 
 type AuthSearch = { mode?: "signin" | "signup" | "reset" | undefined; redirect?: string | undefined };
@@ -43,6 +44,12 @@ function AuthPage() {
   const [displayName, setDisplayName] = useState("");
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState<null | "confirm" | "reset">(null);
+  const [usePhone, setUsePhone] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [code, setCode] = useState("");
+  const [codeSent, setCodeSent] = useState(false);
+  const sendOtp = useServerFn(sendPhoneOtp);
+  const verifyOtp = useServerFn(verifyPhoneOtp);
 
   useEffect(() => {
     if (user) void navigate({ to: redirect ?? "/", replace: true });
@@ -85,16 +92,32 @@ function AuthPage() {
     }
   }
 
-  async function handleGoogle() {
+  async function handleSendCode(event?: React.FormEvent) {
+    event?.preventDefault();
     setBusy(true);
-    const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
-    if (result.error) {
-      toast.error("Google sign-in didn't work. Please try again.");
+    try {
+      await sendOtp({ data: { phone } });
+      setCodeSent(true);
+      toast.success("Code sent by SMS.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not send the code");
+    } finally {
       setBusy(false);
-      return;
     }
-    if (result.redirected) return;
-    void navigate({ to: redirect ?? "/", replace: true });
+  }
+
+  async function handleVerifyCode(event: React.FormEvent) {
+    event.preventDefault();
+    setBusy(true);
+    try {
+      const { tokenHash } = await verifyOtp({ data: { phone, code, displayName: displayName || undefined } });
+      const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type: "magiclink" });
+      if (error) throw error;
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Could not verify the code");
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -180,9 +203,58 @@ function AuthPage() {
                 <div className="my-5 flex items-center gap-3 text-xs text-muted-foreground">
                   <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
                 </div>
-                <Button variant="outline" size="pill" className="w-full" disabled={busy} onClick={handleGoogle}>
-                  Continue with Google
-                </Button>
+                {!usePhone ? (
+                  <Button variant="outline" size="pill" className="w-full" disabled={busy} onClick={() => setUsePhone(true)}>
+                    {mode === "signup" ? "Sign up with mobile number" : "Log in with mobile number"}
+                  </Button>
+                ) : (
+                  <form className="space-y-3" onSubmit={codeSent ? handleVerifyCode : handleSendCode}>
+                    <div className="space-y-1.5">
+                      <Label htmlFor="phone">Mobile number (India)</Label>
+                      <div className="flex gap-2">
+                        <span className="flex items-center rounded-md border border-input px-3 text-sm text-muted-foreground">+91</span>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          inputMode="numeric"
+                          autoComplete="tel-national"
+                          required
+                          maxLength={14}
+                          placeholder="98765 43210"
+                          value={phone}
+                          disabled={codeSent}
+                          onChange={(e) => setPhone(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    {codeSent ? (
+                      <div className="space-y-1.5">
+                        <Label htmlFor="otp">6-digit code</Label>
+                        <Input
+                          id="otp"
+                          inputMode="numeric"
+                          autoComplete="one-time-code"
+                          required
+                          pattern="\d{6}"
+                          maxLength={6}
+                          value={code}
+                          onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                        />
+                        <div className="flex justify-between text-xs">
+                          <button type="button" className="text-muted-foreground underline" onClick={() => { setCodeSent(false); setCode(""); }}>
+                            Change number
+                          </button>
+                          <button type="button" className="font-semibold text-primary" disabled={busy} onClick={() => void handleSendCode()}>
+                            Resend code
+                          </button>
+                        </div>
+                      </div>
+                    ) : null}
+                    <Button type="submit" disabled={busy} size="pill" className="w-full">
+                      {busy ? "Please wait…" : codeSent ? "Verify & continue" : "Send code by SMS"}
+                    </Button>
+                  </form>
+                )}
               </>
             ) : null}
 
