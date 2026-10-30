@@ -17,7 +17,7 @@ function secretPepper() {
   return key;
 }
 
-const phoneInput = z.object({ phone: z.string().min(10).max(16) });
+const phoneInput = z.object({ phone: z.string().min(1).max(20) });
 
 export const sendPhoneOtp = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => phoneInput.parse(input))
@@ -73,7 +73,7 @@ export const sendPhoneOtp = createServerFn({ method: "POST" })
   });
 
 const verifyInput = z.object({
-  phone: z.string().min(10).max(16),
+  phone: z.string().min(1).max(20),
   code: z.string().regex(/^\d{6}$/),
   displayName: z.string().max(60).optional(),
 });
