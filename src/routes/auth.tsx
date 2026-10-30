@@ -121,9 +121,50 @@ function AuthPage() {
   }
 
   return (
-    <div className="mesh-ground flex min-h-screen flex-col items-center justify-center px-5 py-10">
-      <BrandLockup />
-      <div className="surface-card mt-7 w-full max-w-md rounded-3xl p-6 sm:p-8">
+    <div className="mesh-ground min-h-dvh px-4 py-6 sm:px-6 sm:py-10">
+      <div className="mx-auto grid w-full max-w-5xl items-center gap-8 lg:min-h-[calc(100dvh-5rem)] lg:grid-cols-[1fr_minmax(0,28rem)] lg:gap-14">
+      <aside className="hidden animate-in fade-in slide-in-from-left-4 duration-700 lg:block">
+        <BrandLockup />
+        <h2 className="mt-8 font-display text-4xl font-extrabold leading-tight tracking-tight">
+          Give more. <span className="text-primary">Help more.</span>
+        </h2>
+        <p className="mt-3 max-w-md text-muted-foreground">
+          Join a community where asking for help, sharing skills and giving away useful things is always free.
+        </p>
+        <ul className="mt-8 space-y-3">
+          {[
+            { icon: HeartHandshake, text: "Request or offer help — no payment ever required" },
+            { icon: Gift, text: "Give and receive free products locally" },
+            { icon: ShieldCheck, text: "Private contact details, report and block tools" },
+          ].map(({ icon: Icon, text }) => (
+            <li key={text} className="flex items-center gap-3 rounded-2xl bg-card/70 p-3 text-sm shadow-sm backdrop-blur">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary">
+                <Icon className="h-4 w-4" />
+              </span>
+              {text}
+            </li>
+          ))}
+        </ul>
+      </aside>
+      <main className="mx-auto flex w-full max-w-md flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-500">
+      <div className="lg:hidden"><BrandLockup /></div>
+      <div className="surface-card mt-6 w-full rounded-3xl p-5 shadow-xl sm:p-8 lg:mt-0">
+        {mode !== "reset" && !sent ? (
+          <div className="mb-6 grid grid-cols-2 rounded-full bg-muted p-1 text-sm font-semibold" role="tablist">
+            {(["signin", "signup"] as const).map((m) => (
+              <Link
+                key={m}
+                to="/auth"
+                search={{ mode: m, redirect }}
+                role="tab"
+                aria-selected={mode === m}
+                className={`rounded-full py-2 text-center transition-all ${mode === m ? "bg-background text-foreground shadow" : "text-muted-foreground hover:text-foreground"}`}
+              >
+                {m === "signin" ? "Log in" : "Sign up"}
+              </Link>
+            ))}
+          </div>
+        ) : null}
         {sent ? (
           <div className="text-center">
             <h1 className="font-display text-xl font-bold">Check your email</h1>
@@ -285,7 +326,7 @@ function AuthPage() {
           </>
         )}
       </div>
-      <p className="mt-6 max-w-md text-center text-xs text-muted-foreground">
+      <p className="mt-5 max-w-md text-center text-xs text-muted-foreground">
         By continuing you agree to our{" "}
         <Link to="/legal/$slug" params={{ slug: "terms" }} className="underline">
           Terms
@@ -296,6 +337,8 @@ function AuthPage() {
         </Link>
         .
       </p>
+      </main>
+      </div>
     </div>
   );
 }
