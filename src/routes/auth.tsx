@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useServerFn } from "@tanstack/react-start";
 import { sendPhoneOtp, verifyPhoneOtp } from "@/lib/phone-auth.functions";
 import { useAuth } from "@/lib/auth";
+import { Eye, EyeOff, Gift, HeartHandshake, ShieldCheck } from "lucide-react";
 
 type AuthSearch = { mode?: "signin" | "signup" | "reset" | undefined; redirect?: string | undefined };
 
@@ -45,6 +46,7 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState<null | "confirm" | "reset">(null);
   const [usePhone, setUsePhone] = useState(false);
+  const [showPw, setShowPw] = useState(false);
   const [phone, setPhone] = useState("");
   const [code, setCode] = useState("");
   const [codeSent, setCodeSent] = useState(false);
@@ -181,7 +183,7 @@ function AuthPage() {
           </div>
         ) : (
           <>
-            <h1 className="font-display text-2xl font-extrabold tracking-tight">
+            <h1 className="font-display text-2xl font-extrabold sm:text-3xl tracking-tight">
               {mode === "signup" ? "Create your account" : mode === "reset" ? "Reset your password" : "Welcome back"}
             </h1>
             <p className="mt-1.5 text-sm text-muted-foreground">
@@ -198,6 +200,7 @@ function AuthPage() {
                   <Label htmlFor="displayName">Display name</Label>
                   <Input
                     id="displayName"
+                    className="h-11"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     maxLength={60}
@@ -209,6 +212,7 @@ function AuthPage() {
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
+                  className="h-11"
                   type="email"
                   required
                   autoComplete="email"
@@ -220,15 +224,21 @@ function AuthPage() {
               {mode !== "reset" ? (
                 <div className="space-y-1.5">
                   <Label htmlFor="password">Password</Label>
+                  <div className="relative">
                   <Input
                     id="password"
-                    type="password"
+                    className="h-11 pr-11"
+                    type={showPw ? "text" : "password"}
                     required
                     minLength={8}
                     autoComplete={mode === "signup" ? "new-password" : "current-password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
+                  <button type="button" onClick={() => setShowPw((v) => !v)} aria-label={showPw ? "Hide password" : "Show password"} className="absolute inset-y-0 right-0 grid w-11 place-items-center text-muted-foreground hover:text-foreground">
+                    {showPw ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                  </div>
                   {mode === "signup" ? (
                     <p className="text-xs text-muted-foreground">Use at least 8 characters.</p>
                   ) : null}
