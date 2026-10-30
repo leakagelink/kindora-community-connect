@@ -1,6 +1,6 @@
 import { test, expect } from 'bun:test';
 import { CAMPAIGN, campaignSchema } from './campaign-rules';
-import { AD_POLICY, canShowInterstitial, adController } from './ad-controller';
+import { AD_POLICY, ADMOB_IDS, canShowInterstitial, adController } from './ad-controller';
 const valid={full_name:'QA Applicant',business_name:'QA Business',email:'qa@example.test',mobile:'+91 9000000000',website:'',category:'Education',service:'Website',description:'A small website with a service catalogue and contact form for our business.',scope:'Three pages with contact details.',reason:'We want to improve our digital presence for customers.',terms_accepted:true,contact_consent:true};
 test('campaign value is capped at 50000 rupees',()=>expect(CAMPAIGN.maxValue).toBe(50000));
 test('campaign development fee is zero',()=>expect(CAMPAIGN.developmentFee).toBe(0));
@@ -10,7 +10,10 @@ test('application requires contact consent',()=>expect(campaignSchema.safeParse(
 test('optional business link may be omitted',()=>expect(campaignSchema.safeParse(valid).success).toBe(true));
 test('application rejects executable URLs',()=>expect(campaignSchema.safeParse({...valid,website:'javascript:alert(1)'}).success).toBe(false));
 test('application rejects overlong descriptions',()=>expect(campaignSchema.safeParse({...valid,description:'a'.repeat(4001)}).success).toBe(false));
-test('production ads are disabled',()=>expect(AD_POLICY.enabled).toBe(false));
+test('android ads are enabled',()=>expect(AD_POLICY.enabled).toBe(true));
+test('real interstitial unit is used',()=>expect(ADMOB_IDS.interstitial).toBe('ca-app-pub-1475323931624357/4283402427'));
+test('real banner unit is used',()=>expect(ADMOB_IDS.banner).toBe('ca-app-pub-1475323931624357/5979627470'));
+test('interstitial stops after 3 per session',()=>expect(canShowInterstitial({enabled:true,loaded:true,busy:false,critical:false,actions:2,shown:3,elapsedMs:999999})).toBe(false));
 const eligible={enabled:true,loaded:true,busy:false,critical:false,actions:2,shown:0,elapsedMs:120000};
 test('interstitial needs two actions',()=>expect(canShowInterstitial({...eligible,actions:1})).toBe(false));
 test('interstitial cooldown is 120 seconds',()=>expect(canShowInterstitial({...eligible,elapsedMs:119999})).toBe(false));

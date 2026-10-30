@@ -1,3 +1,4 @@
+import { adController } from '@/lib/ad-controller';
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { useServerFn } from '@tanstack/react-start';
 import { useQuery } from '@tanstack/react-query';
@@ -30,7 +31,7 @@ function Apply() {
     lock.current = true; setBusy(true);
     try { const saved = await submit({ data: { offer, payload: parsed.data } }); const result = await query.refetch();
       if (!result.data?.some(a => a.id === saved.id)) throw new Error('Submission could not be verified. Check My Applications before retrying.');
-      setReference(saved.id);
+      setReference(saved.id); void adController.afterCompletedSubmission();
     } catch (e) { setError(e instanceof Error ? e.message : 'Application could not be saved. Please retry.'); }
     finally { lock.current = false; setBusy(false); }
   }

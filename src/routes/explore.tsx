@@ -1,3 +1,4 @@
+import { useBannerAd } from "@/hooks/use-banner-ad";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -58,6 +59,7 @@ const TABS: { value: Tab; label: string }[] = [
 ];
 
 function Explore() {
+  useBannerAd();
   const searchParams = Route.useSearch();
   const navigate = useNavigate();
   const tab = searchParams.tab ?? "requests";
