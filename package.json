@@ -18,6 +18,9 @@
     "seroval": "1.6.11"
   },
   "dependencies": {
+    "@capacitor-community/admob": "^8.3.0",
+    "@capacitor/android": "^8.6.0",
+    "@capacitor/core": "^8.6.0",
     "@hookform/resolvers": "^5.2.2",
     "@lovable.dev/cloud-auth-js": "^1.1.2",
     "@radix-ui/react-accordion": "^1.2.12",
@@ -76,6 +79,7 @@
     "zod": "4.6.6"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.6.0",
     "@eslint/js": "^9.32.0",
     "@lovable.dev/vite-tanstack-config": "2.26.5",
     "@types/node": "^22.16.5",

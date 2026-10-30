@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Goodivo</string>
+    <string name="title_activity_main">Goodivo</string>
+    <string name="package_name">com.socilet.goodivo</string>
+    <string name="custom_url_scheme">com.socilet.goodivo</string>
+</resources>
